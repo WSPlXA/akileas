@@ -395,7 +395,7 @@ h1 em {
   50% { transform: translateY(-12px) rotate(1deg); }
 }
 
-/* Vision Section: 捷足的阿喀琉斯之志 */
+/* Vision Section: Design Philosophy */
 .vision-section {
   padding-block: 80px 92px;
   border-top: 1px solid var(--line);
