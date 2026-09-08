@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5eedb" />
+    <meta
+      name="description"
+      content="Akileas（阿喀琉斯）是一款以&quot;捷足&quot;为愿景的原生极速 Markdown 编辑器。温润护眼色调、毫秒级增量投影、本地优先守护。"
+    />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/" />
+    <link rel="icon" type="image/png" href="assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:title" content="Akileas — 捷足的阿喀琉斯 · 原生极速护眼 Markdown 编辑器" />
+    <meta
+      property="og:description"
+      content="捷足疾行，神盾守拙。原生极速、本地优先、温润护眼的现代化 Markdown 编辑器。"
+    />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Akileas — 捷足的阿喀琉斯 · 原生极速护眼 Markdown 编辑器" />
+    <meta
+      name="twitter:description"
+      content="捷足疾行，神盾守拙。原生极速、本地优先、温润护眼的现代化 Markdown 编辑器。"
+    />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>Akileas — 捷足的阿喀琉斯 · 原生极速护眼 Markdown 编辑器</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Akileas",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "description": "A native, latency-first Markdown editor inspired by the swift-footed Achilles, featuring eye-care parchment aesthetics and an Agent configuration workbench.",
+        "downloadUrl": "https://github.com/WSPlXA/akileas/releases/latest",
+        "softwareHelp": "https://github.com/WSPlXA/akileas/issues",
+        "license": "https://www.apache.org/licenses/LICENSE-2.0"
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳至主要内容</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="./" aria-label="Akileas 首页">
+          <img src="assets/akileas-icon.png" width="38" height="38" alt="Akileas 图标" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="主导航">
+          <a href="#vision">捷足愿景</a>
+          <a href="#features">功能特色</a>
+          <a href="#tech-specs">写作利器</a>
+          <a href="#architecture">极速架构</a>
+          <a href="privacy.html">隐私说明</a>
+          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero Section -->
+      <section class="hero shell">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> 捷足疾驰 · 本地优先 · 护眼色调 · 开源原生</p>
+          <h1>让文字跟上<br /><em>思绪奔驰的速度。</em></h1>
+          <p class="hero-lede">
+            以荷马史诗中“捷足的阿喀琉斯”命名。Akileas 专为极致速度与长久专注而生：光标所在处即时编辑，光标之外如古典羊皮纸般优雅呈现。毫秒级增量投影与纯净护眼底色，彻底告别打字卡顿与双栏割裂。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-store" href="https://apps.microsoft.com/detail/9PF44S6NS06D" target="_blank" rel="noopener">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.949-1.801"/></svg>
+              <span>Microsoft Store 获取</span>
+            </a>
+            <a class="button button-primary" href="https://github.com/WSPlXA/akileas/releases/latest" target="_blank" rel="noopener">
+              GitHub Releases 下载
+            </a>
+            <a class="button button-secondary" href="#features">
+              探索新特性 · Features
+            </a>
+          </div>
+          <div class="platforms" aria-label="支持平台">
+            <span>Windows 10/11</span>
+            <span>macOS</span>
+            <span>Linux</span>
+          </div>
+        </div>
+
+        <div class="hero-mark" aria-hidden="true">
+          <div class="mark-glow"></div>
+          <img src="assets/akileas-icon.png" width="1024" height="1024" alt="Akileas 应用图标" />
+          <div class="metric-card metric-top">
+            <small>渲染核心</small>
+            <strong>零等待增量投影</strong>
+          </div>
+          <div class="metric-card metric-bottom">
+            <small>数据归宿</small>
+            <strong>100% 本地守护</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vision Section: 捷足的阿喀琉斯之志 -->
+      <section class="vision-section" id="vision">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">Vision & Philosophy · 初心与愿景</p>
+              <h2>捷足的阿喀琉斯之志</h2>
+            </div>
+            <p>
+              在荷马史诗《伊利亚特》中，英雄阿喀琉斯被冠以“捷足”（πόδας ὠκὺς Ἀχιλλεύς）之誉——象征着无与伦比的迅捷、敏锐与纯粹的力量。Akileas 的诞生，就是为了在重度工具繁杂的数字时代，重铸那份纯粹的轻盈与极速。
+            </p>
+          </div>
+
+
+          <div class="vision-quote">
+            <blockquote class="homeric-verse" lang="grc">
+              σευάμενος ὥς θ᾽ ἵππος ἀεθλοφόρος σὺν ὄχεσφιν,<br />
+              ὅς ῥά τε ῥεῖα θέῃσι τιταινόμενος πεδίοιο·<br />
+              ὣς Ἀχιλεὺς λαιψηρὰ πόδας καὶ γούνατ᾽ ἐνώμα.
+            </blockquote>
+            <p class="verse-translation">
+              “如同驾车的获胜良驹，舒展着四蹄，在广袤的平原上轻快飞驰；<br />
+              阿喀琉斯亦是如此，迅疾地迈动着他敏捷的双足与双膝。”
+            </p>
+            <cite>— 荷马史诗《伊利亚特》第二十二卷（XXII. 22–24），罗念生 译</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Product Showcase Section -->
+      <section class="product-stage shell" aria-labelledby="product-heading">
+        <div class="section-intro product-intro">
+          <div>
+            <p class="section-kicker">单一连续交互平面 · Continuous Surface</p>
+            <h2 id="product-heading">所见即所思，编辑即阅读。</h2>
+          </div>
+          <p>
+            光标所在行即时呈现清晰的 Markdown 源码，光标移开之处立刻恢复为规整优雅的排版效果。无需双屏对比，无缝游走于源码与版面之间。
+          </p>
+        </div>
+        <figure class="app-frame">
+          <div class="window-bar" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <strong>Akileas Showcase.md</strong>
+          </div>
+          <img
+            src="assets/akileas-windows.png"
+            width="2576"
+            height="1408"
+            alt="Akileas 在 Windows 下编辑包含工作区文件树、数学公式、表格和 Mermaid 流程图的实机界面"
+          />
+          <figcaption>
+            原生窗口一体化呈现实时 Markdown、数学公式、Mermaid 流程图、工作区树与智能 Agent 诊断。
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- Feature Section -->
+      <section class="feature-section" id="features">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">专为专注而铸 · Purpose-built</p>
+              <h2>具备深厚技术底蕴的书写利器</h2>
+            </div>
+            <p>轻灵到让人忘记工具的存在，强大到足以胜任最复杂的工程技术文档。</p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card feature-wide">
+              <p class="feature-number">01</p>
+              <h3>实时行内所见即所得 · WYSIWYG In-Place</h3>
+              <p>
+                无需分裂的双栏对照。仅在光标激活的局部块展示原始 Markdown 标记；标题、列表、表格、超链接和加粗强调实时排版，保持整洁与连贯。
+              </p>
+              <div class="mini-editor" aria-hidden="true">
+                <span class="line source">## <b>心流沉浸写作</b></span>
+                <span class="line rendered">其余所有内容均如最终出版的精美典籍般安然呈现。</span>
+                <span class="caret"></span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">02</p>
+              <h3>GitHub Alert 提示块呼出 · Expressive Callouts</h3>
+              <p>
+                全面支持 GFM 规范提示块语法：<code>[!NOTE]</code>、<code>[!TIP]</code>、<code>[!IMPORTANT]</code>、<code>[!WARNING]</code> 与 <code>[!CAUTION]</code>。光标所在行展开原始标记，光标移开后即刻呈现带有柔和主题强调色与微拟真边框的生动呼出卡。
+              </p>
+              <div class="mini-alert" aria-hidden="true">
+                <div class="mini-alert-head">
+                  <span class="mini-alert-badge"><span class="mini-alert-dot"></span> TIP · 提示块呼出</span>
+                </div>
+                <p>光标离开当前行即刻折叠标记，呈现典雅高质感视效。</p>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">03</p>
+              <h3>智能表格系统与自由对齐 · Smart Table Navigation</h3>
+              <p>
+                完整支持 Markdown 表格列对齐语法（<code>:---</code> 靠左、<code>:---:</code> 居中、<code>---:</code> 靠右）。单元格之间支持 <code>Tab</code> 与 <code>Shift-Tab</code> 平滑快捷跳转，末尾单元格敲击 <code>Tab</code> 自动智能插入全新数据行。
+              </p>
+              <div class="mini-table-demo" aria-hidden="true">
+                <div class="mini-table-row mini-table-head">
+                  <span class="col-left">模块 (:---)</span>
+                  <span class="col-center">状态 (:---:)</span>
+                  <span class="col-right">延迟 (---:)</span>
+                </div>
+                <div class="mini-table-row">
+                  <span class="col-left">Tree-sitter 增量切片</span>
+                  <span class="col-center"><span class="badge-status">Active</span></span>
+                  <span class="col-right">0.18 ms</span>
+                </div>
+                <div class="mini-table-row">
+                  <span class="col-left active-cell">SIMD fast_char_count</span>
+                  <span class="col-center"><span class="badge-status">Ready</span></span>
+                  <span class="col-right">0.05 ms</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">04</p>
+              <h3>原生技术文档渲染 · Pure Native Math & Diagrams</h3>
+              <p>
+                TeX/LaTeX 数学公式、Mermaid 流程图与时序图、GFM 规范表格、任务清单与代码块。无需任何浏览器沙盒与重型 JS 运行时，纯原生 GPU 光速光栅化。
+              </p>
+              <div class="formula" aria-hidden="true">E = mc²</div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">05</p>
+              <h3>内置时光机与崩溃自愈 · Built-in Time Machine</h3>
+              <p>
+                每次保存自动留存多达 100 步的本地轻量快照。支持离线差异比对（Diff）、手动检查点与一键回退恢复，完全脱离 Git 也能无忧回滚；配合磁盘有界恢复日志，突发断电不丢一字。
+              </p>
+              <div class="mini-timemachine" aria-hidden="true">
+                <div class="tm-node tm-active">
+                  <span class="tm-dot"></span>
+                  <div class="tm-info">
+                    <strong>实时快照 (Current)</strong>
+                    <small>刚刚 · 2,410 字 · 无冲突</small>
+                  </div>
+                </div>
+                <div class="tm-node">
+                  <span class="tm-dot"></span>
+                  <div class="tm-info">
+                    <strong>保存检查点 · v0.1.0</strong>
+                    <small>15 分钟前 · 差异 +18 行</small>
+                  </div>
+                  <span class="tm-action">一键回溯</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">06</p>
+              <h3>SIMD 硬件级字符统计 · SIMD-Accelerated Engine</h3>
+              <p>
+                引入 SIMD 并行硬件指令优化的 <code>fast_char_count</code>，十万字长篇毫秒级精准切分 ASCII、CJK 双宽字符与标点。状态栏字数、词数、行数指标随键盘击键如呼吸般即时刷新。
+              </p>
+              <div class="mini-stats" aria-hidden="true">
+                <div class="stat-pill"><span class="stat-k">Chars</span><span class="stat-v">128,490</span></div>
+                <div class="stat-pill"><span class="stat-k">Words</span><span class="stat-v">32,840</span></div>
+                <div class="stat-pill"><span class="stat-k">Lines</span><span class="stat-v">4,120</span></div>
+                <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>SIMD 0.05ms</div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">07</p>
+              <h3>双模主题与纯净本地优先 · Dual Theme & Local-First</h3>
+              <p>
+                独立设置中心支持深邃极客暗黑（Default Dark）与古典温润羊皮纸（Eye Care）双重视效模式。所有文档 100% 留存在本地硬盘，零云端账号、零广告、零隐私遥测。
+              </p>
+              <div class="theme-badge-demo" aria-hidden="true">
+                <div class="theme-chip">
+                  <span class="theme-chip-dot parchment"></span>
+                  <span>护眼羊皮纸</span>
+                </div>
+                <div class="theme-chip theme-chip-dark">
+                  <span class="theme-chip-dot dark"></span>
+                  <span>极客暗色</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card feature-wide agent-card">
+              <p class="feature-number">08</p>
+              <h3>智能 Agent 配置工作台 · Configuration Workbench</h3>
+              <p>
+                深度识别并校验 <code>SKILL.md</code>、<code>AGENTS.md</code> 与 Copilot 配置规范。行内诊断即时提示 Frontmatter 元数据缺失或格式瑕疵，并提供一键安全修复。
+              </p>
+              <div class="diagnostic" aria-hidden="true">
+                <span class="diagnostic-dot"></span>
+                <div><strong>Frontmatter 元数据名称不匹配</strong><small>提供一键快速修复</small></div>
+                <button tabindex="-1">修复</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Specs & Tools Section -->
+      <section class="specs-section shell" id="tech-specs">
+        <div class="section-intro">
+          <div>
+            <p class="section-kicker">全维度工程利器 · Technical Precision</p>
+            <h2>细致入微的技术写作体验</h2>
+          </div>
+          <p>
+            不仅具备宏大的极速架构，更在每一次交互、每一个符号与长篇技术文献的微小细节中千锤百炼。
+          </p>
+        </div>
+
+        <div class="specs-grid">
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+            </div>
+            <h3>交互式待办与折叠块</h3>
+            <p>
+              支持 <code>- [ ]</code> 与 <code>- [x]</code> 任务清单，<strong>可在页面上直接鼠标点按勾选或取消</strong>；原生支持 <code>&lt;details&gt;</code> 与 <code>&lt;summary&gt;</code>，单击标题随心折叠与展开长篇技术注释。
+            </p>
+            <div class="spec-tags">
+              <span>Interactive Tasks</span>
+              <span>Collapsible Details</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2L12 2z"/></svg>
+            </div>
+            <h3>高阶 Markdown 增强标记</h3>
+            <p>
+              全面覆盖复杂排版：荧光高亮 <code>==highlight==</code>、优雅删除线 <code>~~strikethrough~~</code>、下划线 <code>&lt;u&gt;</code>、键位符 <code>&lt;kbd&gt;Ctrl&lt;/kbd&gt;</code>、上标 <code>^sup^</code>、下标 <code>~sub~</code> 与学术级脚注 <code>[^1]</code>。
+            </p>
+            <div class="spec-tags">
+              <span>Highlights</span>
+              <span>Kbd Chips</span>
+              <span>Footnotes</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15.5l-5.5-5.5-9.5 9.5"/></svg>
+            </div>
+            <h3>异步图片解码与显存缓存</h3>
+            <p>
+              支持本地相对路径与远程网络图片，支持显式宽度尺寸标注（如 <code>&lt;img width="400"&gt;</code>）。独立工作线程异步解码并构建 GPU 纹理缓存，即使浏览图文并茂的十万字巨著也毫无顿挫。
+            </p>
+            <div class="spec-tags">
+              <span>Image Cache</span>
+              <span>Async Decode</span>
+              <span>Size Hints</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            </div>
+            <h3>SIMD 批次全文检索与替换</h3>
+            <p>
+              内置平台级 SIMD <code>memmem</code> 检索核心。支持 <code>Ctrl+F</code> 快速查找、<code>Ctrl+H</code> 精准批量替换与 <code>Ctrl+G</code> 行号直达，在百万行超长代码或文档中穿梭自如，搜索永不假死。
+            </p>
+            <div class="spec-tags">
+              <span>SIMD memmem</span>
+              <span>Batch Search</span>
+              <span>Go to Line</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            </div>
+            <h3>无感会话恢复与个性排版</h3>
+            <p>
+              退出时精准记录光标字符坐标、视口滚动行号与毫秒级子像素偏移量，重新启动瞬间恢复心流。支持无级切换系统默认字体、衬线体（Serif）或等宽体（Monospace），并支持 10pt–32pt 动态缩放。
+            </p>
+            <div class="spec-tags">
+              <span>Session Memory</span>
+              <span>Typography</span>
+              <span>Dynamic Scale</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+            </div>
+            <h3>多标签页工作区与代码 Diff</h3>
+            <p>
+              支持同时打开多份文档或大型工程文件夹，侧边栏树形浏览并自动扫描 Markdown 文件；原生识别 <code>```diff```</code> 代码块，提供红绿色带版本差异对比。
+            </p>
+            <div class="spec-tags">
+              <span>Workspace Tree</span>
+              <span>Multi-Tab</span>
+              <span>Diff Fences</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Architecture Deep Dive Section -->
+      <section class="arch-section" id="architecture">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">极速架构全景 · Latency-First Architecture</p>
+              <h2>UI 主线程从不等待。</h2>
+            </div>
+            <p>
+              以交互延迟第一为核心契约。击键仅向内存 Rope 提交最小增量事务并瞬时重绘最新快照，全量语法解析、离线排版与持久化全部在后台并发异步收敛。
+            </p>
+          </div>
+
+          <!-- Hot Path Dual-Track Visualizer -->
+          <div class="arch-hotpath">
+            <div class="hotpath-track hotpath-ui">
+              <div class="track-header">
+                <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>交互快轨 · UI 主线程 (延迟 &lt; 1ms)</span>
+                <strong>键入即呈现，零锁、零阻塞、零深拷贝</strong>
+              </div>
+              <div class="track-steps">
+                <div class="step-card">
+                  <span class="step-num">01</span>
+                  <strong>用户击键 (Input)</strong>
+                  <small>产生原子 BufferEdit 增量修改事务</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">02</span>
+                  <strong>Rope 内存代际</strong>
+                  <small>轻量打上 generation 递增编号</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">03</span>
+                  <strong>脏行临时投影</strong>
+                  <small>语法中立 Pending Projection</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card step-highlight">
+                  <span class="step-num">04</span>
+                  <strong>GPUI 光栅化呈现</strong>
+                  <small>光标与字符无感即时刷新 (毫秒级)</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="hotpath-track hotpath-worker">
+              <div class="track-header">
+                <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>异步收敛轨 · Background Worker Pool</span>
+                <strong>Tree-sitter 增量切片与只读权威快照生成</strong>
+              </div>
+              <div class="track-steps">
+                <div class="step-card">
+                  <span class="step-num">01</span>
+                  <strong>Tree-sitter 增量解析</strong>
+                  <small>InputEdit 局部修正，仅重新切片脏行</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">02</span>
+                  <strong>挂载行内语法树</strong>
+                  <small>高效复用未变动行内 AST 节点</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">03</span>
+                  <strong>权威 MarkdownSnapshot</strong>
+                  <small>生成轻量行存储与高阶语法索引</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card step-highlight-worker">
+                  <span class="step-num">04</span>
+                  <strong>双重代际原子置换</strong>
+                  <small>(epoch, generation) 守卫防幽灵渲染</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Architecture 3 Pillars -->
+          <div class="arch-pillars-grid">
+            <article class="pillar-card">
+              <div class="pillar-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              </div>
+              <h3>三路正交派生管线</h3>
+              <p>
+                <strong>Formula · Mermaid · Table 互不牵连。</strong>
+                LaTeX 公式独立防抖更新；Mermaid 视口窗口按需编译与滚动瞬时复用；表格自适应内容动态测宽。修改正文绝不触发耗时图表或公式重新计算。
+              </p>
+              <div class="pillar-tags">
+                <span>FormulaSnapshot</span>
+                <span>MermaidSnapshot</span>
+                <span>TableLayoutSnapshot</span>
+              </div>
+            </article>
+
+            <article class="pillar-card">
+              <div class="pillar-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>
+              </div>
+              <h3>CPU 与 GPU 异构分工</h3>
+              <p>
+                <strong>各司其职，坚决杜绝越界开销。</strong>
+                CPU 专精 Rope 内存事务、命中测试、Tree-sitter 增量切片与 SIMD 字符统计；GPU 专精字形图集管理、视口图层合成与矢量图表光栅化。
+              </p>
+              <div class="pillar-tags">
+                <span>Rope Piece-Tree</span>
+                <span>Shaping Cache</span>
+                <span>GPUI Metal/DirectX</span>
+              </div>
+            </article>
+
+            <article class="pillar-card">
+              <div class="pillar-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+              </div>
+              <h3>双重自愈持久化体系</h3>
+              <p>
+                <strong>神盾守护，断电或异常关闭不丢一字。</strong>
+                内置时光机保留多达 100 步轻量快照与离线 Diff 比对；搭配专有 <code>AKREC001</code> 二进制崩溃恢复日志，异步防抖原子落盘，启动即愈。
+              </p>
+              <div class="pillar-tags">
+                <span>100-Snapshot History</span>
+                <span>AKREC001 Journal</span>
+                <span>Atomic Swap</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="arch-action-bar">
+            <p>想要深入探索更多内部工程实现细节与基准测试策略？</p>
+            <a class="button button-secondary" href="https://github.com/WSPlXA/akileas/blob/master/docs/architecture.md" target="_blank" rel="noopener">
+              阅读官方架构白皮书 (docs/architecture.md) <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Privacy Band -->
+      <section class="privacy-band">
+        <div class="shell privacy-inner">
+          <div>
+            <p class="section-kicker">天然隐私守护 · Private by Default</p>
+            <h2>无账号。无广告。零数据遥测。</h2>
+          </div>
+          <div>
+            <p>
+              Akileas 严格在本地处理您的文件。只有在您显式点击外部网络链接或引用的远程在线资源时，才会发生系统级网络交互。
+            </p>
+            <a class="text-link" href="privacy.html">查阅完整隐私条款 <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="final-cta shell">
+        <img src="assets/akileas-icon.png" width="88" height="88" alt="Akileas 标志" />
+        <p class="section-kicker">开启书写 · Start Writing</p>
+        <h2>以捷足之速，安享纯粹书写。</h2>
+        <p>直接下载开箱即用的 Release 版本，或在 Apache 2.0 协议下自由从源码构建。</p>
+        <div class="hero-actions">
+          <a class="button button-store" href="https://apps.microsoft.com/detail/9PF44S6NS06D" target="_blank" rel="noopener">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.949-1.801"/></svg>
+            <span>Microsoft Store 获取</span>
+          </a>
+          <a class="button button-primary" href="https://github.com/WSPlXA/akileas/releases/latest" target="_blank" rel="noopener">
+            下载最新发布包 · Releases
+          </a>
+          <a class="button button-secondary" href="https://github.com/WSPlXA/akileas#build-and-run" target="_blank" rel="noopener">
+            从源码构建
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="./" aria-label="Akileas 首页">
+          <img src="assets/akileas-icon.png" width="30" height="30" alt="" />
+          <span>Akileas</span>
+        </a>
+        <p>捷足疾行，专注书写。原生 Markdown 桌面编辑器。</p>
+        <nav aria-label="页脚导航">
+          <a href="privacy.html">隐私政策</a>
+          <a href="https://github.com/WSPlXA/akileas/releases" target="_blank" rel="noopener">发行版本</a>
+          <a href="https://github.com/WSPlXA/akileas/issues" target="_blank" rel="noopener">问题反馈</a>
+          <a href="https://github.com/WSPlXA/akileas/blob/master/LICENSE" target="_blank" rel="noopener">开源许可</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
