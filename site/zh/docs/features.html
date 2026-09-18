@@ -70,7 +70,7 @@
           <li>
             <a href="architecture.html">
               <span class="docs-nav-num" aria-hidden="true">二</span>
-              <span>系统架构</span>
+              <span>为什么这么快</span>
             </a>
           </li>
           <li>
@@ -82,7 +82,7 @@
           <li>
             <a href="screenshots.html">
               <span class="docs-nav-num" aria-hidden="true">四</span>
-              <span>截图指南</span>
+              <span>界面导览</span>
             </a>
           </li>
         </ol>
@@ -133,9 +133,8 @@
             <li><strong>水平拆分（Split Right）</strong>：将当前视口水平一分为二（快捷键可在菜单触发），左右独立滚动。</li>
             <li><strong>垂直拆分（Split Down）</strong>：上下并列对比。</li>
             <li>
-              <strong>同文档双向实时同步</strong>：左右视口同时打开同一篇文档时，它们在内存中
-              <strong>共享同一份 <code>TextBuffer</code> 引用</strong>。在左侧打字的同时，
-              右侧视口在微秒级别同步更新渲染，且各自保持完全独立的滚动距离与光标选区。
+              <strong>同文档双向实时同步</strong>：左右视口同时打开同一篇文档时，它们共享同一份内容。
+              在左侧打字的同时，右侧视口在毫秒级同步更新渲染，且各自保持完全独立的滚动距离与光标选区。
             </li>
             <li>
               <strong>无缝焦点穿梭</strong>：按下 <kbd>Ctrl</kbd> + <kbd>H</kbd> / <kbd>J</kbd> /
@@ -194,8 +193,8 @@
               Akileas 都会自动维护专属的历史版本数据库，滚动保留多达 <strong>100 份</strong>保存快照。
             </li>
             <li>
-              <strong>Myers Diff 离线对比</strong>：直观呈现不同历史版本之间的字符级增删差异
-              （绿色新增、红色删除、行号对应）。
+              <strong>逐字差异对比</strong>：直观呈现不同历史版本之间的字符级增删差异
+              （绿色新增、红色删除、行号对应），无需任何外部工具。
             </li>
             <li>
               <strong>秒级检出与还原</strong>：点击版本历史记录即可快速预览历史状态，
@@ -218,7 +217,7 @@
             </li>
             <li>
               <strong>块级展示公式</strong>：使用 <code>$$ ... $$</code>，支持复杂积分、矩阵、微积分、方程组等。
-              19 套 KaTeX 矢量字体轮廓深度内置，字形优美清晰。
+              内置 19 套数学矢量字体，字形优美清晰。
             </li>
           </ul>
           <h3>现代 Mermaid 矢量图表</h3>
@@ -265,8 +264,8 @@
         <section class="doc-section" id="pdf-export">
           <h2>3.7 出版级 Typst 矢量 PDF 导出</h2>
           <p>
-            告别无头浏览器（Headless Chrome）导出 PDF 产生的模糊与排版错乱。
-            Akileas 内置了由 Rust 编写的现代化排版引擎 <strong>Typst 0.15</strong>。
+            告别依赖浏览器打印导出 PDF 造成的模糊与排版错乱。
+            Akileas 内置现代化的排版引擎 <strong>Typst</strong>，直接输出矢量文档。
           </p>
           <ul class="doc-list">
             <li>

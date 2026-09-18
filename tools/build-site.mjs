@@ -60,9 +60,9 @@ const LOCALES = {
     docs: [
       { slug: "", num: "§", label: "Overview" },
       { slug: "benchmarks", num: "I", label: "Benchmarks" },
-      { slug: "architecture", num: "II", label: "Architecture" },
+      { slug: "architecture", num: "II", label: "How it's fast" },
       { slug: "features", num: "III", label: "Features" },
-      { slug: "screenshots", num: "IV", label: "Screenshots" },
+      { slug: "screenshots", num: "IV", label: "Interface tour" },
     ],
   },
   zh: {
@@ -93,9 +93,9 @@ const LOCALES = {
     docs: [
       { slug: "", num: "§", label: "总览" },
       { slug: "benchmarks", num: "一", label: "性能基准" },
-      { slug: "architecture", num: "二", label: "系统架构" },
+      { slug: "architecture", num: "二", label: "为什么这么快" },
       { slug: "features", num: "三", label: "功能全景" },
-      { slug: "screenshots", num: "四", label: "截图指南" },
+      { slug: "screenshots", num: "四", label: "界面导览" },
     ],
   },
 };
@@ -289,12 +289,7 @@ ${indent(body, 8)}
     main = indent(body, 4);
   }
 
-  const scripts = meta.mermaid
-    ? `\n    <script type="module">\n${indent(
-        readFileSync(join(ROOT, "tools", "mermaid-boot.js"), "utf8").trim(),
-        6,
-      )}\n    </script>`
-    : "";
+  const scripts = "";
 
   return `<!doctype html>
 <html lang="${t.htmlLang}">

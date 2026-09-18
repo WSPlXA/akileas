@@ -2,8 +2,8 @@
 {
   "out": "zh/docs/screenshots.html",
   "lang": "zh",
-  "title": "界面实例与截图指引 — Akileas 技术手册",
-  "description": "Akileas 八大核心界面截图的逐张拍摄规范，包含截图环境建议、统一体验演示样本文档与文件命名规则。",
+  "title": "界面导览 — Akileas 技术手册",
+  "description": "Akileas 的八大核心界面逐一介绍：每个界面能做什么、如何打开、你会看到什么效果。",
   "nav": "docs",
   "docSlug": "screenshots",
   "bodyClass": "docs-page",
@@ -12,323 +12,242 @@
 ---
 <header class="docs-hero">
   <p class="section-kicker">第四章</p>
-  <h1>界面实例与截图指引</h1>
+  <h1>界面导览</h1>
   <p class="docs-lede">
-    为制作最具说服力、视觉冲击力与专业度的宣传材料与技术 UI 演示文档，
-    本章提供八大核心场景的详尽截图拍摄指引，每个场景均配备目标路径、演示重点、
-    可一键复制的样例代码与推荐窗口尺寸。
+    从专注写作、分屏对照，到公式图表、版本回滚与出版级导出，
+    下面八个界面覆盖了 Akileas 的日常使用场景。每个界面都说明了它解决什么问题、
+    怎么打开，以及你会看到什么。
   </p>
 </header>
 
-<section class="doc-section" id="conventions">
-  <h2>4.1 截图规范与环境建议</h2>
-  <ul class="doc-list">
-    <li>
-      <strong>建议操作系统环境</strong>：Windows 11（启用深色模式）
-      或 macOS Sonoma / Sequoia（启用深色模式）。
-    </li>
-    <li>
-      <strong>推荐统一截图分辨率</strong>：全屏 / 大窗口界面 <code>1920 × 1080</code> 或
-      <code>1440 × 900</code>；局部弹窗 / 面板特写 <code>800 × 600</code>，
-      或保持 16:10 黄金比例。
-    </li>
-    <li>
-      <strong>外观主题选择</strong>：推荐使用 Akileas 默认的深色精致主题（Dark Mode），
-      更能突出语法高亮与矢量图表的高级质感。
-    </li>
-    <li>
-      <strong>截图格式要求</strong>：统一采用 24-bit PNG 格式（无损压缩），
-      确保证照细节与字体平滑边缘清晰。
-    </li>
-    <li>
-      <strong>存放位置</strong>：全部截图建议存放于 <code>assets/screenshots/</code> 目录下。
-    </li>
-  </ul>
-</section>
-
-<section class="doc-section" id="sample-doc">
-  <h2>4.2 统一体验演示样本文档</h2>
+<section class="doc-section" id="overview">
+  <h2>4.1 关于这些界面</h2>
   <p>
-    在拍摄截图前，建议在 Akileas 中新建一份名为 <code>demo_showcase.md</code> 的文件，
-    并将以下综合测试代码完整粘贴进去，即可一次性获得所有精美排版效果。
+    Akileas 的界面刻意保持克制：没有多余的工具栏，没有反复切换的面板。
+    写作时它几乎隐入背景，需要某个能力时再用一个快捷键呼出，用完即走。
   </p>
-  <pre class="code-block"><code># Akileas: 纯 Rust 原生极速 Markdown 编辑体验
-
-&gt; **UI 线程永不等待**：微秒级双阶段投影，十万行巨型文档丝滑交互。
-
-## 1. 核心架构与时序协作
-
-```mermaid
-sequenceDiagram
-    autonumber
-    box rgb(30, 41, 59) 前台渲染
-    participant UI as EditorView
-    participant GPUI as GPU Pipeline
-    end
-    box rgb(15, 23, 42) 后台引擎
-    participant Worker as Worker Thread
-    participant TS as Tree-sitter
-    end
-
-    UI-&gt;&gt;GPUI: 阶段 1：待定物理行投影 (19 μs)
-    UI-)Worker: 阶段 2：异步派发 Rope 变更
-    Worker-&gt;&gt;TS: 增量外科手术修剪
-    Worker--&gt;&gt;UI: 原子 Arc 交换更新快照
-```
-
-## 2. 印刷级 LaTeX 理论公式
-
-爱因斯坦场方程与高斯正态分布密度函数：
-
-$$
-R_{\mu\nu} - \frac{1}{2}R g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}
-$$
-
-$$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$
-
-## 3. 硬件性能指标对比
-
-| 文档规模 | Authority p50 | Authority p95 | 优化提升倍数 | 内存基线 |
-| :--- | :---: | :---: | :---: | :---: |
-| **10,000 行** | 0.102 ms | 0.120 ms | 388x | ~32 MB |
-| **100,000 行** | 0.137 ms | 0.148 ms | 3629x | ~65 MB |
-
-- [x] 微软 `mimalloc` 零 GC 停顿
-- [x] 双层增量 Tree-sitter 语法树
-- [ ] 自动化 CI 端到端性能守卫</code></pre>
-  <div class="callout callout-tip">
-    <p class="callout-title">TIP</p>
-    <p>
-      这份样例刻意覆盖了标题、引用、时序图、块级公式、表格与任务列表六种排版，
-      单张截图即可展示编辑器的绝大部分渲染能力。
-    </p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>界面</th><th>解决什么问题</th><th>打开方式</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>主编辑界面</td><td>不被打断地写作</td><td>打开文件即是</td></tr>
+        <tr><td>分屏对照</td><td>同一篇文档前后对照</td><td>菜单 <code>Document → Split Right</code></td></tr>
+        <tr><td>Mermaid 图表</td><td>在文档里画架构图与时序图</td><td>直接书写 <code>```mermaid</code> 代码块</td></tr>
+        <tr><td>数学公式</td><td>排版复杂的数学表达</td><td>行内 <code>$…$</code>，块级 <code>$$…$$</code></td></tr>
+        <tr><td>版本时光机</td><td>找回改错或误删的内容</td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td></tr>
+        <tr><td>大纲与查找</td><td>在长文里快速定位</td><td><kbd>Ctrl</kbd> + <kbd>D</kbd> / <kbd>Ctrl</kbd> + <kbd>F</kbd></td></tr>
+        <tr><td>Agent 工作台</td><td>写对智能体配置文件</td><td>打开 <code>SKILL.md</code> 或 <code>AGENTS.md</code></td></tr>
+        <tr><td>PDF 导出</td><td>输出可打印的正式文档</td><td>菜单 <code>File → Export as PDF…</code></td></tr>
+      </tbody>
+    </table>
   </div>
+  <p class="doc-note">
+    快捷键以 Windows / Linux 为例；macOS 下把 <kbd>Ctrl</kbd> 换成 <kbd>Cmd</kbd> 即可。
+  </p>
 </section>
 
 <section class="doc-section" id="scenes">
-  <h2>4.3 八大核心场景拍摄指引</h2>
+  <h2>4.2 八大核心界面</h2>
 
-  <h3>场景 1：主编辑工作台全景（沉浸式排版与混合所见即所得）</h3>
+  <h3>主编辑界面</h3>
   <p>
-    展示极简无干扰的现代编辑器主窗口、无标题栏沉浸设计、精美的一级 / 二级标题渲染、
-    引用块边框高亮以及勾选框组件。
+    <strong>能做什么：</strong>这是你待得最久的地方。Markdown 语法只在光标所在的那一块展开，
+    移开之后立刻渲染成排版好的样子——标题、引用、代码块、勾选框都在原地变成最终形态。
   </p>
-  <ol class="doc-list">
-    <li>打开上述 <code>demo_showcase.md</code>。</li>
-    <li>将光标放置于普通的正文自然段内（不要选中任何块，以便展示纯排版效果）。</li>
-    <li>确保窗口居中，呈现出干净、克制的视觉设计。</li>
-  </ol>
+  <p>
+    <strong>你会看到：</strong>干净的深色版面，标题层级分明，引用块带一条柔和的边线，
+    任务列表显示为可点击的方框。没有左右分栏，也没有预览窗口。
+  </p>
   <figure class="shot" id="scene-1">
     <div class="shot-frame">
       <img src="../../assets/screenshots/01_main_editor_view.png"
-           alt="Akileas 主编辑工作区全景视图" loading="lazy"
+           alt="Akileas 主编辑界面" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/01_main_editor_view.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 1</span>Akileas 主编辑工作区全景视图——沉浸式深色主题与就地混合所见即所得排版。</figcaption>
+    <figcaption><span class="shot-num">图 1</span>主编辑界面：光标所在处展开源码，移开后原地渲染为最终排版。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1440 × 900</code></p>
 
-  <h3>场景 2：多视口双向实时分屏协作（Split View）</h3>
+  <h3>分屏对照</h3>
   <p>
-    展示同文档在水平分屏（Split Right）下的双视口呈现。左侧处于 Markdown 源码编辑状态
-    （如正在编辑一个表格或列表），右侧实时同步呈现排版后状态，
-    直观体现"同源多视口毫秒级代际同步"。
+    <strong>能做什么：</strong>把同一个文档在左右两个视口里同时打开，一边改一边看整体效果；
+    也可以在两个视口里打开不同文档做资料对照。两边共享同一份内容，
+    在左侧输入，右侧会在毫秒级同步更新。
   </p>
-  <ol class="doc-list">
-    <li>点击菜单 <code>Document -&gt; Split Right</code>（或按快捷键）。</li>
-    <li>在左侧视口中点击某一段落使其处于源码输入状态（光标闪烁）。</li>
-    <li>右侧视口保持阅读渲染状态，可轻微向下滚动展示不同章节。</li>
-  </ol>
+  <p>
+    <strong>怎么打开：</strong>菜单 <code>Document → Split Right</code>（左右并排）
+    或 <code>Split Down</code>（上下并排）。用 <kbd>Ctrl</kbd> + <kbd>H</kbd> /
+    <kbd>J</kbd> / <kbd>K</kbd> / <kbd>L</kbd> 在几个视口之间切换焦点。
+  </p>
+  <p>
+    <strong>你会看到：</strong>左右两个视口各自独立滚动、各自保留光标位置，但内容始终一致。
+  </p>
   <figure class="shot" id="scene-2">
     <div class="shot-frame">
       <img src="../../assets/screenshots/02_split_screen_editing.png"
-           alt="Akileas 双视口实时分屏协作" loading="lazy"
+           alt="Akileas 分屏对照" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/02_split_screen_editing.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 2</span>双视口实时分屏协作——左右独立滚动与共享缓冲区的毫秒级同步渲染。</figcaption>
+    <figcaption><span class="shot-num">图 2</span>分屏对照：左右独立滚动，内容毫秒级同步。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1600 × 900</code></p>
 
-  <h3>场景 3：现代复杂 Mermaid 矢量架构图（含 box 容器与换行）与局部放大镜</h3>
+  <h3>Mermaid 图表</h3>
   <p>
-    展示纯 Rust 编译的复杂 Mermaid 时序图，重点突出支持的现代语法特性——
-    <code>box</code> 色彩分组容器、<code>&lt;br&gt;</code> 换行以及悬浮交互视口
-    （缩放倍率展示或局部放大镜 Lens 模式）。
+    <strong>能做什么：</strong>直接在文档里写流程图、时序图、状态图、类图与思维导图，
+    Akileas 会把它渲染成矢量图形。支持分组容器与标签换行，
+    并可以用滚轮缩放、按住拖拽平移。
   </p>
-  <ol class="doc-list">
-    <li>滚动至 <code>demo_showcase.md</code> 中的 Mermaid 时序图区域。</li>
-    <li>
-      使用鼠标滚轮微调缩放比例（例如缩放到 75% 唤出细节放大镜，
-      或居中展示清晰的拓扑箭头与文本）。
-    </li>
-    <li>确保时序图中的 <code>box</code> 浅蓝透明背景块和 participant 生命线清晰美观。</li>
-  </ol>
+  <p>
+    <strong>你会看到：</strong>图表以矢量方式绘制，放大后线条依然锐利；
+    图表被缩小时会自动出现一个局部放大镜，方便看清密集的节点与连线。
+  </p>
   <figure class="shot" id="scene-3">
     <div class="shot-frame">
       <img src="../../assets/screenshots/03_mermaid_diagram_lens.png"
-           alt="Akileas 现代 Mermaid 矢量图表渲染" loading="lazy"
+           alt="Akileas Mermaid 图表与局部放大镜" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/03_mermaid_diagram_lens.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 3</span>现代 Mermaid 矢量图表渲染——原生支持 box 容器分组与 GPU 硬件加速拓扑平移缩放。</figcaption>
+    <figcaption><span class="shot-num">图 3</span>Mermaid 图表：矢量绘制，可缩放平移，缩小时自动唤出局部放大镜。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1200 × 750</code></p>
 
-  <h3>场景 4：Ratex 高保真 LaTeX 复杂数学公式排版</h3>
+  <h3>数学公式</h3>
   <p>
-    展示纯 Rust Ratex 引擎求解的 Knuth 盒模型数学公式，
-    展现爱因斯坦引力场张量公式与复杂的上下标、根号、分数线矢量平滑度。
+    <strong>能做什么：</strong>用 LaTeX 语法书写行内公式与块级公式，
+    支持积分、矩阵、方程组、上下标与根号等常见表达。
   </p>
-  <ol class="doc-list">
-    <li>定位到包含两个 LaTeX 块级公式的文档区域。</li>
-    <li>截取公式居中、字形轮廓分明的局部或主编辑窗口特写。</li>
-    <li>可以在公式上方展示一行带行内公式 <code>$E=mc^2$</code> 的段落作为对比。</li>
-  </ol>
+  <p>
+    <strong>你会看到：</strong>公式以印刷级排版居中呈现，字形轮廓平滑，
+    放大后不会出现锯齿——包括希腊字母与各种数学符号。
+  </p>
   <figure class="shot" id="scene-4">
     <div class="shot-frame">
       <img src="../../assets/screenshots/04_latex_math_typesetting.png"
-           alt="Akileas Ratex 纯 Rust LaTeX 盒模型数学排版" loading="lazy"
+           alt="Akileas 数学公式排版" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/04_latex_math_typesetting.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 4</span>Ratex 纯 Rust LaTeX 盒模型数学排版——脱离 Web 依赖，内置矢量字体呈现出版级公式。</figcaption>
+    <figcaption><span class="shot-num">图 4</span>数学公式：印刷级排版，缩放后依然锐利。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1000 × 600</code></p>
 
-  <h3>场景 5：独立于 Git 的本地版本时光机与 Myers Diff 差异比对</h3>
+  <h3>版本时光机</h3>
   <p>
-    展示时光机（Time Machine）面板。左侧为时间线滚动历史记录列表，
-    右侧为字符级 Myers Diff 差异对比视图（醒目的绿色增量行与红色删除行标记），
-    体现无 Git 依赖下的极端可靠性。
+    <strong>能做什么：</strong>不用配置 Git，也能找回历史版本。
+    每次保存都会自动留下一份快照，最多保留 100 份；
+    你也可以用 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 手动打一个版本锚点。
   </p>
-  <ol class="doc-list">
-    <li>
-      对文档做两处小修改并分别按 <kbd>Cmd</kbd> + <kbd>S</kbd> / <kbd>Ctrl</kbd> + <kbd>S</kbd>
-      保存两次，产生历史快照。
-    </li>
-    <li>
-      按下快捷键 <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>（macOS）或
-      <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>（Windows / Linux）唤出时光机弹窗。
-    </li>
-    <li>选中前一个版本，使右侧清晰展现红绿对比的差异 Diff。</li>
-  </ol>
+  <p>
+    <strong>怎么打开：</strong>按 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>。
+  </p>
+  <p>
+    <strong>你会看到：</strong>左侧是版本时间线，右侧是选中版本与当前内容的逐字差异对比——
+    绿色表示新增、红色表示删除，可以随时一键还原。
+  </p>
   <figure class="shot" id="scene-5">
     <div class="shot-frame">
       <img src="../../assets/screenshots/05_time_machine_diff.png"
-           alt="Akileas 本地版本时光机与 Myers Diff 差异比对" loading="lazy"
+           alt="Akileas 版本时光机与差异对比" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/05_time_machine_diff.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 5</span>本地版本时光机（Time Machine）——内置 Myers Diff 差异对比，支持零 Git 依赖下的随时回滚。</figcaption>
+    <figcaption><span class="shot-num">图 5</span>版本时光机：历史版本时间线与逐字差异对比，一键还原。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1280 × 800</code></p>
 
-  <h3>场景 6：文档层级大纲导航树与全局快速检索</h3>
+  <h3>大纲与查找</h3>
   <p>
-    展示按 <kbd>Cmd</kbd> + <kbd>D</kbd> / <kbd>Ctrl</kbd> + <kbd>D</kbd> 呼出的悬浮文档大纲
-    （H1~H6 树形结构），或者按 <kbd>Cmd</kbd> + <kbd>F</kbd> / <kbd>Ctrl</kbd> + <kbd>F</kbd>
-    唤出的内联高亮检索框，凸显精准导航体验。
+    <strong>能做什么：</strong>长文档里快速跳转与检索。
+    <kbd>Ctrl</kbd> + <kbd>D</kbd> 呼出大纲树，列出全部标题层级；
+    <kbd>Ctrl</kbd> + <kbd>F</kbd> 查找、<kbd>Ctrl</kbd> + <kbd>H</kbd> 替换。
   </p>
-  <ol class="doc-list">
-    <li>
-      在长文档中按下 <kbd>Cmd</kbd> + <kbd>D</kbd>（Windows 下按 <kbd>Ctrl</kbd> + <kbd>D</kbd>）
-      展开侧边或悬浮大纲视图。
-    </li>
-    <li>
-      同时或者单独唤出查找浮层（输入关键词如 <code>Authority</code>，
-      视口中多处匹配字符呈现高亮金光）。
-    </li>
-    <li>截取带有大纲高亮锚点与检索输入框的界面状态。</li>
-  </ol>
+  <p>
+    <strong>你会看到：</strong>大纲随滚动自动高亮当前所在章节，点击即可平滑跳转；
+    查找结果在正文中以高亮标出，按 <kbd>Enter</kbd> 在命中项之间穿行。
+    查找还支持全字匹配、区分大小写与正则表达式。
+  </p>
   <figure class="shot" id="scene-6">
     <div class="shot-frame">
       <img src="../../assets/screenshots/06_outline_and_search.png"
-           alt="Akileas 文档大纲导航树与极速查找" loading="lazy"
+           alt="Akileas 大纲树与查找" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/06_outline_and_search.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 6</span>文档大纲导航树与极速查找——多级 H1~H6 标题实时树状锚定与高亮定位。</figcaption>
+    <figcaption><span class="shot-num">图 6</span>大纲与查找：标题树随滚动定位，查找结果高亮标出。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1440 × 900</code></p>
 
-  <h3>场景 7：AI Agent 规范工作台与 Problems 诊断修复面板</h3>
+  <h3>Agent 配置工作台</h3>
   <p>
-    展示打开 <code>SKILL.md</code> 或 <code>AGENTS.md</code> 时专属的智能体配置体验。
-    界面下方浮动展示规范诊断 Problems 面板，标出缺漏字段并提供 "Quick Fix" 一键修复动作。
+    <strong>能做什么：</strong>写 <code>SKILL.md</code>、<code>AGENTS.md</code>
+    这类智能体配置文件时，Akileas 会自动切换到专用模式，检查开头的元数据是否完整：
+    必填字段有没有漏、名称是否匹配、版本号格式对不对。
   </p>
-  <ol class="doc-list">
-    <li>
-      新建或打开一个 <code>SKILL.md</code> 文件，故意缺漏 <code>version</code> 字段：
-      frontmatter 仅含 <code>name: sample-agent-skill</code> 与
-      <code>description: 用于自动化测试的智能体技能配置</code>，正文为 <code># 技能正文</code>。
-    </li>
-    <li>查看状态栏或触发浮层，唤出仅占 8 行的无卡顿诊断面板。</li>
-    <li>截取显示黄色警告 / 红色错误行以及"补齐必填项"按钮的细节。</li>
-  </ol>
+  <p>
+    <strong>你会看到：</strong>界面下方浮出一块轻量的诊断面板，逐条列出问题所在；
+    点击修复按钮即可自动补上缺失的字段或模板内容。
+  </p>
   <figure class="shot" id="scene-7">
     <div class="shot-frame">
       <img src="../../assets/screenshots/07_agent_workbench_problems.png"
-           alt="Akileas AI Agent 规范工作台" loading="lazy"
+           alt="Akileas Agent 配置工作台" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/07_agent_workbench_problems.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 7</span>AI Agent 规范工作台——SKILL.md 流式词法分析与轻量 Problems 实时诊断修复。</figcaption>
+    <figcaption><span class="shot-num">图 7</span>Agent 配置工作台：实时诊断配置文件问题并一键补全。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1280 × 750</code></p>
 
-  <h3>场景 8：出版级 Typst 矢量 PDF 导出与高保真打印预览</h3>
+  <h3>PDF 导出</h3>
   <p>
-    展示点击 <code>File -&gt; Export as PDF…</code> 弹出的导出配置对话框
-    （A4 纸张、边距微调、矢量选项），以及并列展示最终导出的高分辨率 PDF 页面，
-    呈现期刊级的版面美感。
+    <strong>能做什么：</strong>把文档导出成可以打印、可以投稿的 PDF。
+    正文、数学公式与图表都会以矢量形式嵌入，放大后依然清晰。
   </p>
-  <ol class="doc-list">
-    <li>点击菜单 <code>File -&gt; Export as PDF…</code>，弹出导出配置弹窗。</li>
-    <li>导出生成的 <code>demo_showcase.pdf</code> 并使用 PDF 阅读器打开第一页。</li>
-    <li>截取导出配置对话框或将编辑器与导出的 PDF 并列排布呈现。</li>
-  </ol>
+  <p>
+    <strong>怎么打开：</strong>菜单 <code>File → Export as PDF…</code>。
+  </p>
+  <p>
+    <strong>你会看到：</strong>一个导出设置对话框，可以选择 A4 或 US Letter 纸张、
+    纵向或横向、页边距，以及是否打印页眉、页脚与页码。
+  </p>
   <figure class="shot" id="scene-8">
     <div class="shot-frame">
       <img src="../../assets/screenshots/08_typst_pdf_export.png"
-           alt="Akileas 出版级 Typst 矢量 PDF 导出" loading="lazy"
+           alt="Akileas PDF 导出设置" loading="lazy"
            onerror="this.closest('figure').classList.add('shot-missing')" />
       <div class="shot-fallback">
         <span class="shot-fallback-mark" aria-hidden="true">▣</span>
-        <strong>截图待补</strong>
+        <strong>界面预览</strong>
         <code>assets/screenshots/08_typst_pdf_export.png</code>
       </div>
     </div>
-    <figcaption><span class="shot-num">图 8</span>出版级 Typst 矢量 PDF 导出——基于原生编译器生成无损矢量图文与期刊级数学版面。</figcaption>
+    <figcaption><span class="shot-num">图 8</span>PDF 导出：纸张、方向、边距与页码设置，输出矢量图文。</figcaption>
   </figure>
-  <p class="doc-note">推荐窗口尺寸：<code>1440 × 900</code></p>
 </section>

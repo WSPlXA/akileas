@@ -169,12 +169,12 @@
                   <span class="col-right">Latency (---:)</span>
                 </div>
                 <div class="mini-table-row">
-                  <span class="col-left">Tree-sitter Incremental Slice</span>
+                  <span class="col-left">Incremental Re-parse</span>
                   <span class="col-center"><span class="badge-status">Active</span></span>
                   <span class="col-right">0.18 ms</span>
                 </div>
                 <div class="mini-table-row">
-                  <span class="col-left active-cell">SIMD fast_char_count</span>
+                  <span class="col-left active-cell">Hardware-Accelerated Counter</span>
                   <span class="col-center"><span class="badge-status">Ready</span></span>
                   <span class="col-right">0.05 ms</span>
                 </div>
@@ -217,15 +217,15 @@
 
             <article class="feature-card">
               <p class="feature-number">VI</p>
-              <h3>SIMD-Accelerated Text Analytics</h3>
+              <h3>Instant Text Analytics</h3>
               <p>
-                Powered by SIMD vector instructions with <code>fast_char_count</code>. Accurately segments ASCII, CJK double-width characters, and punctuation in sub-millisecond time. Word, character, and line metrics update like clockwork with every keystroke.
+                Hardware-accelerated scanning segments ASCII text, CJK double-width characters, and punctuation accurately in sub-millisecond time. Word, character, and line metrics update like clockwork with every keystroke.
               </p>
               <div class="mini-stats" aria-hidden="true">
                 <div class="stat-pill"><span class="stat-k">Chars</span><span class="stat-v">128,490</span></div>
                 <div class="stat-pill"><span class="stat-k">Words</span><span class="stat-v">32,840</span></div>
                 <div class="stat-pill"><span class="stat-k">Lines</span><span class="stat-v">4,120</span></div>
-                <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>SIMD 0.05ms</div>
+                <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>0.05 ms</div>
               </div>
             </article>
 
@@ -324,12 +324,12 @@
             <div class="spec-icon" aria-hidden="true">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
             </div>
-            <h3>SIMD Batch Search & Replace</h3>
+            <h3>Instant Batch Search & Replace</h3>
             <p>
-              Built-in platform SIMD <code>memmem</code> matching core. Use <code>Ctrl+F</code> for rapid find, <code>Ctrl+H</code> for batch replacements, and <code>Ctrl+G</code> for direct line navigation—gliding through millions of lines without ever locking the UI.
+              A hardware-accelerated matching core scans millions of lines without ever locking the interface. Use <code>Ctrl+F</code> for rapid find, <code>Ctrl+H</code> for batch replacements, and <code>Ctrl+G</code> to jump straight to a line.
             </p>
             <div class="spec-tags">
-              <span>SIMD Matching</span>
+              <span>Hardware Accelerated</span>
               <span>Batch Replace</span>
               <span>Go to Line</span>
             </div>
@@ -376,7 +376,7 @@
               <h2>The UI Thread Never Waits.</h2>
             </div>
             <p>
-              Latency is treated as an uncompromising invariant. Keystrokes commit lightweight atomic edits to an in-memory Rope and immediately re-render a pending projection; full syntax re-parsing, layout calculation, and persistence converge asynchronously in background worker threads.
+              Latency is treated as an uncompromising invariant. Each keystroke is applied as a single lightweight edit and immediately repaints a provisional view of the affected line; full re-parsing, layout calculation, and persistence then converge asynchronously in the background.
             </p>
           </div>
 
@@ -384,64 +384,64 @@
           <div class="arch-hotpath">
             <div class="hotpath-track hotpath-ui">
               <div class="track-header">
-                <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Fast Track · UI Main Thread (Latency &lt; 1ms)</span>
-                <strong>Type to render: lock-free, non-blocking, zero redundant copies</strong>
+                <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Fast Track · What You Feel (under 1 ms)</span>
+                <strong>Type to render: never blocked, never waiting, no redundant work</strong>
               </div>
               <div class="track-steps">
                 <div class="step-card">
                   <span class="step-num">I</span>
-                  <strong>Keystroke Input</strong>
-                  <small>Atomic BufferEdit transaction</small>
+                  <strong>Keystroke</strong>
+                  <small>A single, self-contained edit</small>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card">
                   <span class="step-num">II</span>
-                  <strong>Rope Versioning</strong>
-                  <small>Monotonic generation stamp</small>
+                  <strong>Version Stamped</strong>
+                  <small>Each edit carries a newer version number</small>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card">
                   <span class="step-num">III</span>
-                  <strong>Dirty-Line Projection</strong>
-                  <small>Instant grammar-neutral projection</small>
+                  <strong>Line Repainted</strong>
+                  <small>Only the touched line is redrawn</small>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card step-highlight">
                   <span class="step-num">IV</span>
-                  <strong>GPU Rasterization</strong>
-                  <small>Sub-millisecond cursor & glyph paint</small>
+                  <strong>On Screen</strong>
+                  <small>Character and cursor visible within a fraction of a frame</small>
                 </div>
               </div>
             </div>
 
             <div class="hotpath-track hotpath-worker">
               <div class="track-header">
-                <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Convergence Track · Background Worker Pool</span>
-                <strong>Incremental Tree-sitter slicing & authoritative snapshot generation</strong>
+                <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Convergence Track · What Happens Behind You</span>
+                <strong>Highlighting and typesetting catch up without ever interrupting you</strong>
               </div>
               <div class="track-steps">
                 <div class="step-card">
                   <span class="step-num">I</span>
-                  <strong>Incremental Parsing</strong>
-                  <small>InputEdit patch, reslices dirty lines only</small>
+                  <strong>Only What Changed</strong>
+                  <small>Just the affected lines are re-read</small>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card">
                   <span class="step-num">II</span>
-                  <strong>Syntax AST Mounting</strong>
-                  <small>Reuses unchanged inline syntax nodes</small>
+                  <strong>Reusing the Rest</strong>
+                  <small>Everything untouched is kept as-is</small>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card">
                   <span class="step-num">III</span>
-                  <strong>Markdown Snapshot</strong>
-                  <small>Builds flat row store & syntax indices</small>
+                  <strong>Fresh Rendering State</strong>
+                  <small>A complete, up-to-date picture of the document</small>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card step-highlight-worker">
                   <span class="step-num">IV</span>
-                  <strong>Atomic State Swap</strong>
-                  <small>(epoch, generation) guard against ghost frames</small>
+                  <strong>Swapped In</strong>
+                  <small>Outdated results are discarded, never shown</small>
                 </div>
               </div>
             </div>
@@ -453,10 +453,10 @@
               <div class="pillar-icon" aria-hidden="true">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
               </div>
-              <h3>Three Orthogonal Pipelines</h3>
+              <h3>Three Independent Pipelines</h3>
               <p>
                 <strong>Formulas, diagrams, and tables compute independently.</strong>
-                LaTeX formulas debounce updates; Mermaid diagrams compile on-demand with viewport caching; tables adaptively measure column widths. Editing prose never triggers costly diagram recalculations.
+                LaTeX formulas wait until you pause typing; Mermaid diagrams are rendered only where you can see them; tables measure their own columns. Editing prose never triggers a costly diagram recalculation.
               </p>
               <div class="pillar-tags">
                 <span>Formula Snapshots</span>
@@ -469,13 +469,13 @@
               <div class="pillar-icon" aria-hidden="true">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>
               </div>
-              <h3>Heterogeneous CPU & GPU Separation</h3>
+              <h3>Text and Graphics Kept Apart</h3>
               <p>
-                <strong>Clear separation of concerns eliminates cross-domain overhead.</strong>
-                The CPU manages Rope piece-tree transactions, hit-testing, incremental Tree-sitter slicing, and SIMD statistics; the GPU manages glyph atlases, layer compositing, and vector rasterization.
+                <strong>The work is split so neither side waits on the other.</strong>
+                Text editing, cursor hit-testing, incremental re-parsing, and statistics happen on the processor; glyph rendering, layer compositing, and vector drawing happen on the graphics card.
               </p>
               <div class="pillar-tags">
-                <span>Rope Piece-Tree</span>
+                <span>Text Engine</span>
                 <span>Glyph Shaping Cache</span>
                 <span>GPU Hardware Acceleration</span>
               </div>
@@ -488,7 +488,7 @@
               <h3>Resilient Crash Recovery</h3>
               <p>
                 <strong>Protecting your thoughts against sudden power loss.</strong>
-                A built-in time machine retains up to 100 historical snapshots with offline diffing, paired with an atomic binary <code>AKREC001</code> crash journal that restores work immediately upon restart.
+                A built-in time machine retains up to 100 historical snapshots with offline diffing, paired with a lightweight recovery journal that restores unsaved work immediately upon restart.
               </p>
               <div class="pillar-tags">
                 <span>100-Snapshot History</span>

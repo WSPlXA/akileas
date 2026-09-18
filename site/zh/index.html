@@ -215,12 +215,12 @@
                       <span class="col-right">延迟 (---:)</span>
                     </div>
                     <div class="mini-table-row">
-                      <span class="col-left">Tree-sitter 增量切片</span>
+                      <span class="col-left">增量重解析</span>
                       <span class="col-center"><span class="badge-status">运行中</span></span>
                       <span class="col-right">0.18 ms</span>
                     </div>
                     <div class="mini-table-row">
-                      <span class="col-left active-cell">SIMD fast_char_count</span>
+                      <span class="col-left active-cell">硬件加速文本统计</span>
                       <span class="col-center"><span class="badge-status">就绪</span></span>
                       <span class="col-right">0.05 ms</span>
                     </div>
@@ -263,15 +263,15 @@
 
                 <article class="feature-card">
                   <p class="feature-number">VI</p>
-                  <h3>SIMD 加速文本统计</h3>
+                  <h3>瞬时文本统计</h3>
                   <p>
-                    基于 SIMD 向量指令的 <code>fast_char_count</code>。可在亚毫秒内准确切分 ASCII、中日韩全角字符与标点。字数、字符数与行数指标随每一次击键精准更新。
+                    基于硬件指令加速的扫描，可在亚毫秒内准确切分 ASCII、中日韩全角字符与标点。字数、字符数与行数指标随每一次击键精准更新。
                   </p>
                   <div class="mini-stats" aria-hidden="true">
                     <div class="stat-pill"><span class="stat-k">字符</span><span class="stat-v">128,490</span></div>
                     <div class="stat-pill"><span class="stat-k">词数</span><span class="stat-v">32,840</span></div>
                     <div class="stat-pill"><span class="stat-k">行数</span><span class="stat-v">4,120</span></div>
-                    <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>SIMD 0.05ms</div>
+                    <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>0.05 ms</div>
                   </div>
                 </article>
 
@@ -370,12 +370,12 @@
                 <div class="spec-icon" aria-hidden="true">
                   <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
                 </div>
-                <h3>SIMD 批量搜索与替换</h3>
+                <h3>极速批量搜索与替换</h3>
                 <p>
-                  内置平台 SIMD <code>memmem</code> 匹配内核。使用 <code>Ctrl+F</code> 快速查找、<code>Ctrl+H</code> 批量替换、<code>Ctrl+G</code> 直接跳转行号——在数百万行之间穿行也绝不阻塞 UI。
+                  内置硬件加速的匹配内核，在数百万行之间穿行也绝不阻塞界面。使用 <code>Ctrl+F</code> 快速查找、<code>Ctrl+H</code> 批量替换、<code>Ctrl+G</code> 直接跳转行号。
                 </p>
                 <div class="spec-tags">
-                  <span>SIMD 匹配</span>
+                  <span>硬件加速</span>
                   <span>批量替换</span>
                   <span>跳转行号</span>
                 </div>
@@ -422,7 +422,7 @@
                   <h2>UI 线程永不等待。</h2>
                 </div>
                 <p>
-                  延迟被视作一条不可妥协的不变量。击键向内存中的 Rope 提交轻量原子编辑，并立即重绘待定投影；完整的语法重解析、版面计算与持久化则在后台工作线程中异步收敛。
+                  延迟被视作一条不可妥协的不变量。每次击键被作为一次轻量编辑应用，并立即重绘一版临时画面；完整的重解析、版面计算与持久化则在后台异步收敛，绝不阻塞你的输入。
                 </p>
               </div>
 
@@ -430,64 +430,64 @@
               <div class="arch-hotpath">
                 <div class="hotpath-track hotpath-ui">
                   <div class="track-header">
-                    <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>快车道 · UI 主线程（延迟 &lt; 1ms）</span>
-                    <strong>从击键到呈现：无锁、非阻塞、零冗余拷贝</strong>
+                    <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>快车道 · 你能感知到的部分（1 毫秒内）</span>
+                    <strong>从击键到画面：不阻塞、不等待、不做多余的事</strong>
                   </div>
                   <div class="track-steps">
                     <div class="step-card">
                       <span class="step-num">I</span>
-                      <strong>击键输入</strong>
-                      <small>原子化 BufferEdit 事务</small>
+                      <strong>击键</strong>
+                      <small>一次自包含的编辑操作</small>
                     </div>
                     <div class="step-arrow">→</div>
                     <div class="step-card">
                       <span class="step-num">II</span>
-                      <strong>Rope 版本标记</strong>
-                      <small>单调递增的 generation 戳记</small>
+                      <strong>版本标记</strong>
+                      <small>每次编辑都获得更新的版本号</small>
                     </div>
                     <div class="step-arrow">→</div>
                     <div class="step-card">
                       <span class="step-num">III</span>
-                      <strong>脏行投影</strong>
-                      <small>瞬时语法中立的物理投影</small>
+                      <strong>重绘当前行</strong>
+                      <small>只有被改动的那一行需要重画</small>
                     </div>
                     <div class="step-arrow">→</div>
                     <div class="step-card step-highlight">
                       <span class="step-num">IV</span>
-                      <strong>GPU 光栅化</strong>
-                      <small>亚毫秒级光标与字形绘制</small>
+                      <strong>呈现到屏幕</strong>
+                      <small>字符与光标在一帧之内就位</small>
                     </div>
                   </div>
                 </div>
 
                 <div class="hotpath-track hotpath-worker">
                   <div class="track-header">
-                    <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>收敛车道 · 后台工作线程池</span>
-                    <strong>增量 Tree-sitter 切片与权威快照生成</strong>
+                    <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>收敛车道 · 在你身后发生的部分</span>
+                    <strong>语法高亮与精细排版悄悄补上，全程不打断你</strong>
                   </div>
                   <div class="track-steps">
                     <div class="step-card">
                       <span class="step-num">I</span>
-                      <strong>增量解析</strong>
-                      <small>InputEdit 补丁，仅重切脏行</small>
+                      <strong>只重算变动部分</strong>
+                      <small>仅重新读取受影响的那些行</small>
                     </div>
                     <div class="step-arrow">→</div>
                     <div class="step-card">
                       <span class="step-num">II</span>
-                      <strong>语法树挂载</strong>
-                      <small>复用未变更的行内语法节点</small>
+                      <strong>复用其余内容</strong>
+                      <small>未改动的一切原样保留</small>
                     </div>
                     <div class="step-arrow">→</div>
                     <div class="step-card">
                       <span class="step-num">III</span>
-                      <strong>Markdown 快照</strong>
-                      <small>构建扁平行存储与语法索引</small>
+                      <strong>生成新画面</strong>
+                      <small>一份完整且最新的渲染状态</small>
                     </div>
                     <div class="step-arrow">→</div>
                     <div class="step-card step-highlight-worker">
                       <span class="step-num">IV</span>
-                      <strong>原子状态交换</strong>
-                      <small>以 (epoch, generation) 守卫防止幽灵帧</small>
+                      <strong>平滑换上</strong>
+                      <small>过时结果被丢弃，绝不回退</small>
                     </div>
                   </div>
                 </div>
@@ -499,10 +499,10 @@
                   <div class="pillar-icon" aria-hidden="true">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                   </div>
-                  <h3>三条正交渲染管线</h3>
+                  <h3>三条互不干扰的渲染通道</h3>
                   <p>
                     <strong>公式、图表与表格各自独立计算。</strong>
-                    LaTeX 公式带防抖更新；Mermaid 图表按需编译并绑定视口缓存；表格自适应测量列宽。编辑正文永远不会触发代价高昂的图表重算。
+                    LaTeX 公式等你停手之后才重新排版；Mermaid 图表只渲染你看得见的部分；表格自己测量列宽。编辑正文永远不会触发代价高昂的图表重算。
                   </p>
                   <div class="pillar-tags">
                     <span>公式快照</span>
@@ -515,13 +515,13 @@
                   <div class="pillar-icon" aria-hidden="true">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>
                   </div>
-                  <h3>CPU 与 GPU 职责分离</h3>
+                  <h3>文字与图形分开处理</h3>
                   <p>
-                    <strong>清晰的职责边界消除了跨域开销。</strong>
-                    CPU 负责 Rope 分块树事务、命中测试、增量 Tree-sitter 切片与 SIMD 统计；GPU 负责字形图集、图层合成与矢量光栅化。
+                    <strong>分工明确，两边互不等待。</strong>
+                    文本编辑、光标命中测试、增量重解析与字数统计由处理器负责；字形渲染、图层合成与矢量绘制交给显卡完成。
                   </p>
                   <div class="pillar-tags">
-                    <span>Rope 分块树</span>
+                    <span>文本编辑内核</span>
                     <span>字形整形缓存</span>
                     <span>GPU 硬件加速</span>
                   </div>
@@ -534,7 +534,7 @@
                   <h3>韧性崩溃恢复</h3>
                   <p>
                     <strong>为你的思绪抵御突如其来的断电。</strong>
-                    内置时光机保留至多 100 份历史快照并支持离线差异比对，配合原子化的二进制 <code>AKREC001</code> 崩溃日志，重启后即可立即恢复工作。
+                    内置时光机保留至多 100 份历史快照并支持离线差异比对，配合轻量恢复日志，重启后即可立即找回未保存的内容。
                   </p>
                   <div class="pillar-tags">
                     <span>100 份快照历史</span>

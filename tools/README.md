@@ -9,7 +9,6 @@ The published site in `site/` is **generated**. Do not hand-edit files under `si
 tools/
   build-site.mjs        generator (no dependencies, Node 18+)
   check-links.mjs       link / anchor verifier for the generated output
-  mermaid-boot.js       Mermaid bootstrap, inlined into pages that set "mermaid": true
   pages/
     en/…                English page sources
     zh/…                Chinese page sources
@@ -55,7 +54,6 @@ followed by the page markup:
 | `nav` | Which top-level nav item is marked `aria-current`. `home`, `docs`, `privacy`. |
 | `docSlug` | Docs pages only. Must match a `slug` in `LOCALES.<lang>.docs`. |
 | `bodyClass` | Extra `<body>` class, e.g. `legal-page`, `docs-page`. |
-| `mermaid` | Inline the Mermaid bootstrap. Required if the page has `<pre class="mermaid">`. |
 | `altOut` | Output path of the counterpart page in the other language. Drives `hreflang` and the language switch. |
 | `jsonLd` | Optional object, emitted as a `application/ld+json` script. |
 
@@ -68,15 +66,20 @@ Two page shapes are supported:
 The build fails loudly on a duplicate output path or an `altOut` that does not
 correspond to a real generated page, so the two locales cannot silently drift apart.
 
-### Mermaid
+### Diagrams
 
-Inside a `<pre class="mermaid">` block, escape `<`, `>` and `&` as `&lt;`, `&gt;`
-and `&amp;`. A literal line-break tag is therefore written `&lt;br/&gt;`. This is
-required: `<pre>` does not escape its content, so a raw tag would be parsed as HTML
-and lost before Mermaid ever sees it.
+Diagrams are plain HTML/CSS, not a diagramming library — see the `.diagram` /
+`.dgm-*` rules in `site/styles.css`. Three shapes are available:
 
-Diagrams are rendered client-side from a CDN. If the import fails, the diagram source
-simply stays on screen as readable text.
+| Wrapper | Use |
+| --- | --- |
+| `<ol class="dgm-flow">` | Linear sequence of steps with connectors between them. |
+| `<div class="dgm-lanes">` | Two parallel lanes (e.g. what happens now vs. in the background). |
+| `<div class="dgm-split">` | Fan-out and merge: a source pill, `.dgm-branches`, then a result pill. |
+| `<div class="dgm-bars">` | Labelled comparison bars; set the width with `style="--w: 42%"`. |
+
+Keeping diagrams as markup means the text stays crisp at every width, the styling
+matches the rest of the site, and there is no runtime dependency that can fail.
 
 ## Deployment
 

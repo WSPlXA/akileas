@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f1e6cf" />
-    <meta name="description" content="The complete Akileas technical manual: measured performance benchmarks, Rust and GPUI architecture, the full feature and shortcut reference, and the interface screenshot specification." />
+    <meta name="description" content="The Akileas manual: measured performance, why it is so fast, the complete feature and shortcut reference, and a tour of the eight core screens." />
     <link rel="canonical" href="https://wsplxa.github.io/akileas/docs/index.html" />
     <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/index.html" />
     <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
@@ -18,16 +18,16 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Akileas" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="Technical Manual — Akileas" />
-    <meta property="og:description" content="The complete Akileas technical manual: measured performance benchmarks, Rust and GPUI architecture, the full feature and shortcut reference, and the interface screenshot specification." />
+    <meta property="og:title" content="Manual — Akileas" />
+    <meta property="og:description" content="The Akileas manual: measured performance, why it is so fast, the complete feature and shortcut reference, and a tour of the eight core screens." />
     <meta property="og:url" content="https://wsplxa.github.io/akileas/docs/index.html" />
     <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Technical Manual — Akileas" />
-    <meta name="twitter:description" content="The complete Akileas technical manual: measured performance benchmarks, Rust and GPUI architecture, the full feature and shortcut reference, and the interface screenshot specification." />
+    <meta name="twitter:title" content="Manual — Akileas" />
+    <meta name="twitter:description" content="The Akileas manual: measured performance, why it is so fast, the complete feature and shortcut reference, and a tour of the eight core screens." />
     <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
 
-    <title>Technical Manual — Akileas</title>
+    <title>Manual — Akileas</title>
   </head>
   <body class="docs-page lang-en">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -70,7 +70,7 @@
           <li>
             <a href="architecture.html">
               <span class="docs-nav-num" aria-hidden="true">II</span>
-              <span>Architecture</span>
+              <span>How it's fast</span>
             </a>
           </li>
           <li>
@@ -82,7 +82,7 @@
           <li>
             <a href="screenshots.html">
               <span class="docs-nav-num" aria-hidden="true">IV</span>
-              <span>Screenshots</span>
+              <span>Interface tour</span>
             </a>
           </li>
         </ol>
@@ -90,27 +90,25 @@
       </aside>
       <main id="main" class="docs-main">
         <header class="docs-hero">
-          <p class="section-kicker">Documentation</p>
-          <h1>The Akileas Technical Manual</h1>
+          <p class="section-kicker">Manual</p>
+          <h1>The Akileas Manual</h1>
           <p class="docs-lede">
-            Four chapters covering measured performance, the systems underneath the editor, every
-            user-facing capability, and the specification for capturing the interface. Written for
-            engineering reviews, product demonstrations, and architecture briefings.
+            Four chapters: measured performance, why the editor is so fast, the complete feature and
+            shortcut reference, and a tour of the eight core screens. Start wherever your question is.
           </p>
         </header>
 
         <section class="doc-section" id="overview">
           <h2>What this manual covers</h2>
           <p>
-            Akileas is a native, latency-first Markdown editor built on <strong>Rust 2024</strong> and
-            <strong>GPUI</strong>, with a pure-Rust LaTeX and Mermaid rendering core and
-            publication-grade Typst vector PDF export. It holds to a single performance invariant:
-            <strong>the UI thread never waits.</strong>
+            Akileas is a native Markdown editor built for <strong>uncompromising responsiveness</strong>.
+            It renders maths and diagrams natively, edits in place as a hybrid of source and typeset
+            view, and exports publication-grade vector PDF. Every document stays on your own disk.
           </p>
           <p>
-            Whether you are editing a thousand-line note or a hundred-thousand-line engineering
-            manuscript, the physical response stays sub-millisecond. The chapters below document how that
-            is measured, how it is built, how it behaves in daily use, and how to photograph it.
+            Whether you are writing a thousand-line note or a hundred-thousand-line manuscript, the
+            response stays sub-millisecond. The four chapters below answer, in turn: how it measures up,
+            why it can be this fast, how each feature is used, and what each screen looks like.
           </p>
 
           <ol class="docs-toc">
@@ -118,71 +116,75 @@
               <a href="benchmarks.html">
                 <span class="docs-toc-num">Chapter I</span>
                 <strong>Performance &amp; Benchmarks</strong>
-                <span>Microsecond-scale pending projection, authority parse latency at 10k and 100k lines,
-                  SIMD search throughput, memory ceilings, and the full editor comparison matrix.</span>
+                <span>Microsecond-scale response, parse latency at ten and a hundred thousand lines,
+                  large-document search speed, memory footprint, and the full editor comparison.</span>
               </a>
             </li>
             <li>
               <a href="architecture.html">
                 <span class="docs-toc-num">Chapter II</span>
-                <strong>Stack &amp; Architecture</strong>
-                <span>Rust 2024 and GPUI, heterogeneous CPU/GPU division of labour, the dual-stage hot path,
-                  zero-copy Tree-sitter parsing over Rope chunks, and crash-safe storage.</span>
+                <strong>Why Akileas Is So Fast</strong>
+                <span>What happens between a keystroke and the repainted screen: instant response with
+                  background refinement, recomputing only what changed, three independent render
+                  pipelines, instant navigation in huge documents, and storage that survives a crash.</span>
               </a>
             </li>
             <li>
               <a href="features.html">
                 <span class="docs-toc-num">Chapter III</span>
                 <strong>Usage &amp; Feature Guide</strong>
-                <span>In-place hybrid WYSIWYG, split views, outline and search, the Git-free time machine,
-                  native LaTeX and Mermaid, the Agent workbench, and Typst PDF export.</span>
+                <span>In-place hybrid WYSIWYG, split views, the outline and search system, the Git-free
+                  time machine, maths and diagrams, the Agent configuration workbench, and PDF export.</span>
               </a>
             </li>
             <li>
               <a href="screenshots.html">
                 <span class="docs-toc-num">Chapter IV</span>
-                <strong>Screenshot Guide</strong>
-                <span>Capture environment and conventions, the shared demo document, and a shot-by-shot
-                  brief for the eight canonical interface screenshots.</span>
+                <strong>Interface Tour</strong>
+                <span>The eight core screens, one by one: what each one does, how to open it, and what
+                  you will see.</span>
               </a>
             </li>
           </ol>
         </section>
 
         <section class="doc-section" id="using-this-material">
-          <h2>How to use this material</h2>
-          <p>
-            The four chapters are written to be cited independently. Each opens with the claim it
-            supports and backs it with measurements, diagrams, or reproducible commands.
-          </p>
+          <h2>How to read this manual</h2>
+          <p>The four chapters stand alone, so you can jump straight to whatever you need.</p>
           <div class="card-grid">
             <article class="doc-card">
-              <h3>Technical briefings</h3>
+              <h3>See how fast it is</h3>
               <p>
-                Lead with the microsecond-scale benchmark tables in Chapter I and the heterogeneous-compute
-                and dual-stage hot-path diagrams in Chapter II.
+                Go to the measurement tables and the comparison matrix in Chapter I. Every figure comes
+                from a real release build on the machine recorded in that chapter.
               </p>
             </article>
             <article class="doc-card">
-              <h3>User documentation</h3>
+              <h3>Understand where the speed comes from</h3>
               <p>
-                Chapter III stands alone as an onboarding guide. The shortcut reference at the end maps
-                every action across macOS, Windows, and Linux.
+                Chapter II walks through the whole path from key press to repainted screen, with
+                diagrams and no technical background required.
               </p>
             </article>
             <article class="doc-card">
-              <h3>Visual and presentation material</h3>
+              <h3>Start using it</h3>
               <p>
-                Follow Chapter IV to capture the eight canonical screenshots into
-                <code>assets/screenshots/</code>. Each scene lists its subject, staging steps, and
-                window size.
+                Chapter III covers every capability and how to reach it. The shortcut reference at the
+                end works as a day-to-day cheat sheet.
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>Look at the interface first</h3>
+              <p>
+                Chapter IV tours eight screens covering the typical ways people use Akileas, each with
+                its opening shortcut or menu path.
               </p>
             </article>
           </div>
           <p class="doc-note">
-            Every benchmark figure in Chapter I was measured on the reference machine recorded in that
-            chapter. Reproduce them with the commands in the final section rather than quoting them out
-            of context.
+            The performance figures in Chapter I were measured on the reference machine recorded in that
+            chapter. Absolute numbers will differ on other hardware; the order of magnitude and the
+            relative advantage do not.
           </p>
         </section>
       </main>

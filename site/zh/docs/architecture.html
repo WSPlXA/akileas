@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f1e6cf" />
-    <meta name="description" content="深入 Akileas 内部：Rust 2024 与 GPUI、异构 CPU/GPU 分工模型、微秒级双阶段热路径、基于 Rope 分块的零拷贝 Tree-sitter 解析，以及断电安全的存储体系。" />
+    <meta name="description" content="从击键到画面刷新之间发生了什么：即时响应与后台精修的双阶段渲染、只重算改动部分、三条互不拖累的渲染管线、十万行瞬时定位，以及崩溃断电都不丢稿的存储设计。" />
     <link rel="canonical" href="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
     <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
     <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
@@ -18,16 +18,16 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Akileas" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content="技术栈与核心系统架构 — Akileas 技术手册" />
-    <meta property="og:description" content="深入 Akileas 内部：Rust 2024 与 GPUI、异构 CPU/GPU 分工模型、微秒级双阶段热路径、基于 Rope 分块的零拷贝 Tree-sitter 解析，以及断电安全的存储体系。" />
+    <meta property="og:title" content="为什么 Akileas 这么快 — Akileas 技术手册" />
+    <meta property="og:description" content="从击键到画面刷新之间发生了什么：即时响应与后台精修的双阶段渲染、只重算改动部分、三条互不拖累的渲染管线、十万行瞬时定位，以及崩溃断电都不丢稿的存储设计。" />
     <meta property="og:url" content="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
     <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="技术栈与核心系统架构 — Akileas 技术手册" />
-    <meta name="twitter:description" content="深入 Akileas 内部：Rust 2024 与 GPUI、异构 CPU/GPU 分工模型、微秒级双阶段热路径、基于 Rope 分块的零拷贝 Tree-sitter 解析，以及断电安全的存储体系。" />
+    <meta name="twitter:title" content="为什么 Akileas 这么快 — Akileas 技术手册" />
+    <meta name="twitter:description" content="从击键到画面刷新之间发生了什么：即时响应与后台精修的双阶段渲染、只重算改动部分、三条互不拖累的渲染管线、十万行瞬时定位，以及崩溃断电都不丢稿的存储设计。" />
     <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
 
-    <title>技术栈与核心系统架构 — Akileas 技术手册</title>
+    <title>为什么 Akileas 这么快 — Akileas 技术手册</title>
   </head>
   <body class="docs-page lang-zh">
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -70,7 +70,7 @@
           <li>
             <a href="architecture.html" aria-current="page">
               <span class="docs-nav-num" aria-hidden="true">二</span>
-              <span>系统架构</span>
+              <span>为什么这么快</span>
             </a>
           </li>
           <li>
@@ -82,7 +82,7 @@
           <li>
             <a href="screenshots.html">
               <span class="docs-nav-num" aria-hidden="true">四</span>
-              <span>截图指南</span>
+              <span>界面导览</span>
             </a>
           </li>
         </ol>
@@ -91,224 +91,222 @@
       <main id="main" class="docs-main">
         <header class="docs-hero">
           <p class="section-kicker">第二章</p>
-          <h1>技术栈与核心系统架构</h1>
+          <h1>为什么 Akileas 这么快</h1>
           <p class="docs-lede">
-            Akileas 秉承"异构硬件各司其职"的设计哲学，将计算密集型与分支密集型任务严格划分，
-            避免盲目移植 GPU 或将所有逻辑堆在主线程的传统弊端。
+            大多数编辑器在文档变长之后就开始"想一下再显示"，输入时能感到明显的迟滞。
+            Akileas 从设计上就不允许这件事发生：<strong>你敲下按键的那一刻，画面就已经更新了</strong>，
+            剩下的精细排版在后台悄悄补上，永远不会挡在你和文字之间。
           </p>
         </header>
 
-        <section class="doc-section" id="layers">
-          <h2>2.1 分层架构</h2>
-          <p>整个工程遵循单向向内的依赖方向，自顶层应用逻辑逐层下沉到存储与安全边界。</p>
-          <pre class="mermaid">flowchart TB
-            subgraph ArchLayers ["Akileas 单向向内依赖系统层次"]
-                direction TB
-                AppLayer["app/ ：顶层状态机、多窗口会话、命令路由与快捷键"]
-                UILayer["ui/ ：GPUI 视图组件、虚拟化渲染管线、外观主题"]
-                RichRenderLayer["render/ + text/ ：Ratex 公式、Rusty-Mermaid 矢量、8MB 字形排版缓存"]
-                CoreEngine["markdown/ + editor/ ：Tree-sitter 增量解析、Ropey 缓冲、对数级 HeightMap"]
-                StorageEngine["storage/ + agent/ ：SaveTicket 保序锁、原子落盘、本地时光机、Agent 嗅探"]
-            end
-
-            AppLayer --&gt; UILayer
-            UILayer --&gt; RichRenderLayer
-            RichRenderLayer --&gt; CoreEngine
-            CoreEngine --&gt; StorageEngine</pre>
-          <p class="doc-note">
-            每一层只依赖其下方相邻层，箭头方向即编译期可见的依赖方向，不允许反向引用。
-          </p>
-        </section>
-
-        <section class="doc-section" id="stack">
-          <h2>2.2 核心技术选型一览</h2>
-          <ul class="doc-list">
-            <li><strong>编程语言</strong>：<code>Rust 2024 Edition</code>，利用零成本抽象与强类型系统规避竞态，以编译期内存管理代替运行时 GC。</li>
-            <li><strong>UI 与图形引擎</strong>：<code>GPUI</code>（Zed 团队开发），采用全 GPU 渲染管线（macOS 下为原生 Metal，Windows / Linux 下支持 DirectX 12 / Vulkan），支持 120Hz / 144Hz 超高刷新率与亚像素字体渲染。</li>
-            <li><strong>内存分配引擎</strong>：<code>mimalloc</code>（Microsoft），替代系统默认 malloc，针对小对象和多线程场景优化，消除堆内存碎片与抖动。</li>
-            <li><strong>文本数据结构</strong>：<code>Ropey</code>，基于 B-Tree 的不可变绳索（Rope）结构，支持大规模文本的 <em>O</em>(log <em>N</em>) 插入、删除与无拷贝切片。</li>
-            <li><strong>语法增量分析</strong>：<code>Tree-sitter</code>（<code>tree-sitter-md</code>），采用两级架构（块级语法树与行级内联语法树），基于字节范围实施局部"外科手术式"增量修剪。</li>
-            <li><strong>TeX 盒模型排版</strong>：<code>Ratex</code>，纯 Rust 实现的宏包解析与 Knuth-TeX 盒模型求解算法，脱离任何 JavaScript / Node / 浏览器运行时。</li>
-            <li><strong>矢量图表编译器</strong>：<code>Rusty-Mermaid</code>，纯 Rust 将 Mermaid DSL 编译为不可变 GPU 矢量图元（路径、多边形、贝塞尔曲线），内建 360x240 局部着色器放大镜。</li>
-            <li><strong>出版级排版输出</strong>：<code>Typst 0.15</code>，现代化排版框架，将 Markdown AST 转换为 Typst 格式直出高精矢量 PDF。</li>
-          </ul>
-        </section>
-
-        <section class="doc-section" id="threads">
-          <h2>2.3 异构计算硬件与线程分工模型</h2>
+        <section class="doc-section" id="instant">
+          <h2>2.1 击键即显示</h2>
           <p>
-            四类执行单元各自承担性质完全不同的工作：主线程只做极轻量的物理投影，
-            CPU 向量单元负责扫描，后台线程池负责解析与求解，GPU 只做最终的光栅化。
+            编辑器内部把"你按下一个键"这件事拆成了两半：<strong>立刻显示</strong>与<strong>随后精修</strong>。
+            前者只做最少的事，保证画面在同一帧内就刷新；后者复杂但可以慢慢来，而且随时可以被更新的输入打断。
           </p>
-          <pre class="mermaid">flowchart LR
-            subgraph UI_Thread ["UI 主线程（延迟 &lt; 0.03ms）"]
-                A1["键盘/鼠标事件"] --&gt; A2["TextBuffer (Ropey) 编辑"]
-                A2 --&gt; A3["project_raw_lines 物理行即刻投影"]
-                A3 --&gt; A4["GPUI 局部场景图提交"]
-            end
 
-            subgraph CPU_SIMD ["CPU SIMD 向量化单元"]
-                B1["memchr 指令集分发 (AVX2 / NEON)"] --&gt; B2["11.5 GB/s 向量扫描与表格分割"]
-            end
+          <figure class="diagram">
+            <figcaption class="diagram-title">一次击键的完整过程</figcaption>
+            <div class="dgm-lanes">
+              <section class="dgm-lane dgm-lane-now">
+                <h4>立即发生</h4>
+                <p>必须在同一帧内完成，否则你会看到延迟。</p>
+                <ol class="dgm-steps">
+                  <li>你在光标处敲下一个字符</li>
+                  <li>只有这一行被重新绘制</li>
+                  <li>屏幕刷新，字符与光标就位</li>
+                </ol>
+              </section>
+              <section class="dgm-lane dgm-lane-later">
+                <h4>随后发生</h4>
+                <p>在后台进行，绝不阻塞你的输入。</p>
+                <ol class="dgm-steps">
+                  <li>后台开始分析文档的变化</li>
+                  <li>只重新计算受影响的那一部分</li>
+                  <li>语法高亮与精细排版平滑补上</li>
+                  <li>若你已继续输入，过时的结果自动丢弃</li>
+                </ol>
+              </section>
+            </div>
+          </figure>
 
-            subgraph Worker_Pool ["后台多核 Worker 线程池"]
-                C1["Tree-sitter 增量解析（Rope Chunks）"]
-                C2["Ratex TeX 盒模型求解"]
-                C3["Rusty-Mermaid 拓扑编译"]
-                C4["DocumentAst / SyntaxIndex 派生"]
-            end
-
-            subgraph GPU_Direct ["GPU 硬件加速管线"]
-                D1["字形 Atlas 纹理光栅化"] --&gt; D2["矢量路径细分与贝塞尔渲染"]
-                D2 --&gt; D3["平滑缩放与着色器放大镜"]
-            end
-
-            A2 -.->|派发解析| C1
-            C1 --&gt; C4
-            C4 --&gt; C2
-            C4 --&gt; C3
-            C2 -.->|无锁 Arc 交换| A3
-            C3 -.->|无锁 Arc 交换| A3
-            A4 --&gt; D1</pre>
+          <p>
+            这就是为什么在十万行的文档里打字，和在一页空白纸上打字，手感几乎没有区别。
+            实测中，按下按键到画面刷新的这一步只需要 <strong>37 微秒</strong>，
+            不到一帧（8.33 毫秒）预算的百分之一。
+          </p>
         </section>
 
-        <section class="doc-section" id="hotpath">
-          <h2>2.4 微秒级双阶段热路径机制</h2>
+        <section class="doc-section" id="incremental">
+          <h2>2.2 只重算改动的那一行</h2>
           <p>
-            为了彻底根除大文档输入卡顿，Akileas 创新性地将文本变更解耦为两个阶段：
-            主线程立刻投影未着色的物理行，后台线程池随后异步补齐权威语法。
+            文档变长之后变卡，通常是因为每次输入都要把整篇重新解析一遍。Akileas 不做这件事。
           </p>
-          <pre class="mermaid">sequenceDiagram
-            autonumber
-            actor User as 用户键盘
-            participant UI as UI 主线程 (EditorView)
-            participant Proj as 待定物理行投影
-            participant Worker as 后台 Worker 线程池
-            participant TS as Tree-sitter 语法权威
-            participant GPUI as GPU 呈现管线
-
-            User-&gt;&gt;UI: 按下按键（如插入字符）
-            UI-&gt;&gt;UI: TextBuffer 递增 generation 并完成 Rope 变更
-
-            rect rgb(238, 244, 252)
-            Note over UI, GPUI: 【阶段 1：待定物理行即刻投影（~0.019 ms）】
-            UI-&gt;&gt;Proj: 仅重投影受波及的原始物理行（Raw Pending Projection）
-            Proj--&gt;&gt;UI: 瞬时输出保留光标/IME 锚点的未着色渲染行
-            UI-&gt;&gt;GPUI: 提交最小脏矩形场景
-            GPUI--&gt;&gt;User: 屏幕第 1 帧刷新，光标移动与字符显示（0 感知延迟）
-            end
-
-            rect rgb(240, 246, 238)
-            Note over UI, TS: 【阶段 2：后台权威异步增量解析（~0.137 ms）】
-            UI-)Worker: 派发解析任务（携带 document_epoch, generation）
-            Worker-&gt;&gt;TS: 流式读取 Rope Chunks 进行增量修正
-            TS--&gt;&gt;Worker: 生成 MarkdownSnapshot、RenderLineStore 与 SyntaxIndex
-            Worker-)UI: 提交权威快照
-            end
-
-            rect rgb(250, 245, 232)
-            Note over UI: 【原子 Arc 交换生效】
-            alt 当前代际匹配
-                UI-&gt;&gt;UI: 原子替换 RenderLineStore（Arc 浅拷贝）
-                UI-&gt;&gt;GPUI: 平滑更新高亮语法与富文本装饰
-            else 用户已键入新内容（代际过时）
-                UI-&gt;&gt;UI: 丢弃过时快照，继续等待最新代际结果（防止倒流）
-            end
-            end</pre>
-        </section>
-
-        <section class="doc-section" id="treesitter">
-          <h2>2.5 Tree-sitter 双层增量解析与零拷贝 Rope Chunks 流式驱动</h2>
           <p>
-            传统编辑器在传递文档给解析器时，往往需要调用 <code>to_string()</code> 分配一个数十兆字节的巨大连续内存，
-            导致剧烈的内存分配与 GC。Akileas 的突破性方案有两点。
+            它把文档的解读分成两层：一层记录"哪些是段落、标题、代码块、列表"，另一层记录"某一段里的
+            加粗、链接、公式"。当你在正文中改动几个字时，外层的结构完全没有变化，
+            于是<strong>只有你正在编辑的那一行需要重新解读，其余九万九千九百九十九行原样复用</strong>。
           </p>
-          <ol class="doc-list">
-            <li>
-              <strong>直接流式读取 Rope Chunks</strong>：通过自定义流式读取器，
-              Tree-sitter 直接读取 Ropey 分块内部的不连续内存页，<strong>零内存拷贝</strong>。
-            </li>
-            <li>
-              <strong>两级语法树隔离</strong>：<em>块级语法树（Block Tree）</em>仅划分段落、标题、代码块、引用与列表边界；
-              <em>行级语法树（Inline Tree）</em>按需挂载在变化块上。当修改正文字符时，块结构保持不变，
-              仅受影响的那一行重新解析行内语法，周围 99,999 行完全复用既有树节点。
-            </li>
-          </ol>
           <div class="callout callout-note">
             <p class="callout-title">NOTE</p>
             <p>
-              零拷贝流式读取意味着打开十万行文档时，内存中不会出现第二份完整的文档副本，
-              冷启动的 1.84 秒中绝大部分耗时来自首次权威解析，而非文本搬运。
+              这也是为什么输入普通文字几乎感觉不到任何延迟，而只有像输入 <code># </code>
+              这样会改变标题结构、牵动整块内容的操作，后台才会多花一点时间——
+              但即便在这种情况下，画面依然在 85 微秒内就已经更新完毕，你完全感知不到后台的忙碌。
             </p>
           </div>
         </section>
 
         <section class="doc-section" id="pipelines">
-          <h2>2.6 纯 Rust 富文本三大独立解耦渲染管线</h2>
+          <h2>2.3 公式、图表、表格互不拖累</h2>
           <p>
-            Akileas 拥有三大相互隔离的富文本渲染管线，各自具备独立的防抖机制、代际校验与缓存淘汰策略。
+            数学公式、Mermaid 图表和表格是文档里最"贵"的三种内容。如果它们共用一条更新通道，
+            你每敲一个字都可能触发一次图表重算，输入就会一顿一顿的。
           </p>
-          <pre class="mermaid">flowchart TD
-            Snap["权威 MarkdownSnapshot 生成"] --&gt; Idx["扫描 SyntaxIndex 变更"]
+          <p>
+            Akileas 让它们各自独立：<strong>只有真正变了的那一类才会重新计算</strong>。
+            在正文里写字，不会惊动旁边那张已经画好的架构图。
+          </p>
 
-            Idx --&gt;|公式区间变更| TeX["Ratex LaTeX 管线&lt;br/&gt;• 700ms 键盘防抖&lt;br/&gt;• 32MB 盒模型 LRU 缓存&lt;br/&gt;• 直出 GPUI DisplayList"]
-            Idx --&gt;|代码块或视口滚动| Mer["Rusty-Mermaid 矢量管线&lt;br/&gt;• 视口裁剪窗口绑定&lt;br/&gt;• 32MB 几何路径拓扑缓存&lt;br/&gt;• 支持 box/&lt;br/&gt; 语法与放大镜"]
-            Idx --&gt;|表格内容微调| Tab["表格自适应布局管线&lt;br/&gt;• memchr 硬件向量加速切分&lt;br/&gt;• 基于 Unicode 显示单元动态算宽"]
-
-            TeX --&gt; Merge["EditorView 混合场景图组装"]
-            Mer --&gt; Merge
-            Tab --&gt; Merge
-            Merge --&gt; Out["GPU 硬件光栅化呈现"]</pre>
+          <figure class="diagram">
+            <figcaption class="diagram-title">三条相互独立的渲染通道</figcaption>
+            <div class="dgm-split">
+              <div class="dgm-pill dgm-pill-source">文档发生变化</div>
+              <div class="dgm-link" aria-hidden="true"></div>
+              <div class="dgm-branches">
+                <article class="dgm-branch">
+                  <strong>数学公式</strong>
+                  <ul>
+                    <li>停止输入后才重新排版</li>
+                    <li>已经算过的公式会被记住</li>
+                    <li>光标在别处时完全不重算</li>
+                  </ul>
+                </article>
+                <article class="dgm-branch">
+                  <strong>Mermaid 图表</strong>
+                  <ul>
+                    <li>只编译视野内可见的图表</li>
+                    <li>缩放与平移不重新计算图形</li>
+                    <li>图形几何被缓存复用</li>
+                  </ul>
+                </article>
+                <article class="dgm-branch">
+                  <strong>表格</strong>
+                  <ul>
+                    <li>按实际显示宽度自适应列宽</li>
+                    <li>中英混排也能对齐</li>
+                    <li>改动单元格只影响该表</li>
+                  </ul>
+                </article>
+              </div>
+              <div class="dgm-link" aria-hidden="true"></div>
+              <div class="dgm-pill dgm-pill-accent">合成同一幅画面，交给显卡绘制</div>
+            </div>
+          </figure>
         </section>
 
-        <section class="doc-section" id="heightmap">
-          <h2>2.7 对数级虚拟化高度树 DocumentHeightMap</h2>
+        <section class="doc-section" id="scrolling">
+          <h2>2.4 十万行也能瞬间滚到任意位置</h2>
           <p>
-            在长达十万行的文档中，如果使用线性累加计算总高度，滚动视口或拖拽滚动条将引发灾难性的计算瓶颈。
-            Akileas 实现了 <code>DocumentHeightMap</code> 对数级高度树。
+            在超长文档里拖动滚动条，很多编辑器会先卡住、再突然跳过去。原因是它们需要从头累加每一行的高度，
+            才能算出"你拖到的位置对应哪一行"。
           </p>
-          <ul class="doc-list">
-            <li>
-              <strong>前缀和高度累加树</strong>：以分块构建累积高度索引。当用户编辑第 500 行时，
-              仅更新局部块的高度差值，不需要遍历全篇。
-            </li>
-            <li>
-              <strong><em>O</em>(log <em>N</em>) 二分快速定位</strong>：鼠标拖拽滚动条到 85% 位置时，
-              通过二分查找在<strong>数微秒内</strong>直接命中精确行号与行内像素偏移。
-            </li>
-            <li>
-              <strong>渲染平滑防抖</strong>：将非视口内的未知行预估为均值高度，当用户平滑拖拽时逐步细化，
-              彻底消除滚动条跳跃与抖动。
-            </li>
-          </ul>
+          <p>
+            Akileas 把整篇文档的高度组织成一份可以快速查找的索引。无论文档多长，
+            定位都只需要和文档长度的对数成正比的计算量——<strong>把滚动条拖到 85%，
+            它能在几微秒内告诉你那是第几行的第几个字符</strong>。滚动过程中尚未测量过的行会先按平均高度估算，
+            再随着你的拖动逐步精确，因此不会出现跳动或抖动。
+          </p>
+          <div class="stat-grid">
+            <div class="stat-card"><span class="stat-label">定位耗时</span><strong>几微秒</strong><small>与文档长度几乎无关</small></div>
+            <div class="stat-card"><span class="stat-label">滚动抖动</span><strong>无</strong><small>未知行按均值预估后细化</small></div>
+          </div>
         </section>
 
-        <section class="doc-section" id="storage">
-          <h2>2.8 存储安全韧性：SaveTicket 保序、原子落盘与灾难恢复</h2>
-          <p>针对写文件竞态与异常断电场景，Akileas 建立了高可靠的存储安全体系。</p>
-          <pre class="mermaid">flowchart TD
-            SaveReq["触发保存（Cmd+S / 自动定时保存）"] --&gt; Ticket["分配递增票据 SaveTicket（seq = N）"]
-            Ticket --&gt; Queue["进入文件专属并发队列"]
-            Queue --&gt; Check{"持锁期间校验：&lt;br/&gt;latest_sequence == N ?"}
+        <section class="doc-section" id="safety">
+          <h2>2.5 崩溃与断电也不会丢稿</h2>
+          <p>
+            保存看起来是一个动作，但如果在写入过程中断电，半截文件会直接毁掉你原本完好的稿子。
+            Akileas 用"先写副本、校验通过、再一次性替换"的方式避免这件事。
+          </p>
 
-            Check --&gt;|否（已有更新的保存任务）| Drop["自动废弃过期任务（杜绝旧写覆盖新内容）"]
-            Check --&gt;|是（允许写入）| Tmp["1. 同目录下创建 .tmp.UUID 临时文件"]
-            Tmp --&gt; Write["2. 写入完整数据并计算 CRC32"]
-            Write --&gt; Fsync["3. 调用 OS 底层 sync_all / fsync 强制物理扇区落盘"]
-            Fsync --&gt; Rename["4. 原子覆盖（POSIX rename / Windows MoveFileEx）"]
-            Rename --&gt; TM["5. 本地时光机 LocalHistoryStore 记录滚动版本（至多 100 份）"]</pre>
+          <figure class="diagram">
+            <figcaption class="diagram-title">一次保存的实际过程</figcaption>
+            <ol class="dgm-flow">
+              <li>
+                <span class="dgm-idx">1</span>
+                <strong>生成新版本</strong>
+                <small>把当前内容组织成完整的文件内容</small>
+              </li>
+              <li>
+                <span class="dgm-idx">2</span>
+                <strong>写入临时副本</strong>
+                <small>先写到一个临时文件，原文件此刻纹丝不动</small>
+              </li>
+              <li>
+                <span class="dgm-idx">3</span>
+                <strong>校验完整性</strong>
+                <small>确认写入的数据完整无误，并强制落盘</small>
+              </li>
+              <li>
+                <span class="dgm-idx">4</span>
+                <strong>一次性替换</strong>
+                <small>用副本原子地顶替原文件，不存在"写了一半"的状态</small>
+              </li>
+              <li>
+                <span class="dgm-idx">5</span>
+                <strong>记入时光机</strong>
+                <small>顺手留存一份历史版本，可随时比对与回滚</small>
+              </li>
+            </ol>
+          </figure>
 
-          <h3>断电恢复与本地时光机</h3>
-          <ul class="doc-list">
-            <li>
-              <strong>RecoveryJournal 恢复日志</strong>：每次编辑流式追加带 CRC32 校验的轻量日志；
-              即使遭遇断电关机，再次启动时也会自动校验并秒级重放恢复。
-            </li>
-            <li>
-              <strong>LocalHistoryStore 本地时光机</strong>：完全不依赖 Git。每次保存自动在本地数据库记录一份历史版本快照，
-              支持内置 Myers Diff 算法进行字符级增删对比，随时一键还原。
-            </li>
-          </ul>
+          <p>
+            除此之外，编辑器还会持续追加一份带校验的轻量编辑记录。即使遇到断电关机，
+            重新打开时也会自动校验并重放，把未保存的内容还给你。
+          </p>
+        </section>
+
+        <section class="doc-section" id="foundation">
+          <h2>2.6 技术底座</h2>
+          <p>
+            上面这些能力来自几个根本性的选择——它们决定了 Akileas 的起点就和浏览器内核的编辑器不在同一条路上。
+          </p>
+          <div class="card-grid">
+            <article class="doc-card">
+              <h3>原生编译，没有浏览器内核</h3>
+              <p>
+                整个应用编译成本机代码，直接调用系统图形接口。不内嵌浏览器引擎，
+                因此没有"启动要等好几秒"和"内存吃掉几百兆"的代价。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>没有垃圾回收停顿</h3>
+              <p>
+                内存由编译器在编译期确定释放时机，不存在运行时的垃圾回收。
+                那些每隔几秒就卡一下的丢帧，在这里不会发生。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>由显卡直接绘制</h3>
+              <p>
+                字形、矢量图形与界面元素都交给显卡渲染，支持高刷新率屏幕与清晰的亚像素字体，
+                滚动与缩放的顺滑度不受文档长度影响。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>内存与缓存都有上限</h3>
+              <p>
+                图片、公式与图表缓存各自设有明确上限，超出后自动淘汰最久未用的内容，
+                长时间编辑超大文档也不会越用越卡。
+              </p>
+            </article>
+          </div>
+          <p class="doc-note">
+            这些设计带来的直接结果是：轻量文档常驻内存约 25 MB ~ 45 MB，
+            十万行文档稳定在 60 MB ~ 110 MB，且不会随编辑时长增长。
+          </p>
         </section>
       </main>
     </div>
@@ -329,71 +327,5 @@
         </nav>
       </div>
     </footer>
-    <script type="module">
-      // Mermaid bootstrap, inlined by tools/build-site.mjs into pages that contain
-      // diagrams. The CDN import is intentionally unguarded: if it fails, the source
-      // inside each <pre class="mermaid"> simply stays on screen as readable text.
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-
-      const nodes = document.querySelectorAll("pre.mermaid");
-      if (nodes.length) {
-        mermaid.initialize({
-          startOnLoad: false,
-          securityLevel: "strict",
-          theme: "base",
-          fontFamily: '"EB Garamond", "Cormorant Garamond", Garamond, Georgia, serif',
-          fontSize: 17,
-          themeVariables: {
-            background: "#fdf8ec",
-            primaryColor: "#f8f1e0",
-            primaryTextColor: "#241d12",
-            primaryBorderColor: "#bda87c",
-            secondaryColor: "#ece0c6",
-            secondaryTextColor: "#241d12",
-            secondaryBorderColor: "#bda87c",
-            tertiaryColor: "#f1e6cf",
-            tertiaryTextColor: "#241d12",
-            tertiaryBorderColor: "#bda87c",
-            lineColor: "#8a6a2a",
-            textColor: "#241d12",
-            mainBkg: "#f8f1e0",
-            nodeBorder: "#bda87c",
-            clusterBkg: "#f2e8d5",
-            clusterBorder: "#bda87c",
-            edgeLabelBackground: "#fdf8ec",
-            actorBkg: "#f8f1e0",
-            actorBorder: "#bda87c",
-            actorTextColor: "#241d12",
-            actorLineColor: "#bda87c",
-            signalColor: "#5f5138",
-            signalTextColor: "#241d12",
-            labelBoxBkgColor: "#f8f1e0",
-            labelBoxBorderColor: "#bda87c",
-            labelTextColor: "#241d12",
-            loopTextColor: "#241d12",
-            noteBkgColor: "#f6ecd2",
-            noteBorderColor: "#a5813a",
-            noteTextColor: "#241d12",
-            activationBkgColor: "#ece0c6",
-            activationBorderColor: "#a5813a",
-            sequenceNumberColor: "#fdf8ec",
-            pie1: "#2b4d7d",
-            pie2: "#a5813a",
-            pie3: "#4d6b4a",
-            pie4: "#9c4230",
-            pieOpacity: "0.85",
-          },
-          flowchart: { curve: "basis", htmlLabels: true, padding: 14, useMaxWidth: true },
-          sequence: { useMaxWidth: true, mirrorActors: false, actorMargin: 60, boxMargin: 10 },
-          pie: { useMaxWidth: true, textPosition: 0.62 },
-        });
-
-        try {
-          await mermaid.run({ nodes });
-        } catch (err) {
-          console.warn("[akileas] mermaid render failed; showing diagram source instead.", err);
-        }
-      }
-    </script>
   </body>
 </html>

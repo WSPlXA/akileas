@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f1e6cf" />
-    <meta name="description" content="Akileas 完整技术手册：真实性能基准实测、Rust 与 GPUI 核心架构、全量功能与快捷键速查，以及界面截图拍摄规范。" />
+    <meta name="description" content="Akileas 使用手册：真实性能实测数据、为什么它这么快、完整功能与快捷键速查，以及八大核心界面导览。" />
     <link rel="canonical" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
     <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
     <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/index.html" />
@@ -19,12 +19,12 @@
     <meta property="og:site_name" content="Akileas" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:title" content="技术手册 — Akileas" />
-    <meta property="og:description" content="Akileas 完整技术手册：真实性能基准实测、Rust 与 GPUI 核心架构、全量功能与快捷键速查，以及界面截图拍摄规范。" />
+    <meta property="og:description" content="Akileas 使用手册：真实性能实测数据、为什么它这么快、完整功能与快捷键速查，以及八大核心界面导览。" />
     <meta property="og:url" content="https://wsplxa.github.io/akileas/zh/docs/index.html" />
     <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="技术手册 — Akileas" />
-    <meta name="twitter:description" content="Akileas 完整技术手册：真实性能基准实测、Rust 与 GPUI 核心架构、全量功能与快捷键速查，以及界面截图拍摄规范。" />
+    <meta name="twitter:description" content="Akileas 使用手册：真实性能实测数据、为什么它这么快、完整功能与快捷键速查，以及八大核心界面导览。" />
     <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
 
     <title>技术手册 — Akileas</title>
@@ -70,7 +70,7 @@
           <li>
             <a href="architecture.html">
               <span class="docs-nav-num" aria-hidden="true">二</span>
-              <span>系统架构</span>
+              <span>为什么这么快</span>
             </a>
           </li>
           <li>
@@ -82,7 +82,7 @@
           <li>
             <a href="screenshots.html">
               <span class="docs-nav-num" aria-hidden="true">四</span>
-              <span>截图指南</span>
+              <span>界面导览</span>
             </a>
           </li>
         </ol>
@@ -90,24 +90,26 @@
       </aside>
       <main id="main" class="docs-main">
         <header class="docs-hero">
-          <p class="section-kicker">技术文档</p>
-          <h1>Akileas 技术手册</h1>
+          <p class="section-kicker">使用手册</p>
+          <h1>Akileas 使用手册</h1>
           <p class="docs-lede">
-            全书共四章，分别覆盖真实性能实测数据、编辑器底层系统架构、全部用户可用能力，以及界面截图的拍摄规范。
-            面向工程技术评审、产品演示与架构汇报场景编写。
+            全书共四章：实测性能数据、快速的原因、完整功能与快捷键，
+            以及八大核心界面导览。无论你是想快速上手，还是想先弄清它到底快在哪里，
+            都可以直接从对应的章节读起。
           </p>
         </header>
 
         <section class="doc-section" id="overview">
           <h2>本手册涵盖的内容</h2>
           <p>
-            Akileas 是基于 <strong>Rust 2024</strong> 与 <strong>GPUI</strong> 打造的原生极速 Markdown 编辑器，
-            内置纯 Rust 的 LaTeX / Mermaid 渲染内核，并支持出版级的 Typst 矢量 PDF 导出。
-            它只坚守一条性能铁律：<strong>UI 线程永不等待</strong>。
+            Akileas 是一款原生 Markdown 编辑器，为<strong>毫不妥协的响应速度</strong>而打造。
+            它内置数学公式与图表渲染，支持就地混合所见即所得，并能导出出版级矢量 PDF。
+            所有文档只保存在你的本地磁盘上。
           </p>
           <p>
-            无论是在一千行的日常笔记中，还是在十万行的工程长文里，交互物理响应均保持在亚毫秒级别。
-            以下四章分别记录这些指标如何被测量、系统如何被构建、日常使用中如何表现，以及界面如何被拍摄。
+            无论是在一千行的日常笔记中，还是在十万行的工程长文里，交互响应都保持在亚毫秒级别。
+            下面四章分别回答：它的实测表现如何、为什么能做到这么快、每一项功能怎么用，
+            以及各个界面长什么样。
           </p>
 
           <ol class="docs-toc">
@@ -115,65 +117,69 @@
               <a href="benchmarks.html">
                 <span class="docs-toc-num">第一章</span>
                 <strong>性能测评与基准实测</strong>
-                <span>微秒级待定投影、一万行与十万行的权威解析延迟、SIMD 检索吞吐量、内存预算上限，
-                  以及完整的编辑器横向对比矩阵。</span>
+                <span>微秒级即时响应、一万行与十万行文档的解析耗时、超大文档检索速度、
+                  内存占用对比，以及完整的编辑器横向对比矩阵。</span>
               </a>
             </li>
             <li>
               <a href="architecture.html">
                 <span class="docs-toc-num">第二章</span>
-                <strong>技术栈与核心系统架构</strong>
-                <span>Rust 2024 与 GPUI、异构 CPU/GPU 分工模型、双阶段热路径、基于 Rope 分块的零拷贝
-                  Tree-sitter 解析，以及断电安全的存储体系。</span>
+                <strong>为什么 Akileas 这么快</strong>
+                <span>击键到画面刷新之间发生了什么：即时响应与后台精修的双阶段渲染、
+                  只重算改动的那一部分、三条互不拖累的渲染管线、十万行瞬时定位，
+                  以及崩溃断电也不丢稿的存储设计。</span>
               </a>
             </li>
             <li>
               <a href="features.html">
                 <span class="docs-toc-num">第三章</span>
                 <strong>产品用法与功能全景</strong>
-                <span>就地混合所见即所得、多视口分屏、大纲与检索体系、免 Git 本地时光机、原生
-                  LaTeX 与 Mermaid、Agent 工作台，以及 Typst PDF 导出。</span>
+                <span>就地混合所见即所得、多视口分屏、大纲与检索体系、免 Git 本地时光机、
+                  数学公式与图表、Agent 配置工作台，以及 PDF 导出。</span>
               </a>
             </li>
             <li>
               <a href="screenshots.html">
                 <span class="docs-toc-num">第四章</span>
-                <strong>界面实例与截图指引</strong>
-                <span>截图环境与规范、统一体验演示样本文档，以及八大核心场景的逐张拍摄指引。</span>
+                <strong>界面导览</strong>
+                <span>八大核心界面逐一介绍：每个界面能做什么、怎么打开、你会看到什么效果。</span>
               </a>
             </li>
           </ol>
         </section>
 
         <section class="doc-section" id="using-this-material">
-          <h2>材料使用建议</h2>
-          <p>
-            四章内容均可独立引用。每一章都先给出它所要支撑的结论，再用实测数据、架构图或可复现命令加以佐证。
-          </p>
+          <h2>怎么读这本手册</h2>
+          <p>四章内容彼此独立，可以按需要直接跳读。</p>
           <div class="card-grid">
             <article class="doc-card">
-              <h3>技术宣讲与架构汇报</h3>
+              <h3>想先看它有多快</h3>
               <p>
-                重点引用第一章的微秒级基准数据表，以及第二章的异构计算分工图与双阶段热路径时序图。
+                直接读第一章的实测数据表与横向对比。所有数字都来自同一台真实机器上的正式发行版本。
               </p>
             </article>
             <article class="doc-card">
-              <h3>用户手册与新人培训</h3>
+              <h3>想了解快在哪里</h3>
               <p>
-                第三章可独立作为上手指南使用，章末的快捷键速查表覆盖 macOS、Windows 与 Linux 全平台操作。
+                第二章用图示解释了从按键到画面刷新的整个过程，不需要任何技术背景。
               </p>
             </article>
             <article class="doc-card">
-              <h3>视觉材料与演示文稿</h3>
+              <h3>准备开始使用</h3>
               <p>
-                按第四章指引拍摄八张标准截图并放入 <code>assets/screenshots/</code> 目录。
-                每个场景都列出了演示重点、准备步骤与推荐窗口尺寸。
+                第三章覆盖全部功能与操作方式，章末的快捷键速查表可以直接当作日常参考。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>想先看看界面</h3>
+              <p>
+                第四章用八个界面带你过一遍典型使用场景，每个界面都说明了打开方式。
               </p>
             </article>
           </div>
           <p class="doc-note">
-            第一章的全部基准数据均测量自该章所记录的参考机器。请使用末节的命令自行复现，
-            而不要脱离上下文直接引用其中的数字。
+            第一章的性能数字测量自该章所记录的参考机器。不同硬件上的绝对值会有所差异，
+            但量级与相对优势是一致的。
           </p>
         </section>
       </main>

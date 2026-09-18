@@ -70,7 +70,7 @@
           <li>
             <a href="architecture.html">
               <span class="docs-nav-num" aria-hidden="true">II</span>
-              <span>Architecture</span>
+              <span>How it's fast</span>
             </a>
           </li>
           <li>
@@ -82,7 +82,7 @@
           <li>
             <a href="screenshots.html">
               <span class="docs-nav-num" aria-hidden="true">IV</span>
-              <span>Screenshots</span>
+              <span>Interface tour</span>
             </a>
           </li>
         </ol>
@@ -111,7 +111,7 @@
           <ul class="doc-list">
             <li><strong>Split Right.</strong> Divide the current viewport horizontally into two (the shortcut can be triggered from the menu), each side scrolling independently.</li>
             <li><strong>Split Down.</strong> Place two viewports one above the other for vertical comparison.</li>
-            <li><strong>Bidirectional live sync for the same document.</strong> When both viewports have the same document open, they share a single <code>TextBuffer</code> reference in memory. Typing in the left viewport updates the rendered right viewport at microsecond-level latency, while each side keeps its own fully independent scroll position and cursor selection.</li>
+            <li><strong>Bidirectional live sync for the same document.</strong> When both viewports have the same document open, they share a single copy of its content. Typing in the left viewport updates the rendered right viewport at millisecond-level latency, while each side keeps its own fully independent scroll position and cursor selection.</li>
             <li><strong>Seamless focus travel.</strong> Press <kbd>Ctrl</kbd> + <kbd>H</kbd> / <kbd>J</kbd> / <kbd>K</kbd> / <kbd>L</kbd> to move focus between split viewports as smoothly as in Vim.</li>
           </ul>
         </section>
@@ -135,7 +135,7 @@
           <ul class="doc-list">
             <li><strong>Summon the time machine panel.</strong> Press <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> (macOS) or <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> (Windows/Linux).</li>
             <li><strong>Runs independently, with no dependencies.</strong> Whether or not the current file sits inside a Git repository, Akileas maintains its own dedicated history database and keeps a rolling set of up to 100 saved snapshots.</li>
-            <li><strong>Offline Myers Diff comparison.</strong> The time machine interface presents character-level additions and deletions between different historical versions (green for additions, red for deletions, with corresponding line numbers).</li>
+            <li><strong>Character-level diffing.</strong> The time machine interface presents character-level additions and deletions between different historical versions (green for additions, red for deletions, with corresponding line numbers), with no external tool required.</li>
             <li><strong>Second-scale checkout and restore.</strong> Click a version in the history list to preview that historical state, then click <strong>Restore</strong> to roll back safely.</li>
           </ul>
           <p>You can also create a milestone snapshot manually at any time with <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>.</p>
@@ -145,7 +145,7 @@
           <h2>3.5 Native LaTeX and Mermaid Diagrams</h2>
           <p>No external plug-ins and no network connection are required: Akileas renders professional typesetting components natively.</p>
           <h3>LaTeX math formulas</h3>
-          <p>Inline formulas use <code>$E = mc^2$</code> and are typeset elegantly within the flow of text. Block-level display formulas use <code>$$ ... $$</code> and support complex integrals, matrices, calculus, and systems of equations. Nineteen KaTeX vector font outlines are built in deeply, giving beautiful and crisp glyphs.</p>
+          <p>Inline formulas use <code>$E = mc^2$</code> and are typeset elegantly within the flow of text. Block-level display formulas use <code>$$ ... $$</code> and support complex integrals, matrices, calculus, and systems of equations. Nineteen mathematical vector fonts are built in, giving beautiful and crisp glyphs.</p>
           <h3>Modern Mermaid vector diagrams</h3>
           <ul class="doc-list">
             <li>Supports flowcharts (<code>graph TD</code>), sequence diagrams (<code>sequenceDiagram</code>), state diagrams, class diagrams, and mind maps.</li>
@@ -167,7 +167,7 @@
 
         <section class="doc-section" id="pdf-export">
           <h2>3.7 Publication-Grade Typst PDF Export</h2>
-          <p>Say goodbye to the blurriness and broken layout produced by exporting PDFs through a headless browser (Headless Chrome). Akileas embeds Typst 0.15, a modern typesetting engine written in Rust.</p>
+          <p>Say goodbye to the blurriness and broken layout produced by printing a PDF through a browser. Akileas embeds <strong>Typst</strong>, a modern typesetting engine, and writes vector documents directly.</p>
           <ul class="doc-list">
             <li><strong>Trigger the export.</strong> Click the menu <strong>File -&gt; Export as PDF…</strong>.</li>
             <li><strong>Professional export parameters.</strong> International standard page sizes A4 or US Letter; Portrait or Landscape orientation; custom margins set precisely from 5mm to 60mm; and page number and header controls that let you freely choose whether to print headers, footers, and dynamic page numbers.</li>

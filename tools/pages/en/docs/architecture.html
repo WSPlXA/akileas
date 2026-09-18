@@ -2,434 +2,248 @@
 {
   "out": "docs/architecture.html",
   "lang": "en",
-  "title": "Stack & Architecture — Akileas Manual",
-  "description": "Inside Akileas: Rust 2024 and GPUI, heterogeneous CPU/GPU division of labour, the dual-stage hot path, zero-copy Tree-sitter parsing over Rope chunks, and crash-safe storage.",
+  "title": "Why Akileas Is So Fast — Akileas Manual",
+  "description": "What happens between a keystroke and the repainted screen: instant response with background refinement, recomputing only what changed, three independent render pipelines, instant navigation in a 100,000-line document, and storage that survives crashes and power loss.",
   "nav": "docs",
   "docSlug": "architecture",
   "bodyClass": "docs-page",
-  "mermaid": true,
   "altOut": "zh/docs/architecture.html"
 }
 ---
 <header class="docs-hero">
   <p class="section-kicker">Chapter II</p>
-  <h1>Stack &amp; Architecture</h1>
-  <p class="docs-lede">Akileas is built as a strictly layered native application: Rust 2024 and GPUI below, five one-way-dependent layers above, and a hot path measured in microseconds between a keystroke and the first refreshed frame.</p>
+  <h1>Why Akileas Is So Fast</h1>
+  <p class="docs-lede">
+    Most editors begin to "think before they show" once a document grows long, and you can feel the
+    lag as you type. Akileas is designed so that this never happens:
+    <strong>the instant you press a key, the screen has already updated</strong>, and the remaining
+    fine typesetting is quietly filled in behind the scenes, never standing between you and your words.
+  </p>
 </header>
 
-<section class="doc-section" id="layers">
-  <h2>2.1 Layered Architecture</h2>
+<section class="doc-section" id="instant">
+  <h2>2.1 A keystroke, shown immediately</h2>
   <p>
-    The site enforces a single-direction, inward-facing dependency hierarchy. Each layer is aware only of the
-    layer directly beneath it, and no dependency ever points back upward.
+    Inside the editor, "you pressed a key" is split into two halves: <strong>show it at once</strong>
+    and <strong>refine it afterwards</strong>. The first does the bare minimum, so the screen is
+    guaranteed to refresh within the same frame. The second is more involved, but it can take its time
+    and can be interrupted at any moment by newer input.
   </p>
-  <ul class="doc-list">
-    <li><code>app/</code> — the top-level state machine, multi-window sessions, command routing and keybindings.</li>
-    <li><code>ui/</code> — GPUI view components, the virtualised render pipeline and appearance themes.</li>
-    <li><code>render/</code> + <code>text/</code> — Ratex formulas, Rusty-Mermaid vectors and an 8MB glyph layout cache.</li>
-    <li><code>markdown/</code> + <code>editor/</code> — Tree-sitter incremental parsing, Ropey buffers and the logarithmic HeightMap.</li>
-    <li><code>storage/</code> + <code>agent/</code> — the SaveTicket ordering lock, atomic writes, the local time machine and Agent sniffing.</li>
-  </ul>
-  <p>The dependency direction runs one way only, from the top down.</p>
-  <pre class="mermaid">flowchart TB
-    subgraph ArchLayers ["Akileas: one-way inward dependencies"]
-        direction TB
-        AppLayer["app/ : top-level state machine, multi-window sessions, command routing, keybindings"]
-        UILayer["ui/ : GPUI view components, virtualised render pipeline, appearance themes"]
-        RichRenderLayer["render/ + text/ : Ratex formulas, Rusty-Mermaid vectors, 8MB glyph layout cache"]
-        CoreEngine["markdown/ + editor/ : Tree-sitter incremental parsing, Ropey buffers, logarithmic HeightMap"]
-        StorageEngine["storage/ + agent/ : SaveTicket ordering lock, atomic writes, local time machine, Agent sniffing"]
-    end
-    AppLayer --&gt; UILayer
-    UILayer --&gt; RichRenderLayer
-    RichRenderLayer --&gt; CoreEngine
-    CoreEngine --&gt; StorageEngine</pre>
-  <p class="doc-note">Because dependencies point downward only, a layer can be exercised without any of the layers above it.</p>
+
+  <figure class="diagram">
+    <figcaption class="diagram-title">What happens on a single keystroke</figcaption>
+    <div class="dgm-lanes">
+      <section class="dgm-lane dgm-lane-now">
+        <h4>Happens immediately</h4>
+        <p>It has to finish within the same frame, or you would see a delay.</p>
+        <ol class="dgm-steps">
+          <li>You type a character at the cursor</li>
+          <li>Only that one line is redrawn</li>
+          <li>The screen refreshes, with the character and cursor in place</li>
+        </ol>
+      </section>
+      <section class="dgm-lane dgm-lane-later">
+        <h4>Happens afterwards</h4>
+        <p>It runs in the background and never blocks your typing.</p>
+        <ol class="dgm-steps">
+          <li>The editor starts analysing how the document changed</li>
+          <li>Only the affected part is recomputed</li>
+          <li>Syntax highlighting and fine typesetting are filled in smoothly</li>
+          <li>If you have kept typing, out-of-date results are discarded automatically</li>
+        </ol>
+      </section>
+    </div>
+  </figure>
+
+  <p>
+    This is why typing in a hundred-thousand-line document feels almost the same as typing on a blank
+    sheet of paper. In measured tests, the step from keypress to refreshed screen takes just
+    <strong>37 microseconds</strong> — less than one hundredth of a single frame's budget (8.33 ms).
+  </p>
 </section>
 
-<section class="doc-section" id="stack">
-  <h2>2.2 Core Technology Choices</h2>
-  <p>Eight choices define the runtime envelope of the editor.</p>
-  <ul class="doc-list">
-    <li>
-      <strong>Programming language:</strong> Rust 2024 Edition. Zero-cost abstractions and a strong type system
-      rule out data races, and compile-time memory management replaces a runtime GC.
-    </li>
-    <li>
-      <strong>UI and graphics engine:</strong> GPUI (built by the Zed team). A fully GPU-driven rendering pipeline
-      (native Metal on macOS; DirectX 12 / Vulkan on Windows and Linux), with support for 120Hz/144Hz ultra-high
-      refresh rates and subpixel font rendering.
-    </li>
-    <li>
-      <strong>Memory allocator:</strong> mimalloc (Microsoft). It replaces the system default <code>malloc</code>,
-      is tuned for small objects and multi-threaded workloads, and eliminates heap fragmentation and jitter.
-    </li>
-    <li>
-      <strong>Text data structure:</strong> Ropey. A B-Tree-based immutable rope supporting O(log N) insertion and
-      deletion plus copy-free slicing of very large texts.
-    </li>
-    <li>
-      <strong>Incremental syntax analysis:</strong> Tree-sitter (<code>tree-sitter-md</code>). A two-tier
-      architecture (a block-level syntax tree and a line-level inline syntax tree) performs local,
-      "surgical" incremental pruning over byte ranges.
-    </li>
-    <li>
-      <strong>TeX box-model typesetting:</strong> Ratex. A pure-Rust implementation of macro-package parsing and
-      Knuth-TeX box-model solving, with no dependency on any JavaScript / Node / browser runtime.
-    </li>
-    <li>
-      <strong>Vector diagram compiler:</strong> Rusty-Mermaid. Pure Rust compiles Mermaid DSL into immutable GPU
-      vector primitives (paths, polygons, Bézier curves), with a built-in 360x240 locally shaded magnifier.
-    </li>
-    <li>
-      <strong>Publication-grade typesetting output:</strong> Typst 0.15. A modern typesetting framework that
-      converts the Markdown AST into Typst format and emits high-fidelity vector PDF directly.
-    </li>
-  </ul>
-  <pre class="code-block"><code>markdown/   Tree-sitter (tree-sitter-md) + Ropey
-editor/     DocumentHeightMap, RenderLineStore, SyntaxIndex
-storage/    SaveTicket, RecoveryJournal, LocalHistoryStore</code></pre>
-  <p class="doc-note">Crate names, API names and version numbers are reproduced exactly as the project declares them.</p>
-</section>
-
-<section class="doc-section" id="threads">
-  <h2>2.3 Heterogeneous Compute &amp; Thread Model</h2>
+<section class="doc-section" id="incremental">
+  <h2>2.2 Only the line you changed is recomputed</h2>
   <p>
-    The design philosophy is that heterogeneous hardware should each do its own job: compute-intensive and
-    branch-intensive work is divided strictly, rather than blindly porting everything to the GPU or piling all
-    logic onto the main thread.
+    Documents usually get sluggish as they grow because every keystroke re-reads the whole thing from
+    scratch. Akileas does not do that.
   </p>
-  <div class="table-wrap">
-    <table class="data-table">
-      <thead>
-        <tr><th>Lane</th><th>Responsibility</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>UI main thread <em>(latency &lt; 0.03&nbsp;ms)</em></td>
-          <td>Keyboard/mouse events → <code>TextBuffer</code> (Ropey) edit → immediate physical-line projection via <code>project_raw_lines</code> → GPUI partial scene-graph submission</td>
-        </tr>
-        <tr>
-          <td>CPU SIMD vectorised unit</td>
-          <td><code>memchr</code> instruction-set dispatch (AVX2 / NEON) → 11.5 GB/s vector scanning and table splitting</td>
-        </tr>
-        <tr>
-          <td>Background multi-core worker thread pool</td>
-          <td>Tree-sitter incremental parsing (Rope Chunks); Ratex TeX box-model solving; Rusty-Mermaid topology compilation; <code>DocumentAst</code> / <code>SyntaxIndex</code> derivation</td>
-        </tr>
-        <tr>
-          <td>GPU hardware acceleration pipeline</td>
-          <td>Glyph atlas texture rasterisation → vector path tessellation and Bézier rendering → smooth scaling and the shader magnifier</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <pre class="mermaid">flowchart LR
-    subgraph UI_Thread ["UI main thread (latency below 0.03 ms)"]
-        UI_Events["Keyboard/mouse events"]
-        UI_Buffer["TextBuffer (Ropey) edit"]
-        UI_Project["project_raw_lines: immediate physical-line projection"]
-        UI_Scene["GPUI partial scene-graph submission"]
-        UI_Events --&gt; UI_Buffer
-        UI_Buffer --&gt; UI_Project
-        UI_Project --&gt; UI_Scene
-    end
-
-    subgraph CPU_SIMD ["CPU SIMD vectorised unit"]
-        SIMD_Dispatch["memchr instruction-set dispatch (AVX2 / NEON)"]
-        SIMD_Scan["11.5 GB/s vector scan and table splitting"]
-        SIMD_Dispatch --&gt; SIMD_Scan
-    end
-
-    subgraph Worker_Pool ["Background multi-core worker thread pool"]
-        W_TS["Tree-sitter incremental parsing (Rope Chunks)"]
-        W_Ratex["Ratex TeX box-model solving"]
-        W_Mermaid["Rusty-Mermaid topology compilation"]
-        W_Derive["DocumentAst / SyntaxIndex derivation"]
-    end
-
-    subgraph GPU_Direct ["GPU hardware acceleration pipeline"]
-        G_Atlas["Glyph atlas texture rasterisation"]
-        G_Vector["Vector path tessellation and Bezier rendering"]
-        G_Zoom["Smooth scaling and shader magnifier"]
-        G_Atlas --&gt; G_Vector
-        G_Vector --&gt; G_Zoom
-    end
-
-    UI_Buffer -.dispatch parse.-&gt; W_TS
-    W_Derive --&gt; W_Ratex
-    W_Derive --&gt; W_Mermaid
-    W_Ratex -.lock-free Arc swap.-&gt; UI_Project
-    W_Mermaid -.lock-free Arc swap.-&gt; UI_Project</pre>
   <p>
-    The wiring is therefore short and explicit: a <code>TextBuffer</code> edit dispatches a parse to Tree-sitter
-    incremental parsing; <code>DocumentAst</code> / <code>SyntaxIndex</code> derivation feeds Ratex and
-    Rusty-Mermaid; Ratex and Rusty-Mermaid hand results back to physical-line projection through a lock-free
-    <code>Arc</code> swap; and the GPU pipeline is connected sequentially inside itself.
+    It reads a document on two levels: one records <em>which parts are paragraphs, headings, code
+    blocks and lists</em>, and the other records <em>the bold text, links and formulas inside a given
+    block</em>. When you change a few words in the body text, the outer structure has not changed at
+    all, so <strong>only the line you are editing has to be re-read, while the other 99,999 lines are
+    reused exactly as they were</strong>.
   </p>
   <div class="callout callout-note">
     <p class="callout-title">NOTE</p>
-    <p>Nothing on the GPU lane ever blocks the UI lane: the main thread only ever submits a minimal dirty rectangle, while rasterisation, tessellation and shading stay on the hardware pipeline.</p>
-  </div>
-</section>
-
-<section class="doc-section" id="hotpath">
-  <h2>2.4 The Dual-Stage Hot Path</h2>
-  <p>
-    To eliminate input stutter in large documents at the root, a text change is decoupled into two stages: an
-    immediate provisional projection on the UI thread, and an authoritative asynchronous parse on a worker pool.
-  </p>
-  <pre class="mermaid">sequenceDiagram
-    autonumber
-    actor User as User keystroke
-    participant UI as UI main thread (EditorView)
-    participant Proj as Pending raw-line projection
-    participant Worker as Background worker pool
-    participant TS as Tree-sitter authority
-    participant GPUI as GPU presentation
-
-    User-&gt;&gt;UI: Press a key (for example, insert a character)
-    UI-&gt;&gt;UI: TextBuffer increments generation and completes the Rope change
-
-    rect rgb(240, 248, 255)
-        note over UI,GPUI: Stage 1 - Pending raw-line projection (~0.019 ms)
-        UI-&gt;&gt;Proj: Reproject only the affected raw physical lines (Raw Pending Projection)
-        Proj--&gt;&gt;UI: Unstyled render lines that preserve cursor/IME anchors
-        UI-&gt;&gt;GPUI: Submit the minimal dirty-rect scene
-        GPUI--&gt;&gt;User: Screen frame 1 refresh - cursor movement and character display (zero perceived latency)
-    end
-
-    rect rgb(245, 245, 245)
-        note over UI,TS: Stage 2 - Authoritative background async incremental parse (~0.137 ms)
-        UI-)Worker: Dispatch the parse task (carrying document_epoch, generation)
-        Worker-&gt;&gt;Worker: Stream Rope chunks for incremental correction
-        TS--&gt;&gt;Worker: Produce MarkdownSnapshot, RenderLineStore and SyntaxIndex
-        Worker-)UI: Submit the authoritative snapshot
-    end
-
-    rect rgb(255, 250, 240)
-        note over UI,TS: Atomic Arc swap takes effect
-        alt The current generation matches
-            UI-&gt;&gt;UI: Atomically replace RenderLineStore (shallow Arc clone) and smoothly update syntax highlighting and rich-text decorations
-        else The user has already typed new content (the generation is stale)
-            UI-&gt;&gt;UI: Discard the stale snapshot and keep waiting for the newest generation (prevent rollback)
-        end
-    end</pre>
-  <h3>Stage 1: immediate pending raw-line projection (~0.019 ms)</h3>
-  <p>
-    Only the affected raw physical lines are reprojected. The instantaneous output is an unstyled render line that
-    still preserves the cursor and IME anchor, after which the UI submits the minimal dirty-rect scene to the GPU
-    presentation pipeline. The first screen frame therefore shows the moved cursor and the new character with zero
-    perceived latency.
-  </p>
-  <h3>Stage 2: authoritative background async incremental parse (~0.137 ms)</h3>
-  <p>
-    A parse task is dispatched to the worker thread pool carrying <code>document_epoch</code> and
-    <code>generation</code>. The worker reads Rope chunks as a stream and corrects the parse incrementally; the
-    Tree-sitter authority then yields a <code>MarkdownSnapshot</code>, a <code>RenderLineStore</code> and a
-    <code>SyntaxIndex</code>, which the worker submits back to the UI.
-  </p>
-  <h3>Atomic Arc swap takes effect</h3>
-  <ol class="doc-list">
-    <li>If the current generation matches, the <code>RenderLineStore</code> is replaced atomically (a shallow <code>Arc</code> clone), and syntax highlighting and rich-text decorations update smoothly.</li>
-    <li>If the user has already typed new content and the generation is stale, the outdated snapshot is discarded and the editor keeps waiting for the newest generation, which prevents rollback.</li>
-  </ol>
-  <div class="callout callout-important">
-    <p class="callout-title">IMPORTANT</p>
-    <p>Generation matching is what makes the two stages safe to run concurrently. A stale snapshot can never overwrite newer text: it is dropped rather than rendered.</p>
-  </div>
-</section>
-
-<section class="doc-section" id="treesitter">
-  <h2>2.5 Two-Tier Tree-sitter Parsing over Zero-Copy Rope Chunks</h2>
-  <p>
-    A conventional editor usually hands the document to its parser through a <code>to_string()</code> call, which
-    allocates tens of megabytes of contiguous memory and triggers violent allocation churn and GC pressure.
-    Akileas takes a different route.
-  </p>
-  <ol class="doc-list">
-    <li>
-      <strong>Streaming reads straight from Rope chunks.</strong> Through a custom streaming reader, Tree-sitter
-      reads the non-contiguous memory pages inside Ropey's chunks directly, with zero memory copying.
-    </li>
-    <li>
-      <strong>Two-level syntax-tree isolation.</strong> The block-level syntax tree (Block Tree) only delimits
-      paragraphs, headings, code blocks, block quotes and list boundaries; the line-level syntax tree (Inline Tree)
-      is attached on demand to the blocks that changed. When body characters are edited the block structure stays
-      untouched, so only the affected line is re-parsed for inline syntax while the surrounding 99,999 lines reuse
-      their existing tree nodes in full.
-    </li>
-  </ol>
-  <div class="table-wrap">
-    <table class="data-table">
-      <thead>
-        <tr><th>Tree</th><th>Scope</th><th>Behaviour on edit</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Block Tree (block level)</td>
-          <td>Paragraphs, headings, code blocks, block quotes and list boundaries</td>
-          <td>Remains unchanged while body characters change</td>
-        </tr>
-        <tr>
-          <td>Inline Tree (line level)</td>
-          <td>Inline syntax, mounted on demand on changed blocks</td>
-          <td>Only the affected line is re-parsed</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="callout callout-tip">
-    <p class="callout-title">TIP</p>
-    <p>Zero-copy input plus two-tier isolation is what keeps parse cost proportional to the edit rather than to the size of the document.</p>
+    <p>
+      This is also why typing ordinary text feels like it has no delay at all, and why only something
+      like typing <code># </code> — which changes the heading structure and pulls a whole block along
+      with it — costs the background a little extra time. Even then, the screen has already finished
+      updating within 85 microseconds, so you never notice the background working.
+    </p>
   </div>
 </section>
 
 <section class="doc-section" id="pipelines">
-  <h2>2.6 Three Decoupled Rich-Text Pipelines</h2>
+  <h2>2.3 Formulas, diagrams and tables that do not hold each other back</h2>
   <p>
-    Three mutually isolated rich-text rendering pipelines each carry their own debounce policy, generation
-    validation and cache-eviction strategy.
+    Mathematical formulas, Mermaid diagrams and tables are the three most "expensive" kinds of content
+    in a document. If they all shared a single update path, every character you typed could trigger a
+    diagram to be recomputed, and your typing would come out in stutters.
+  </p>
+  <p>
+    Akileas keeps them independent: <strong>only the kind that actually changed is recomputed</strong>.
+    Typing in the body text never disturbs the architecture diagram already drawn beside it.
+  </p>
+
+  <figure class="diagram">
+    <figcaption class="diagram-title">Three independent render paths</figcaption>
+    <div class="dgm-split">
+      <div class="dgm-pill dgm-pill-source">The document changes</div>
+      <div class="dgm-link" aria-hidden="true"></div>
+      <div class="dgm-branches">
+        <article class="dgm-branch">
+          <strong>Mathematical formulas</strong>
+          <ul>
+            <li>Re-laid out only after you stop typing</li>
+            <li>Formulas already computed are remembered</li>
+            <li>Not recomputed at all while the cursor is elsewhere</li>
+          </ul>
+        </article>
+        <article class="dgm-branch">
+          <strong>Mermaid diagrams</strong>
+          <ul>
+            <li>Only diagrams visible in the viewport are compiled</li>
+            <li>Zooming and panning do not recompute the drawing</li>
+            <li>Diagram geometry is cached and reused</li>
+          </ul>
+        </article>
+        <article class="dgm-branch">
+          <strong>Tables</strong>
+          <ul>
+            <li>Column widths adapt to the actual display width</li>
+            <li>Text mixing Chinese and English still lines up</li>
+            <li>Editing a cell affects only that table</li>
+          </ul>
+        </article>
+      </div>
+      <div class="dgm-link" aria-hidden="true"></div>
+      <div class="dgm-pill dgm-pill-accent">Composited into one image and handed to the GPU to draw</div>
+    </div>
+  </figure>
+</section>
+
+<section class="doc-section" id="scrolling">
+  <h2>2.4 Instant navigation anywhere in a hundred thousand lines</h2>
+  <p>
+    Dragging the scrollbar through a very long document makes many editors freeze first and then jump.
+    The reason is that they have to add up the height of every line from the top just to work out which
+    line your drag position corresponds to.
+  </p>
+  <p>
+    Akileas arranges the document's entire height into an index that can be searched quickly. However
+    long the document is, locating a position costs only an amount of work proportional to the
+    logarithm of its length — <strong>drag the scrollbar to 85% and it can tell you, within a few
+    microseconds, which line and which character that is</strong>. Lines that have not been measured
+    yet are estimated at the average height while you scroll, then refined as you keep dragging, so
+    there is no jumping or jitter.
+  </p>
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-label">Time to locate</span><strong>A few microseconds</strong><small>Almost independent of document length</small></div>
+    <div class="stat-card"><span class="stat-label">Scroll jitter</span><strong>None</strong><small>Unmeasured lines are estimated, then refined</small></div>
+  </div>
+</section>
+
+<section class="doc-section" id="safety">
+  <h2>2.5 Crashes and power loss will not cost you your work</h2>
+  <p>
+    Saving looks like a single action, but if the power fails halfway through the write, a half-finished
+    file can destroy the perfectly good draft you had. Akileas avoids this by writing a copy first,
+    verifying it, and only then replacing the original in one step.
+  </p>
+
+  <figure class="diagram">
+    <figcaption class="diagram-title">What actually happens when you save</figcaption>
+    <ol class="dgm-flow">
+      <li>
+        <span class="dgm-idx">1</span>
+        <strong>Build the new version</strong>
+        <small>Assemble the current content into a complete file</small>
+      </li>
+      <li>
+        <span class="dgm-idx">2</span>
+        <strong>Write a temporary copy</strong>
+        <small>Write to a temporary file first; the original is untouched at this point</small>
+      </li>
+      <li>
+        <span class="dgm-idx">3</span>
+        <strong>Verify integrity</strong>
+        <small>Confirm the written data is complete and correct, and force it to disk</small>
+      </li>
+      <li>
+        <span class="dgm-idx">4</span>
+        <strong>Replace in one step</strong>
+        <small>Swap the copy in for the original atomically, with no half-written state</small>
+      </li>
+      <li>
+        <span class="dgm-idx">5</span>
+        <strong>Record it in the time machine</strong>
+        <small>Keep a historical version you can compare with and roll back to at any time</small>
+      </li>
+    </ol>
+  </figure>
+
+  <p>
+    On top of that, the editor keeps appending a lightweight, verified record of your edits. Even after
+    a power loss, the next time you open the document it checks and replays that record automatically,
+    handing back the content you had not saved.
+  </p>
+</section>
+
+<section class="doc-section" id="foundation">
+  <h2>2.6 The foundations</h2>
+  <p>
+    These capabilities come from a few fundamental choices — choices that put Akileas on a different
+    road from the outset than editors built on a browser engine.
   </p>
   <div class="card-grid">
     <article class="doc-card">
-      <h3>Ratex LaTeX pipeline</h3>
-      <p>Triggered when formula ranges change: 700ms keyboard debounce, a 32MB box-model LRU cache, and direct GPUI <code>DisplayList</code> output.</p>
+      <h3>Compiled natively, with no browser engine inside</h3>
+      <p>
+        The whole application is compiled into native code that calls the system's graphics interfaces
+        directly. No browser engine is embedded, so there is no several-second wait to start up and no
+        several hundred megabytes of memory consumed.
+      </p>
     </article>
     <article class="doc-card">
-      <h3>Rusty-Mermaid vector pipeline</h3>
-      <p>Triggered by a code block or viewport scroll: viewport clip-window binding, a 32MB geometry path topology cache, and support for the <code>box/</code> syntax plus the magnifier.</p>
+      <h3>No garbage-collection pauses</h3>
+      <p>
+        The compiler decides at compile time when memory is released, so there is no garbage collection
+        while the app runs. The dropped frames that stutter every few seconds simply do not happen here.
+      </p>
     </article>
     <article class="doc-card">
-      <h3>Adaptive table layout pipeline</h3>
-      <p>Triggered when table content is tweaked: hardware-vector <code>memchr</code> splitting and dynamic width computation based on Unicode display units.</p>
+      <h3>Drawn directly by the GPU</h3>
+      <p>
+        Glyphs, vector graphics and interface elements are all rendered by the GPU, with support for
+        120 FPS high-refresh-rate displays and crisp subpixel text. Scrolling and zooming stay smooth
+        no matter how long the document is.
+      </p>
+    </article>
+    <article class="doc-card">
+      <h3>Memory and caches are both bounded</h3>
+      <p>
+        Images, formulas and diagrams each have a clear cache limit; once it is exceeded, the
+        least-recently-used content is dropped automatically, so editing a very large document for a
+        long time never gets slower.
+      </p>
     </article>
   </div>
-  <pre class="mermaid">flowchart TD
-    Snapshot["Authoritative MarkdownSnapshot produced"]
-    Scan["Scan SyntaxIndex for changes"]
-    Snapshot --&gt; Scan
-
-    Scan --&gt;|Formula ranges changed| RatexPipe
-    Scan --&gt;|Code block or viewport scroll| MermaidPipe
-    Scan --&gt;|Table content tweaked| TablePipe
-
-    RatexPipe["Ratex LaTeX pipeline"]
-    RatexDebounce["700ms keyboard debounce"]
-    RatexCache["32MB box-model LRU cache"]
-    RatexOut["Direct GPUI DisplayList output"]
-    RatexPipe --&gt; RatexDebounce
-    RatexDebounce --&gt; RatexCache
-    RatexCache --&gt; RatexOut
-
-    MermaidPipe["Rusty-Mermaid vector pipeline"]
-    MermaidClip["Viewport clip-window binding"]
-    MermaidCache["32MB geometry path topology cache"]
-    MermaidSyntax["box/ syntax and magnifier support"]
-    MermaidPipe --&gt; MermaidClip
-    MermaidClip --&gt; MermaidCache
-    MermaidCache --&gt; MermaidSyntax
-
-    TablePipe["Adaptive table layout pipeline"]
-    TableSplit["memchr hardware-vector splitting"]
-    TableWidth["Dynamic width from Unicode display units"]
-    TablePipe --&gt; TableSplit
-    TableSplit --&gt; TableWidth
-
-    Assemble["EditorView mixed scene-graph assembly"]
-    Raster["GPU hardware rasterisation"]
-    RatexOut --&gt; Assemble
-    MermaidSyntax --&gt; Assemble
-    TableWidth --&gt; Assemble
-    Assemble --&gt; Raster</pre>
-  <p>
-    All three pipelines converge on <code>EditorView</code> mixed scene-graph assembly and then on GPU hardware
-    rasterisation. Because each pipeline debounces and validates generations independently, a burst of typing in a
-    table never invalidates a cached formula layout.
+  <p class="doc-note">
+    The direct result of these design choices: a light document sits at roughly 25 MB to 45 MB of
+    memory, a hundred-thousand-line document holds steady between 60 MB and 110 MB, and neither grows
+    the longer you keep editing.
   </p>
-</section>
-
-<section class="doc-section" id="heightmap">
-  <h2>2.7 DocumentHeightMap: Logarithmic Virtualisation</h2>
-  <p>
-    In a hundred-thousand-line document, accumulating total height linearly turns any viewport scroll or scrollbar
-    drag into a catastrophic computational bottleneck. Akileas instead implements <code>DocumentHeightMap</code>,
-    a logarithmic height tree.
-  </p>
-  <ul class="doc-list">
-    <li>
-      <strong>Prefix-sum height accumulation tree.</strong> Cumulative height indices are built per block, so
-      editing line 500 updates only the height delta of the local block instead of walking the whole document.
-    </li>
-    <li>
-      <strong>O(log N) binary-search lookup.</strong> Dragging the scrollbar to the 85% position resolves through
-      binary search directly to the exact line number and the in-line pixel offset within a few microseconds.
-    </li>
-    <li>
-      <strong>Smooth-render debounce.</strong> Lines outside the viewport whose height is still unknown are
-      estimated at the mean height and refined progressively while the user drags, which eliminates scrollbar
-      jumping and jitter entirely.
-    </li>
-  </ul>
-  <p class="doc-note">The height tree is what makes virtualised scrolling feel continuous: unknown heights are an estimate that converges, never a blocking full measurement.</p>
-</section>
-
-<section class="doc-section" id="storage">
-  <h2>2.8 Storage Durability: SaveTicket, Atomic Writes, Disaster Recovery</h2>
-  <p>
-    Saving is triggered by <kbd>Cmd</kbd>+<kbd>S</kbd> or by an automatic timed save, and every request passes
-    through an ordering lock before it is allowed to touch the file.
-  </p>
-  <pre class="mermaid">flowchart TD
-    Trigger["Save triggered (Cmd+S / automatic timed save)"]
-    Ticket["Allocate an increasing SaveTicket (seq = N)"]
-    Queue["Enter the file-specific concurrent queue"]
-    Check{"While holding the lock: latest_sequence == N ?"}
-    Discard["Discard the superseded task (never let an old write clobber newer content)"]
-    Tmp["1. Create a .tmp.UUID temporary file in the same directory"]
-    Write["2. Write the full payload and compute CRC32"]
-    Fsync["3. Call the OS-level sync_all / fsync to force physical sectors to disk"]
-    Replace["4. Atomic replace (POSIX rename / Windows MoveFileEx)"]
-    History["5. LocalHistoryStore records a rolling version (at most 100)"]
-
-    Trigger --&gt; Ticket
-    Ticket --&gt; Queue
-    Queue --&gt; Check
-    Check --&gt;|No: a newer save task already exists| Discard
-    Check --&gt;|Yes: writing is permitted| Tmp
-    Tmp --&gt; Write
-    Write --&gt; Fsync
-    Fsync --&gt; Replace
-    Replace --&gt; History</pre>
-  <h3>The ordering lock</h3>
-  <ol class="doc-list">
-    <li>A monotonically increasing <code>SaveTicket</code> is allocated with <code>seq = N</code>.</li>
-    <li>The task enters the file-specific concurrent queue.</li>
-    <li>While the lock is held, the guard validates <code>latest_sequence == N</code>. If it does not match, a newer save task already exists and the superseded task is discarded automatically, which guarantees that an old write never clobbers newer content.</li>
-    <li>If it matches, the write proceeds through the five atomic steps below.</li>
-  </ol>
-  <h3>Atomic write sequence</h3>
-  <ol class="doc-list">
-    <li>A <code>.tmp.UUID</code> temporary file is created in the same directory.</li>
-    <li>The complete payload is written and its CRC32 is computed.</li>
-    <li>The OS-level <code>sync_all</code> / <code>fsync</code> is called to force the data onto physical sectors.</li>
-    <li>The destination is replaced atomically (POSIX <code>rename</code> / Windows <code>MoveFileEx</code>).</li>
-    <li><code>LocalHistoryStore</code> records a rolling version, at most 100 of them.</li>
-  </ol>
-  <h3>RecoveryJournal recovery log</h3>
-  <p>
-    Every edit streams a lightweight journal entry with a CRC32 checksum appended. Even after a power loss, the next
-    launch verifies the journal automatically and replays it to recover within seconds.
-  </p>
-  <h3>LocalHistoryStore local time machine</h3>
-  <p>
-    This relies on Git in no way at all. Each save records a snapshot version in a local database, and the built-in
-    Myers diff algorithm provides character-level insertion and deletion comparison, so any version can be restored
-    with a single click.
-  </p>
-  <div class="callout callout-warning">
-    <p class="callout-title">WARNING</p>
-    <p>Durability depends on the ordering lock being honoured: bypassing the ticket check is exactly how a stale
-      write would silently overwrite newer content on disk.</p>
-  </div>
 </section>

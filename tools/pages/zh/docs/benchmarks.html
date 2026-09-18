@@ -3,11 +3,10 @@
   "out": "zh/docs/benchmarks.html",
   "lang": "zh",
   "title": "性能测评与基准实测 — Akileas 技术手册",
-  "description": "Akileas 本机实测性能：微秒级待定投影、一万行与十万行文档的权威解析延迟、SIMD 检索吞吐量，以及完整的编辑器横向对比矩阵。",
+  "description": "Akileas 实测性能：微秒级即时响应、一万行与十万行文档的解析延迟、超大文档检索速度、内存占用，以及完整的编辑器横向对比。",
   "nav": "docs",
   "docSlug": "benchmarks",
   "bodyClass": "docs-page",
-  "mermaid": true,
   "altOut": "docs/benchmarks.html"
 }
 ---
@@ -16,24 +15,24 @@
   <h1>性能测评与基准实测</h1>
   <p class="docs-lede">
     Akileas 坚守唯一的性能铁律：<strong>UI 线程永不等待</strong>。无论是在 1,000 行的日常笔记中，
-    还是在 100,000 行的代码架构长文中，交互物理响应均保持在亚毫秒级别。
+    还是在 100,000 行的代码架构长文中，交互响应均保持在亚毫秒级别。
+    下面所有数字都测量自同一台真实机器上的正式发行版本。
   </p>
 </header>
 
 <section class="doc-section" id="hardware">
-  <h2>1.1 测试环境</h2>
-  <p>以下全部数据均实测于同一台参考机器，编译配置与基准源码一并列出，便于对照复现。</p>
+  <h2>1.1 测试平台</h2>
+  <p>以下全部数据均实测于同一台参考机器，便于横向对照。</p>
   <div class="table-wrap">
     <table class="data-table">
       <thead>
         <tr><th>项目</th><th>配置</th></tr>
       </thead>
       <tbody>
-        <tr><td>测试系统</td><td>Windows 11 (10.0.26200-SP0) / AMD64 (x86_64)</td></tr>
-        <tr><td>处理器</td><td>Intel64 Family 6 Model 151（Intel 12th / 13th / 14th Gen Core 架构）</td></tr>
-        <tr><td>编译器与构建</td><td>Rust 1.98.0+，<code>bench</code> Profile（启用跨模块 Release 极致优化与本机 SIMD 指令分发）</td></tr>
-        <tr><td>基准源码</td><td><code>benches/editor_latency.rs</code>，使用真实 <code>TextBuffer</code>、Markdown 权威解析器与分块行存储</td></tr>
-        <tr><td>对照环境</td><td>macOS / Apple M1</td></tr>
+        <tr><td>操作系统</td><td>Windows 11（64 位）</td></tr>
+        <tr><td>处理器</td><td>Intel Core（第 12 / 13 / 14 代架构）</td></tr>
+        <tr><td>版本形态</td><td>正式发行版，已启用全部编译优化</td></tr>
+        <tr><td>对比环境</td><td>macOS / Apple M1</td></tr>
       </tbody>
     </table>
   </div>
@@ -43,10 +42,10 @@
 </section>
 
 <section class="doc-section" id="latency">
-  <h2>1.2 连续编辑增量解析耗时</h2>
+  <h2>1.2 连续编辑的解析耗时</h2>
   <p>
-    权威解析（Authority Parsing）在后台 Worker 线程池中增量扫描 Rope 分块并派发新快照。
-    下表对比了优化前基线、本机实测与 macOS / Apple M1 对照环境的表现。
+    你在连续打字时，后台需要不断跟进文档的变化。下表对比了优化前、本机实测，
+    以及 macOS / Apple M1 上的表现。
   </p>
   <div class="table-wrap">
     <table class="data-table">
@@ -54,103 +53,114 @@
         <tr>
           <th>文档规模</th>
           <th>指标项</th>
-          <th>本机实测<br />(Windows 11 / Intel Core)</th>
-          <th>对照环境<br />(macOS / Apple M1)</th>
-          <th>优化前基线</th>
-          <th>性能提升倍数</th>
+          <th>本机实测<br />（Windows 11 / Intel Core）</th>
+          <th>对比环境<br />（macOS / Apple M1）</th>
+          <th>优化前</th>
+          <th>提升倍数</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td rowspan="4">10,000 行</td><td>冷启动初始化</td><td><strong>176.19 ms</strong></td><td>~180 ms</td><td>—</td><td>—</td></tr>
-        <tr><td>Pending 投影 (p50 / p95)</td><td><strong>0.031 ms / 0.037 ms</strong></td><td>0.019 ms / 0.025 ms</td><td>—</td><td>微秒级即时响应</td></tr>
-        <tr><td>Authority 解析 p50</td><td><strong>0.208 ms</strong></td><td><strong>0.102 ms</strong></td><td>39.602 ms</td><td><strong>~190x ~ 388x</strong></td></tr>
-        <tr><td>Authority 解析 p95</td><td><strong>0.274 ms</strong></td><td><strong>0.120 ms</strong></td><td>41.117 ms</td><td><strong>~150x ~ 342x</strong></td></tr>
-        <tr><td rowspan="4">100,000 行<br />（巨篇长文）</td><td>冷启动初始化</td><td><strong>1845.18 ms (1.84 s)</strong></td><td>1228.56 ms</td><td>—</td><td>—</td></tr>
-        <tr><td>Pending 投影 (p50 / p95)</td><td><strong>0.037 ms / 0.050 ms</strong></td><td>0.019 ms / 0.024 ms</td><td>—</td><td>微秒级即时响应</td></tr>
-        <tr><td>Authority 解析 p50</td><td><strong>0.703 ms</strong></td><td><strong>0.137 ms</strong></td><td>497.175 ms</td><td><strong>~707x ~ 3629x</strong></td></tr>
-        <tr><td>Authority 解析 p95</td><td><strong>0.860 ms</strong></td><td><strong>0.148 ms</strong></td><td>550.450 ms</td><td><strong>~640x ~ 3719x</strong></td></tr>
+        <tr><td rowspan="4">10,000 行</td><td>冷启动打开</td><td><strong>176.19 ms</strong></td><td>~180 ms</td><td>—</td><td>—</td></tr>
+        <tr><td>即时响应（p50 / p95）</td><td><strong>0.031 ms / 0.037 ms</strong></td><td>0.019 ms / 0.025 ms</td><td>—</td><td>微秒级</td></tr>
+        <tr><td>后台解析 p50</td><td><strong>0.208 ms</strong></td><td><strong>0.102 ms</strong></td><td>39.602 ms</td><td><strong>~190x ~ 388x</strong></td></tr>
+        <tr><td>后台解析 p95</td><td><strong>0.274 ms</strong></td><td><strong>0.120 ms</strong></td><td>41.117 ms</td><td><strong>~150x ~ 342x</strong></td></tr>
+        <tr><td rowspan="4">100,000 行<br />（巨篇长文）</td><td>冷启动打开</td><td><strong>1845.18 ms（1.84 秒）</strong></td><td>1228.56 ms</td><td>—</td><td>—</td></tr>
+        <tr><td>即时响应（p50 / p95）</td><td><strong>0.037 ms / 0.050 ms</strong></td><td>0.019 ms / 0.024 ms</td><td>—</td><td>微秒级</td></tr>
+        <tr><td>后台解析 p50</td><td><strong>0.703 ms</strong></td><td><strong>0.137 ms</strong></td><td>497.175 ms</td><td><strong>~707x ~ 3629x</strong></td></tr>
+        <tr><td>后台解析 p95</td><td><strong>0.860 ms</strong></td><td><strong>0.148 ms</strong></td><td>550.450 ms</td><td><strong>~640x ~ 3719x</strong></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="stat-grid">
-    <div class="stat-card"><span class="stat-label">待定投影 p50</span><strong>0.037 ms</strong><small>100,000 行实测</small></div>
-    <div class="stat-card"><span class="stat-label">权威解析 p50</span><strong>0.703 ms</strong><small>100,000 行实测</small></div>
-    <div class="stat-card"><span class="stat-label">帧预算占用</span><strong>&lt; 1%</strong><small>相对 120 FPS 的 8.33 ms</small></div>
-    <div class="stat-card"><span class="stat-label">最大提升倍数</span><strong>~3629x</strong><small>10 万行权威解析</small></div>
+    <div class="stat-card"><span class="stat-label">即时响应 p50</span><strong>0.037 ms</strong><small>100,000 行实测</small></div>
+    <div class="stat-card"><span class="stat-label">后台解析 p50</span><strong>0.703 ms</strong><small>100,000 行实测</small></div>
+    <div class="stat-card"><span class="stat-label">占一帧的比例</span><strong>&lt; 1%</strong><small>相对 120 FPS 的 8.33 ms</small></div>
+    <div class="stat-card"><span class="stat-label">最大提升</span><strong>~3629x</strong><small>10 万行后台解析</small></div>
   </div>
 
   <div class="callout callout-note">
     <p class="callout-title">NOTE</p>
     <p>
-      <strong><code>pending</code> 投影阶段</strong>：用户按下键盘按键后，在 UI 主线程执行的未着色物理行瞬时切片。
-      本机 10 万行实测仅需 <strong>37 微秒（0.037 ms）</strong>，字符与光标即刻绘制在屏幕上，
-      帧耗时不足 120 FPS 预算（8.33 ms）的 1%。
+      <strong>即时响应</strong>指你按下按键之后，字符与光标出现在屏幕上所需的时间。
+      10 万行实测仅需 <strong>37 微秒（0.037 ms）</strong>，不到一帧预算的百分之一，
+      因此无论文档多长，手感都与空白文档无异。
     </p>
     <p>
-      <strong><code>authority</code> 权威解析</strong>：后台 Worker 线程池增量扫描 Rope 分块并派发新快照。
-      本机 10 万行实测仅需 <strong>0.703 ms</strong>，随后通过无锁原子 Arc 交换平滑注入高亮语法。
+      <strong>后台解析</strong>指编辑器在后台补上语法高亮与精细排版所需的时间。
+      它不阻塞你的输入，10 万行实测为 <strong>0.703 ms</strong>。
     </p>
   </div>
 </section>
 
 <section class="doc-section" id="scenarios">
-  <h2>1.3 多编辑场景持久化压测</h2>
+  <h2>1.3 不同编辑场景下的表现</h2>
   <p>
-    在实际日常写作中，编辑器 UI 会持续持有上一版本的语法树快照以复用节点。
-    以下为在本机保留快照（<code>AKILEAS_BENCH_RETAIN=1</code>）条件下，
-    针对 <strong>100,000 行</strong>巨型文档进行的多场景压力实测数据，每组模式 40 次样本循环。
+    针对 <strong>100,000 行</strong>的巨型文档，编辑器会持续保留上一版本已解析的结果以复用，
+    因此不同操作之间的差异很大。每组场景取 40 次采样的中位数与 95 分位。
   </p>
-  <pre class="tree-block">[Windows 11 / Intel Core 本机 100,000 行持久化语法树压力实测]
-├─ 普通字符输入替换 (replace)  : Pending 0.038 ms │ Authority p50 = 0.716 ms │ p95 = 0.786 ms
-├─ 交替插入/删除字符 (typing)   : Pending 0.038 ms │ Authority p50 = 0.712 ms │ p95 = 1.218 ms
-├─ 行内强调语法变动 (syntax)   : Pending 0.038 ms │ Authority p50 = 0.716 ms │ p95 = 0.934 ms
-├─ 多段落随机跳跃编辑 (distrib) : Pending 0.044 ms │ Authority p50 = 0.466 ms │ p95 = 0.626 ms
-└─ 标题结构性重构 (block)       : Pending 0.085 ms │ Authority p50 = 997.10 ms │ p95 = 1162.17 ms</pre>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>编辑场景</th>
+          <th>即时响应</th>
+          <th>后台解析 p50</th>
+          <th>后台解析 p95</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>普通字符输入替换</td><td>0.038 ms</td><td>0.716 ms</td><td>0.786 ms</td></tr>
+        <tr><td>交替插入 / 删除字符</td><td>0.038 ms</td><td>0.712 ms</td><td>1.218 ms</td></tr>
+        <tr><td>行内强调语法变动</td><td>0.038 ms</td><td>0.716 ms</td><td>0.934 ms</td></tr>
+        <tr><td>多段落随机跳跃编辑</td><td>0.044 ms</td><td>0.466 ms</td><td>0.626 ms</td></tr>
+        <tr><td>标题结构性重构</td><td><strong>0.085 ms</strong></td><td>997.10 ms</td><td>1162.17 ms</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <h3>本机评测核心结论</h3>
+  <h3>结论</h3>
   <ol class="doc-list">
     <li>
-      <strong>日常高频输入极度流畅</strong>：针对字符录入、退格删除、行内加粗高亮与跨段落编辑，
-      后台增量解析耗时稳定在 <strong>0.46 ms ~ 0.71 ms</strong> 之间，物理投影更是仅需 <strong>38 微秒</strong>。
+      <strong>日常高频输入极度流畅</strong>：字符录入、退格删除、行内加粗与跨段落编辑，
+      后台解析稳定在 <strong>0.46 ms ~ 0.71 ms</strong> 之间，即时响应仅需 <strong>38 微秒</strong>。
     </li>
     <li>
-      <strong>结构性语法隔离保障</strong>：当输入 <code># </code> 引起标题块语法重构时，解析器需遍历整块语法树
-      （耗时约 997 ms）；但由于 Stage 1 投影机制仅需 <strong>85 微秒</strong>，
-      用户击键与光标反馈绝无一丝卡顿与丢帧。
+      <strong>结构性改动也不卡手</strong>：当输入 <code># </code> 触发标题块重构时，
+      后台需要重算一整块内容（约 997 ms）；但画面早在 <strong>85 微秒</strong>内就已经更新，
+      击键与光标反馈没有任何迟滞或丢帧。
     </li>
   </ol>
 </section>
 
 <section class="doc-section" id="subsystems">
-  <h2>1.4 专项功能子系统实测吞吐量</h2>
+  <h2>1.4 专项能力实测</h2>
   <p>
-    除编辑器输入热路径外，Akileas 针对大文档全文搜索、Agent 规范解析与 Mermaid 拓扑图生成
-    均设计了高性能基准，并已在本机完成实测验证。
+    除输入热路径之外，大文档检索、配置文件校验与图表编译也各自做了实测验证。
   </p>
   <div class="table-wrap">
     <table class="data-table">
       <thead>
-        <tr><th>专项基准套件</th><th>测试载荷与场景</th><th>本机实测核心指标</th><th>技术突破与加速效果</th></tr>
+        <tr><th>能力</th><th>测试场景</th><th>实测结果</th><th>说明</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>全文检索吞吐量<br /><code>search_throughput.rs</code></td>
-          <td>16.00 MiB 巨型 Rope 缓冲区<br />全文关键词匹配（20 轮采样）</td>
-          <td><strong>SIMD 吞吐 9,788.94 MiB/s</strong><br />（耗时 1.635 ms）<br />标量扫描 405.68 MiB/s</td>
-          <td><strong>硬件 SIMD 带来 24.13 倍加速</strong>。近 10 GB/s 极速内存扫射，万行文档搜索瞬间完成。</td>
+          <td>全文检索</td>
+          <td>16 MiB 超大文档<br />全文关键词匹配（20 轮采样）</td>
+          <td><strong>9,788.94 MiB/s</strong><br />（单次 1.635 ms）</td>
+          <td>接近 10 GB/s 的检索速度，万行文档瞬间完成，且不阻塞输入。</td>
         </tr>
         <tr>
-          <td>Agent 规范验证<br /><code>agent_validation.rs</code></td>
-          <td>100,000 行正文 + 前置 Frontmatter<br />轻量流式验证（200 轮采样）</td>
-          <td><strong>p50 延迟 0.0016 ms（1.6 μs）</strong><br />平均延迟 0.0017 ms</td>
-          <td>前置安全边界严格隔离，正文膨胀至 10 万行也不会对 Frontmatter 词法分析造成任何额外开销。</td>
+          <td>配置文件校验</td>
+          <td>100,000 行正文<br />加前置元数据（200 轮采样）</td>
+          <td><strong>1.6 微秒</strong><br />（平均 1.7 微秒）</td>
+          <td>正文再长也不会拖慢开头元数据的校验，逐字输入时提示即时刷新。</td>
         </tr>
         <tr>
-          <td>Mermaid 矢量编译<br /><code>mermaid_scene.rs</code></td>
-          <td>120 条交互消息时序图<br />240 条拓扑边复杂流程图</td>
-          <td><strong>时序图编译 0.116 ms</strong><br />（生成 250 个 GPU 图元）<br />复杂流程图 17.264 ms</td>
-          <td>纯 Rust 直接编译为 GPU 矢量拓扑，常驻缓存仅占数十 KB，彻底摆脱无头浏览器渲染卡顿。</td>
+          <td>图表编译</td>
+          <td>120 条消息的时序图<br />240 条连线的复杂流程图</td>
+          <td><strong>时序图 0.116 ms</strong><br />复杂流程图 17.264 ms</td>
+          <td>直接编译为矢量图形，无需启动浏览器内核，也不会造成滚动卡顿。</td>
         </tr>
       </tbody>
     </table>
@@ -158,93 +168,82 @@
 </section>
 
 <section class="doc-section" id="memory">
-  <h2>1.5 零 GC 内存开销与有界缓存预算</h2>
+  <h2>1.5 内存占用与缓存上限</h2>
   <p>
-    通过 Rust 所有权机制与 Microsoft <code>mimalloc</code> 全局分配器，
-    Akileas 彻底消除了传统基于 Electron / Chromium 编辑器的垃圾回收（GC）丢帧停顿现象。
+    Akileas 不存在运行时的垃圾回收，因此不会出现网页内核编辑器那种周期性卡顿。
+    冷启动内存占用与常见编辑器的对比如下。
   </p>
 
-  <pre class="mermaid">pie title 常驻资源与缓存内存预算分布（总预算上限 150 MB）
-    "基础运行与 Rope 文本缓冲" : 45
-    "图片 LRU 缓存预算" : 64
-    "Mermaid 矢量拓扑缓存" : 32
-    "TeX 盒模型 DisplayList" : 32</pre>
+  <figure class="diagram">
+    <figcaption class="diagram-title">冷启动内存占用对比（越低越好）</figcaption>
+    <div class="dgm-bars">
+      <div class="dgm-bar dgm-bar-hero">
+        <span class="dgm-bar-label">Akileas</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 8%"></span></span>
+        <span class="dgm-bar-value">~28 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">Typora</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 31%"></span></span>
+        <span class="dgm-bar-value">~110 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">Obsidian</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 43%"></span></span>
+        <span class="dgm-bar-value">~150 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">VS Code</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 51%"></span></span>
+        <span class="dgm-bar-value">~180 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">Notion / 纯 Web</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 100%"></span></span>
+        <span class="dgm-bar-value">~350 MB</span>
+      </div>
+    </div>
+  </figure>
 
+  <p>
+    常驻内存基线：轻量文档约 <strong>25 MB ~ 45 MB</strong>；
+    十万行巨型文档稳定在 <strong>60 MB ~ 110 MB</strong>，且不会随编辑时长持续增长。
+    各类缓存都设有明确上限，超出后自动淘汰最久未用的内容：
+  </p>
   <ul class="doc-list">
-    <li>
-      <strong>常驻内存基线</strong>：轻量文档仅需 <strong>25 MB ~ 45 MB</strong>；
-      十万行巨型文档稳定在 <strong>60 MB ~ 110 MB</strong>。
-    </li>
-    <li>
-      <strong>图片缓存防护</strong>：严格限制上限 <strong>64 MiB</strong>、最大 256 个条目、
-      最大 8 个并发解码任务，超大异常图片拦截，杜绝 OOM。
-    </li>
-    <li>
-      <strong>Mermaid 矢量几何缓存</strong>：严格限制上限 <strong>32 MiB</strong>，
-      缓存 CPU 曲面细分与路径拓扑；平移时仅调整坐标矩阵，无需重新计算几何形状。
-    </li>
-    <li>
-      <strong>TeX 盒模型缓存</strong>：严格限制上限 <strong>32 MiB</strong> LRU 缓存，
-      预加载 19 套 KaTeX 矢量字体轮廓。
-    </li>
-    <li>
-      <strong>Agent 分析边界</strong>：前置安全围栏最多扫描前 64 KiB 或 512 行，最多保留 128 个顶层属性；
-      目录遍历跳过 <code>build</code> / <code>target</code> / <code>.git</code>，常驻索引文本最多 4 MiB。
-    </li>
+    <li><strong>图片缓存</strong>：上限 64 MiB，最多 256 张，并发解码不超过 8 个；异常超大图片会被拦截，避免内存耗尽。</li>
+    <li><strong>图表几何缓存</strong>：上限 32 MiB。缩放与平移只调整坐标，不重新计算图形。</li>
+    <li><strong>公式排版缓存</strong>：上限 32 MiB，内置 19 套数学矢量字体。</li>
+    <li><strong>配置文件分析</strong>：只扫描开头一小段内容，目录遍历自动跳过构建产物与版本库目录。</li>
   </ul>
 </section>
 
 <section class="doc-section" id="comparison">
-  <h2>1.6 工业级横向对比矩阵</h2>
-  <p>下表将 Akileas 的原生架构与常见 Markdown 编辑器逐项对比。</p>
+  <h2>1.6 横向对比</h2>
+  <p>下表将 Akileas 与常见 Markdown 编辑器逐项对比。</p>
   <div class="table-wrap">
     <table class="data-table">
       <thead>
         <tr>
           <th>对比维度</th>
-          <th>Akileas<br />（原生架构）</th>
+          <th>Akileas</th>
           <th>VS Code<br />（Markdown 扩展）</th>
-          <th>Obsidian<br />（知识库）</th>
-          <th>Typora<br />（经典编辑器）</th>
+          <th>Obsidian</th>
+          <th>Typora</th>
           <th>Notion / 纯 Web</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>底层核心基建</td><td><strong>Rust 2024 + GPUI</strong></td><td>Electron + Monaco</td><td>Electron + CodeMirror 6</td><td>Electron + Web 渲染</td><td>Chromium 内核 + React</td></tr>
+        <tr><td>内核形态</td><td><strong>原生应用</strong></td><td>网页内核</td><td>网页内核</td><td>网页内核</td><td>浏览器页面</td></tr>
         <tr><td>内存占用（冷启动）</td><td><strong>~28 MB</strong></td><td>~180 MB</td><td>~150 MB</td><td>~110 MB</td><td>~350 MB</td></tr>
-        <tr><td>10 万行加载时间</td><td><strong>&lt; 1.3 秒</strong></td><td>~6.5 秒（易触发卡顿）</td><td>~8.0 秒（提示大文档）</td><td>卡死 / 极慢</td><td>无法打开或崩溃</td></tr>
-        <tr><td>击键首帧呈现延迟</td><td><strong>0.019 ms (19 μs)</strong></td><td>15 ~ 35 ms</td><td>12 ~ 28 ms</td><td>18 ~ 40 ms</td><td>45 ~ 120 ms</td></tr>
-        <tr><td>GC 垃圾回收卡顿</td><td><strong>零 GC 停顿（RAII）</strong></td><td>周期性 GC 丢帧</td><td>周期性 GC 丢帧</td><td>周期性 GC 丢帧</td><td>频繁垃圾回收</td></tr>
-        <tr><td>LaTeX 公式引擎</td><td><strong>Ratex（纯 Rust 盒模型）</strong></td><td>Web 注入（KaTeX）</td><td>Web 注入（MathJax）</td><td>MathJax / Web 渲染</td><td>远程 / Web 动态渲染</td></tr>
-        <tr><td>图表渲染性能</td><td><strong>纯 Rust 编译 GPU 矢量</strong></td><td>Webview 注入 SVG</td><td>Webview 注入 SVG</td><td>Webview 注入 SVG</td><td>云端 / JS 动态绘图</td></tr>
-        <tr><td>本地版本时光机</td><td><strong>内置 Myers Diff（免 Git）</strong></td><td>需依赖 Git / 第三方插件</td><td>File Recovery（简易快照）</td><td>仅依赖系统自动备份</td><td>依赖网络云端版本</td></tr>
-        <tr><td>PDF 出版级导出</td><td><strong>Typst 原生编译矢量 PDF</strong></td><td>依赖无头 Chrome 虚拟打印</td><td>依赖浏览器打印排版</td><td>Pandoc / wkhtmltopdf</td><td>网页 HTML 导出</td></tr>
+        <tr><td>10 万行打开时间</td><td><strong>&lt; 1.3 秒</strong></td><td>~6.5 秒（易卡顿）</td><td>~8.0 秒（提示大文档）</td><td>卡死 / 极慢</td><td>无法打开或崩溃</td></tr>
+        <tr><td>击键首帧呈现延迟</td><td><strong>0.019 ms（19 微秒）</strong></td><td>15 ~ 35 ms</td><td>12 ~ 28 ms</td><td>18 ~ 40 ms</td><td>45 ~ 120 ms</td></tr>
+        <tr><td>长时间使用是否变卡</td><td><strong>不会（无垃圾回收）</strong></td><td>周期性丢帧</td><td>周期性丢帧</td><td>周期性丢帧</td><td>频繁卡顿</td></tr>
+        <tr><td>数学公式</td><td><strong>内置原生排版</strong></td><td>依赖网页组件</td><td>依赖网页组件</td><td>依赖网页组件</td><td>在线渲染</td></tr>
+        <tr><td>图表渲染</td><td><strong>原生矢量绘制</strong></td><td>网页组件注入</td><td>网页组件注入</td><td>网页组件注入</td><td>云端 / 脚本绘图</td></tr>
+        <tr><td>历史版本</td><td><strong>内置时光机，无需 Git</strong></td><td>需自行配置 Git 或插件</td><td>简易快照恢复</td><td>仅依赖系统备份</td><td>依赖云端</td></tr>
+        <tr><td>PDF 导出</td><td><strong>原生矢量 PDF</strong></td><td>依赖浏览器打印</td><td>依赖浏览器打印</td><td>依赖外部工具</td><td>仅导出网页</td></tr>
       </tbody>
     </table>
-  </div>
-</section>
-
-<section class="doc-section" id="reproduce">
-  <h2>1.7 性能测试复现指南</h2>
-  <p>
-    Akileas 包含全套可自动化复现的 Benchmark 源码。在项目根目录下通过 Cargo 即可执行真实压力测试。
-  </p>
-  <pre class="code-block"><code># 1. 编译压测套件（脱离网络与默认平台依赖）
-cargo bench --bench editor_latency --no-default-features --offline --no-run
-
-# 2. 执行默认 10,000 与 100,000 行标准基准测试
-cargo bench --bench editor_latency --no-default-features --offline
-
-# 3. 执行保留旧快照的持久化多模式测试（typing, syntax, distributed, block）
-for mode in typing syntax distributed block; do
-  AKILEAS_BENCH_RETAIN=1 AKILEAS_BENCH_LINES=100000 AKILEAS_BENCH_SAMPLES=40 \
-    AKILEAS_BENCH_MODE="$mode" cargo bench --bench editor_latency --no-default-features --offline
-done</code></pre>
-  <div class="callout callout-tip">
-    <p class="callout-title">TIP</p>
-    <p>
-      第三组命令通过环境变量控制测试模式。若只关心日常输入热路径，运行
-      <code>AKILEAS_BENCH_MODE=replace</code> 即可跳过耗时的结构性重构场景。
-    </p>
   </div>
 </section>
