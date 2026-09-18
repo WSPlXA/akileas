@@ -27,7 +27,7 @@
 
   --text: #241d12;
   --muted: #5f5138;
-  --subtle: #8a7a5c;
+  --subtle: #7d6d50;
 
   /* — Pigments ——————————————————————————————————————— */
   --gold: #a5813a;
@@ -400,11 +400,11 @@ h1 {
 h1 em {
   background: linear-gradient(
     98deg,
-    #6d5220 0%,
-    #c9a24a 26%,
-    #f2e0a8 46%,
-    #a5813a 66%,
-    #7a5c1f 100%
+    #52400f 0%,
+    #7d5c14 20%,
+    #9a7520 40%,
+    #6b4c0f 62%,
+    #46320a 100%
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -1842,11 +1842,15 @@ code {
 
 .final-cta h2::after {
   display: block;
-  margin-top: 26px;
-  color: var(--gold);
-  font-size: 1.1rem;
-  line-height: 1;
-  content: "\2766";
+  width: 300px;
+  max-width: 80%;
+  height: 10px;
+  margin: 28px auto 0;
+  background-image: var(--divider);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 300px 10px;
+  content: "";
 }
 
 .final-cta > p:not(.section-kicker) {
