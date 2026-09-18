@@ -2161,7 +2161,7 @@ footer nav a:hover {
     font-size: 1.04rem;
   }
 
-  .site-header nav a:not(.nav-github) {
+  .site-header nav a:not(.nav-github):not(.lang-switch) {
     display: none;
   }
 
@@ -2346,5 +2346,691 @@ footer nav a:hover {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Documentation / manual
+   ========================================================================== */
+
+.site-header nav {
+  gap: 24px;
+}
+
+/* Language switch — a small engraved tab, not an underlined nav link */
+.site-header nav a.lang-switch {
+  padding: 7px 13px;
+  border: 1px solid var(--line-bright);
+  border-radius: var(--radius-sm);
+  background: rgba(253, 249, 240, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 253, 245, 0.7);
+  color: var(--gold-deep);
+  letter-spacing: 0.1em;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.site-header nav a.lang-switch::after {
+  display: none;
+}
+
+.site-header nav a.lang-switch:hover {
+  border-color: var(--gold);
+  background: #fdf9ef;
+  color: var(--gold-deep);
+}
+
+/* — Two-column docs shell ——————————————————————————————— */
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 244px minmax(0, 1fr);
+  gap: 62px;
+  align-items: start;
+  padding-block: 58px 116px;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: 112px;
+}
+
+.docs-sidebar-title {
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--gold-deep);
+  font-family: var(--font-inscription);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.docs-nav {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docs-nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 13px;
+  border-left: 2px solid transparent;
+  color: var(--muted);
+  font-size: 0.98rem;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.docs-nav a:hover {
+  background: rgba(165, 129, 58, 0.07);
+  color: var(--text);
+}
+
+.docs-nav a[aria-current="page"] {
+  border-left-color: var(--gold);
+  background: rgba(165, 129, 58, 0.1);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.docs-nav-num {
+  min-width: 1.3em;
+  color: var(--gold);
+  font-family: var(--font-inscription);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.docs-sidebar-back {
+  display: inline-block;
+  width: 100%;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-hair);
+  color: var(--muted);
+  font-family: var(--font-inscription);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.docs-sidebar-back:hover {
+  color: var(--gold-deep);
+}
+
+/* — Docs body ——————————————————————————————————————— */
+
+.docs-main {
+  min-width: 0;
+}
+
+.docs-hero {
+  margin-bottom: 42px;
+  padding-bottom: 34px;
+  border-bottom: 3px double var(--line-bright);
+}
+
+.docs-hero h1 {
+  max-width: 22ch;
+  font-size: clamp(2.5rem, 4.8vw, 4rem);
+}
+
+.docs-lede {
+  max-width: 64ch;
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 1.16rem;
+  line-height: 1.76;
+}
+
+.doc-section {
+  padding: 36px 0;
+  border-bottom: 1px solid var(--line-hair);
+  scroll-margin-top: 118px;
+}
+
+.doc-section:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.doc-section h2 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.8vw, 2.35rem);
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: var(--text);
+}
+
+.doc-section h3 {
+  margin: 34px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.doc-section h3:first-child {
+  margin-top: 0;
+}
+
+.doc-section p {
+  max-width: 76ch;
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.doc-section p strong {
+  color: var(--text);
+}
+
+.doc-section a {
+  border-bottom: 1px solid rgba(165, 129, 58, 0.5);
+  color: var(--ultramarine-deep);
+}
+
+.doc-section a:hover {
+  border-bottom-color: var(--gold);
+  color: var(--gold-deep);
+}
+
+.doc-list {
+  max-width: 76ch;
+  margin: 16px 0 0;
+  padding-left: 1.5em;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.doc-list li {
+  margin-bottom: 9px;
+}
+
+.doc-list li::marker {
+  color: var(--gold);
+  font-family: var(--font-inscription);
+}
+
+.doc-section p.doc-note {
+  max-width: 76ch;
+  margin-top: 16px;
+  color: var(--subtle);
+  font-size: 0.96rem;
+  font-style: italic;
+}
+
+/* — Tables ————————————————————————————————————————— */
+
+.table-wrap {
+  margin: 28px 0;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-page);
+  box-shadow: 0 6px 18px rgba(80, 58, 24, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table thead th {
+  padding: 13px 16px;
+  border-bottom: 2px solid var(--gold);
+  background: rgba(165, 129, 58, 0.06);
+  color: var(--gold-deep);
+  font-family: var(--font-inscription);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+  vertical-align: bottom;
+}
+
+.data-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line-hair);
+  color: var(--muted);
+  line-height: 1.6;
+  vertical-align: top;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:hover td {
+  background: rgba(165, 129, 58, 0.05);
+}
+
+.data-table tbody td:first-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* — Code & tree output ————————————————————————————————— */
+
+.code-block,
+.tree-block {
+  margin: 26px 0;
+  padding: 22px 24px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, #fdf9f0, #f7f0de);
+  color: #2f2617;
+  font-family: var(--font-mono);
+  font-size: 0.79rem;
+  line-height: 1.75;
+  tab-size: 2;
+}
+
+.tree-block {
+  border-left-color: var(--ultramarine);
+}
+
+.code-block code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* — Callouts ————————————————————————————————————————— */
+
+.callout {
+  margin: 26px 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+  background: rgba(253, 249, 240, 0.94);
+  box-shadow: 0 5px 16px rgba(80, 58, 24, 0.05);
+}
+
+.callout-title {
+  margin: 0 0 9px;
+  color: var(--gold-deep);
+  font-family: var(--font-inscription);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.callout p {
+  max-width: 76ch;
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.callout p:last-child {
+  margin-bottom: 0;
+}
+
+.callout ul {
+  margin: 0 0 10px;
+  padding-left: 1.4em;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.callout ul:last-child {
+  margin-bottom: 0;
+}
+
+.callout-note {
+  border-left-color: var(--ultramarine);
+}
+.callout-note .callout-title {
+  color: var(--ultramarine-deep);
+}
+
+.callout-tip {
+  border-left-color: var(--verdigris);
+}
+.callout-tip .callout-title {
+  color: #3d5c3a;
+}
+
+.callout-warning {
+  border-left-color: var(--gold);
+}
+
+.callout-important {
+  border-left-color: var(--terracotta);
+}
+.callout-important .callout-title {
+  color: var(--terracotta);
+}
+
+/* — Stat plates & cards ————————————————————————————————— */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.stat-card {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  outline: 1px solid rgba(165, 129, 58, 0.2);
+  outline-offset: -5px;
+  background: linear-gradient(160deg, rgba(253, 249, 240, 0.95), rgba(242, 234, 216, 0.9));
+}
+
+.stat-label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--gold-deep);
+  font-family: var(--font-inscription);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.stat-card strong {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.stat-card small {
+  display: block;
+  margin-top: 5px;
+  color: var(--subtle);
+  font-size: 0.84rem;
+  font-style: italic;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.doc-card {
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  outline: 1px solid rgba(165, 129, 58, 0.18);
+  outline-offset: -6px;
+  background: var(--surface-soft);
+}
+
+.doc-card h3 {
+  margin: 0 0 9px;
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.doc-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* — Keyboard keys ————————————————————————————————————— */
+
+kbd {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid var(--line-bright);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #fdfaf1, #efe4c9);
+  color: var(--ultramarine-deep);
+  font-family: var(--font-mono);
+  font-size: 0.76em;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+/* — Diagrams ————————————————————————————————————————— */
+
+pre.mermaid {
+  margin: 28px 0;
+  padding: 26px 20px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-page);
+  color: var(--subtle);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* — Screenshot plates ——————————————————————————————————— */
+
+.shot {
+  margin: 32px 0;
+}
+
+.shot-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-bright);
+  border-radius: var(--radius-md);
+  outline: 1px solid rgba(165, 129, 58, 0.28);
+  outline-offset: 4px;
+  background: linear-gradient(160deg, rgba(253, 249, 240, 0.95), rgba(240, 231, 211, 0.9));
+}
+
+.shot-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.shot-fallback {
+  display: none;
+  padding: 56px 26px;
+  text-align: center;
+}
+
+.shot-missing .shot-frame img {
+  display: none;
+}
+
+.shot-missing .shot-fallback {
+  display: block;
+}
+
+.shot-fallback-mark {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--gold);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.shot-fallback strong {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 600;
+}
+
+.shot-fallback code {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.76rem;
+}
+
+.shot figcaption {
+  margin-top: 15px;
+  color: var(--subtle);
+  font-size: 0.96rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.shot-num {
+  margin-right: 9px;
+  color: var(--gold-deep);
+  font-family: var(--font-inscription);
+  font-size: 0.58rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* — Docs hub extras ————————————————————————————————————— */
+
+.docs-toc {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docs-toc a {
+  display: block;
+  height: 100%;
+  padding: 24px 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  outline: 1px solid rgba(165, 129, 58, 0.18);
+  outline-offset: -6px;
+  background: linear-gradient(160deg, rgba(253, 249, 240, 0.95), rgba(242, 234, 216, 0.9));
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.docs-toc a:hover {
+  transform: translateY(-3px);
+  border-color: rgba(165, 129, 58, 0.5);
+  box-shadow: 0 16px 34px rgba(80, 58, 24, 0.11);
+}
+
+.docs-toc-num {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--gold);
+  font-family: var(--font-inscription);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.docs-toc strong {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.docs-toc span {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+
+/* — Docs responsive ————————————————————————————————————— */
+
+@media (max-width: 1080px) {
+  .site-header nav a.nav-anchor {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .docs-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding-block: 42px 84px;
+  }
+
+  .docs-sidebar {
+    position: static;
+  }
+
+  .docs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .docs-nav a {
+    padding: 8px 13px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: rgba(253, 249, 240, 0.7);
+    font-size: 0.88rem;
+  }
+
+  .docs-nav a[aria-current="page"] {
+    border-color: var(--gold);
+    background: rgba(165, 129, 58, 0.12);
+  }
+
+  .docs-sidebar-back {
+    width: auto;
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 700px) {
+  .docs-hero h1 {
+    font-size: clamp(2.1rem, 9vw, 3rem);
+  }
+
+  .code-block,
+  .tree-block {
+    padding: 18px 16px;
+    font-size: 0.74rem;
+  }
+
+  .data-table {
+    font-size: 0.86rem;
+  }
+
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 10px 12px;
+  }
+
+  .stat-card strong {
+    font-size: 1.3rem;
   }
 }

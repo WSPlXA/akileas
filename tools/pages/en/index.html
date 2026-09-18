@@ -1,0 +1,545 @@
+---
+{
+  "out": "index.html",
+  "lang": "en",
+  "title": "Akileas — Native, Latency-First Markdown Editor",
+  "description": "Akileas is a native, latency-first Markdown editor inspired by the swift-footed Achilles. Featuring in-place WYSIWYG, eye-care palette, and 100% local-first privacy.",
+  "nav": "home",
+  "altOut": "zh/index.html",
+  "jsonLd": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Akileas",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Windows, macOS, Linux",
+    "description": "A native, latency-first Markdown editor inspired by the swift-footed Achilles, featuring eye-care parchment aesthetics and an Agent configuration workbench.",
+    "downloadUrl": "https://github.com/WSPlXA/akileas/releases/latest",
+    "softwareHelp": "https://github.com/WSPlXA/akileas/issues",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0"
+  }
+}
+---
+<main id="main">
+      <!-- Hero Section -->
+      <section class="hero shell">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Native Performance · Local-First · Eye-Care Palette · Open Source</p>
+          <h1>Keep up with the speed<br /><em>of your thought.</em></h1>
+          <p class="hero-lede dropcap">
+            Named after Homer’s "swift-footed Achilles", Akileas is engineered for uncompromising responsiveness and deep focus. Markdown syntax unfolds seamlessly at your cursor and settles into clean typography the moment you move on. No split-screen friction, no typing lag—just writing in pure flow.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-store" href="https://apps.microsoft.com/detail/9PF44S6NS06D" target="_blank" rel="noopener">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.949-1.801"/></svg>
+              <span>Get from Microsoft Store</span>
+            </a>
+            <a class="button button-primary" href="https://github.com/WSPlXA/akileas/releases/latest" target="_blank" rel="noopener">
+              Download on GitHub
+            </a>
+            <a class="button button-secondary" href="#features">
+              Explore Features
+            </a>
+          </div>
+          <div class="platforms" aria-label="Supported platforms">
+            <span>Windows 10/11</span>
+            <span>macOS</span>
+            <span>Linux</span>
+          </div>
+        </div>
+
+        <div class="hero-mark" aria-hidden="true">
+          <div class="mark-glow"></div>
+          <img src="assets/akileas-icon.png" width="1024" height="1024" alt="Akileas application icon" />
+          <div class="metric-card metric-top">
+            <small>Rendering Core</small>
+            <strong>Zero-Wait Projection</strong>
+          </div>
+          <div class="metric-card metric-bottom">
+            <small>Data Ownership</small>
+            <strong>100% Local Storage</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vision Section: Design Philosophy -->
+      <section class="vision-section" id="vision">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">Design Philosophy</p>
+              <h2>The Swift-Footed Achilles</h2>
+            </div>
+            <p>
+              In Homer’s Iliad, the hero Achilles is celebrated as "swift-footed" (πόδας ὠκὺς Ἀχιλλεύς)—embodying razor-sharp agility, unhindered momentum, and pure velocity. In an era where writing tools are weighed down by heavy web runtimes and sluggish electron wrappers, Akileas reclaims that effortless speed: immediate keystroke response, quiet simplicity, and a canvas that gets out of your way.
+            </p>
+          </div>
+
+          <div class="vision-quote">
+            <blockquote class="homeric-verse" lang="grc">
+              σευάμενος ὥς θ᾽ ἵππος ἀεθλοφόρος σὺν ὄχεσφιν,<br />
+              ὅς ῥά τε ῥεῖα θέῃσι τιταινόμενος πεδίοιο·<br />
+              ὣς Ἀχιλεὺς λαιψηρὰ πόδας καὶ γούνατ᾽ ἐνώμα.
+            </blockquote>
+            <p class="verse-translation">
+              “As a prize-winning steed with its chariot sweeps lightly over the plain in full career,<br />
+              so Achilles swiftly plied his nimble feet and knees.”
+            </p>
+            <cite>— Homer, The Iliad, Book XXII (lines 22–24)</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Product Showcase Section -->
+      <section class="product-stage shell" aria-labelledby="product-heading">
+        <div class="section-intro product-intro">
+          <div>
+            <p class="section-kicker">Continuous Interactive Canvas</p>
+            <h2 id="product-heading">What you write is what you read.</h2>
+          </div>
+          <p>
+            Markdown syntax reveals itself only on the active line under your cursor, instantly settling into refined typography as you navigate away. No dual-pane splits, no mental context switching—seamlessly bridge authoring and reading on a single surface.
+          </p>
+        </div>
+        <figure class="app-frame">
+          <div class="window-bar" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <strong>Akileas Showcase.md</strong>
+          </div>
+          <img
+            src="assets/akileas-windows.png"
+            width="2576"
+            height="1408"
+            alt="Akileas on Windows running with workspace tree, math equations, tables, and Mermaid flowcharts"
+          />
+          <figcaption>
+            Unified native desktop workspace displaying live Markdown, math equations, Mermaid diagrams, workspace navigation, and Agent diagnostics.
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- Feature Section -->
+      <section class="feature-section" id="features">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">Core Features</p>
+              <h2>Engineered for Focus, Grounded in Precision</h2>
+            </div>
+            <p>Light enough to disappear beneath your thoughts, capable enough for complex technical manuscripts.</p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card feature-wide">
+              <p class="feature-number">I</p>
+              <h3>In-Place Hybrid WYSIWYG</h3>
+              <p>
+                Eliminate fractured side-by-side preview panes. Raw Markdown syntax expands only on the active line under your cursor. Headings, lists, tables, links, and bold text render inline in real time, keeping your canvas immaculate.
+              </p>
+              <div class="mini-editor" aria-hidden="true">
+                <span class="line source">## <b>Immersive Writing Flow</b></span>
+                <span class="line rendered">Once your cursor moves ahead, text settles smoothly into publication-grade layout.</span>
+                <span class="caret"></span>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">II</p>
+              <h3>GitHub Alert Callouts</h3>
+              <p>
+                Full support for standard GFM alert syntax: <code>[!NOTE]</code>, <code>[!TIP]</code>, <code>[!IMPORTANT]</code>, <code>[!WARNING]</code>, and <code>[!CAUTION]</code>. Syntax expands while editing and folds into softly accented, refined callout cards as your cursor moves past.
+              </p>
+              <div class="mini-alert" aria-hidden="true">
+                <div class="mini-alert-head">
+                  <span class="mini-alert-badge"><span class="mini-alert-dot"></span> TIP · Callout Block</span>
+                </div>
+                <p>Syntax folds away into a quiet, elegant card the moment your cursor leaves the line.</p>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">III</p>
+              <h3>Smart Table Navigation & Alignment</h3>
+              <p>
+                Complete support for Markdown column alignment syntax (<code>:---</code> left, <code>:---:</code> center, <code>---:</code> right). Glide effortlessly across cells with <code>Tab</code> and <code>Shift-Tab</code>; pressing <code>Tab</code> in the final cell automatically appends a new row.
+              </p>
+              <div class="mini-table-demo" aria-hidden="true">
+                <div class="mini-table-row mini-table-head">
+                  <span class="col-left">Module (:---)</span>
+                  <span class="col-center">Status (:---:)</span>
+                  <span class="col-right">Latency (---:)</span>
+                </div>
+                <div class="mini-table-row">
+                  <span class="col-left">Tree-sitter Incremental Slice</span>
+                  <span class="col-center"><span class="badge-status">Active</span></span>
+                  <span class="col-right">0.18 ms</span>
+                </div>
+                <div class="mini-table-row">
+                  <span class="col-left active-cell">SIMD fast_char_count</span>
+                  <span class="col-center"><span class="badge-status">Ready</span></span>
+                  <span class="col-right">0.05 ms</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">IV</p>
+              <h3>Native Math & Diagram Rendering</h3>
+              <p>
+                First-class support for TeX/LaTeX formulas, Mermaid flowcharts and sequence diagrams, syntax-highlighted code fences, and task lists. Rendered natively by the GPU with zero browser runtimes or heavy script engines.
+              </p>
+              <div class="formula" aria-hidden="true">E = mc²</div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">V</p>
+              <h3>Built-in Time Machine & Auto-Recovery</h3>
+              <p>
+                Every save automatically captures up to 100 lightweight snapshots, complete with offline diff inspection and one-click rollback. Backed by a bounded binary recovery log, unsaved work survives unexpected crashes and power outages.
+              </p>
+              <div class="mini-timemachine" aria-hidden="true">
+                <div class="tm-node tm-active">
+                  <span class="tm-dot"></span>
+                  <div class="tm-info">
+                    <strong>Current Snapshot</strong>
+                    <small>Just now · 2,410 words · clean</small>
+                  </div>
+                </div>
+                <div class="tm-node">
+                  <span class="tm-dot"></span>
+                  <div class="tm-info">
+                    <strong>Save Checkpoint · v0.1.0</strong>
+                    <small>15 mins ago · +18 lines</small>
+                  </div>
+                  <span class="tm-action">Restore</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">VI</p>
+              <h3>SIMD-Accelerated Text Analytics</h3>
+              <p>
+                Powered by SIMD vector instructions with <code>fast_char_count</code>. Accurately segments ASCII, CJK double-width characters, and punctuation in sub-millisecond time. Word, character, and line metrics update like clockwork with every keystroke.
+              </p>
+              <div class="mini-stats" aria-hidden="true">
+                <div class="stat-pill"><span class="stat-k">Chars</span><span class="stat-v">128,490</span></div>
+                <div class="stat-pill"><span class="stat-k">Words</span><span class="stat-v">32,840</span></div>
+                <div class="stat-pill"><span class="stat-k">Lines</span><span class="stat-v">4,120</span></div>
+                <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>SIMD 0.05ms</div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <p class="feature-number">VII</p>
+              <h3>Eye-Care Themes & Local-First Privacy</h3>
+              <p>
+                Switch seamlessly between soothing Eye-Care Parchment and deep Midnight Dark. 100% of your documents remain on your local drive. No accounts, no cloud sync lock-in, no telemetry.
+              </p>
+              <div class="theme-badge-demo" aria-hidden="true">
+                <div class="theme-chip">
+                  <span class="theme-chip-dot parchment"></span>
+                  <span>Eye-Care Parchment</span>
+                </div>
+                <div class="theme-chip theme-chip-dark">
+                  <span class="theme-chip-dot dark"></span>
+                  <span>Midnight Dark</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card feature-wide agent-card">
+              <p class="feature-number">VIII</p>
+              <h3>Agent Configuration Workbench</h3>
+              <p>
+                Native parsing and validation for <code>SKILL.md</code>, <code>AGENTS.md</code>, and assistant configurations. Inline diagnostics highlight missing frontmatter keys or formatting errors with one-click automated fixes.
+              </p>
+              <div class="diagnostic" aria-hidden="true">
+                <span class="diagnostic-dot"></span>
+                <div><strong>Frontmatter metadata name mismatch</strong><small>One-click auto fix available</small></div>
+                <button tabindex="-1">Fix</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Specs & Tools Section -->
+      <section class="specs-section shell" id="tech-specs">
+        <div class="section-intro">
+          <div>
+            <p class="section-kicker">Technical Precision</p>
+            <h2>Thoughtful Details for Serious Writing</h2>
+          </div>
+          <p>
+            From subtle typographic accents to multi-thousand-word engineering documentation, every interaction is carefully honed.
+          </p>
+        </div>
+
+        <div class="specs-grid">
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+            </div>
+            <h3>Interactive Tasks & Collapsible Details</h3>
+            <p>
+              Native support for <code>- [ ]</code> and <code>- [x]</code> task lists with <strong>direct mouse-click toggling</strong>; native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> support lets you expand and collapse long technical asides with ease.
+            </p>
+            <div class="spec-tags">
+              <span>Interactive Tasks</span>
+              <span>Collapsible Details</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2L12 2z"/></svg>
+            </div>
+            <h3>Extended Markdown Typography</h3>
+            <p>
+              Comprehensive typographic coverage: highlight <code>==highlight==</code>, strikethrough <code>~~strikethrough~~</code>, underline <code>&lt;u&gt;</code>, keycaps <code>&lt;kbd&gt;Ctrl&lt;/kbd&gt;</code>, superscript <code>^sup^</code>, subscript <code>~sub~</code>, and academic footnotes <code>[^1]</code>.
+            </p>
+            <div class="spec-tags">
+              <span>Highlights</span>
+              <span>Keycap Chips</span>
+              <span>Footnotes</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15.5l-5.5-5.5-9.5 9.5"/></svg>
+            </div>
+            <h3>Async Image Decoding & GPU Cache</h3>
+            <p>
+              Supports relative local paths and remote network URLs with explicit width attributes (e.g., <code>&lt;img width="400"&gt;</code>). Dedicated worker threads decode images into GPU textures, ensuring stutter-free scrolling even in image-dense manuscripts.
+            </p>
+            <div class="spec-tags">
+              <span>GPU Texture Cache</span>
+              <span>Async Decoding</span>
+              <span>Explicit Dimensions</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            </div>
+            <h3>SIMD Batch Search & Replace</h3>
+            <p>
+              Built-in platform SIMD <code>memmem</code> matching core. Use <code>Ctrl+F</code> for rapid find, <code>Ctrl+H</code> for batch replacements, and <code>Ctrl+G</code> for direct line navigation—gliding through millions of lines without ever locking the UI.
+            </p>
+            <div class="spec-tags">
+              <span>SIMD Matching</span>
+              <span>Batch Replace</span>
+              <span>Go to Line</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            </div>
+            <h3>Instant Session Resume & Typography</h3>
+            <p>
+              Saves exact cursor coordinates, scroll lines, and sub-pixel offsets upon exit, restoring your exact writing context on launch. Seamlessly switch between system sans, serif, or monospace with dynamic scaling from 10pt to 32pt.
+            </p>
+            <div class="spec-tags">
+              <span>Session Memory</span>
+              <span>Font Switching</span>
+              <span>Dynamic Scaling</span>
+            </div>
+          </article>
+
+          <article class="spec-card">
+            <div class="spec-icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+            </div>
+            <h3>Workspace Tree & Syntax Diff</h3>
+            <p>
+              Work across multiple documents or entire project folders. The sidebar workspace tree automatically scans Markdown files, while native <code>```diff```</code> code fences provide clear red/green side-by-side comparisons.
+            </p>
+            <div class="spec-tags">
+              <span>Workspace Tree</span>
+              <span>Multi-Tab View</span>
+              <span>Syntax Diff</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Architecture Deep Dive Section -->
+      <section class="arch-section" id="architecture">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">Latency-First Architecture</p>
+              <h2>The UI Thread Never Waits.</h2>
+            </div>
+            <p>
+              Latency is treated as an uncompromising invariant. Keystrokes commit lightweight atomic edits to an in-memory Rope and immediately re-render a pending projection; full syntax re-parsing, layout calculation, and persistence converge asynchronously in background worker threads.
+            </p>
+          </div>
+
+          <!-- Hot Path Dual-Track Visualizer -->
+          <div class="arch-hotpath">
+            <div class="hotpath-track hotpath-ui">
+              <div class="track-header">
+                <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Fast Track · UI Main Thread (Latency &lt; 1ms)</span>
+                <strong>Type to render: lock-free, non-blocking, zero redundant copies</strong>
+              </div>
+              <div class="track-steps">
+                <div class="step-card">
+                  <span class="step-num">I</span>
+                  <strong>Keystroke Input</strong>
+                  <small>Atomic BufferEdit transaction</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">II</span>
+                  <strong>Rope Versioning</strong>
+                  <small>Monotonic generation stamp</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">III</span>
+                  <strong>Dirty-Line Projection</strong>
+                  <small>Instant grammar-neutral projection</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card step-highlight">
+                  <span class="step-num">IV</span>
+                  <strong>GPU Rasterization</strong>
+                  <small>Sub-millisecond cursor & glyph paint</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="hotpath-track hotpath-worker">
+              <div class="track-header">
+                <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Convergence Track · Background Worker Pool</span>
+                <strong>Incremental Tree-sitter slicing & authoritative snapshot generation</strong>
+              </div>
+              <div class="track-steps">
+                <div class="step-card">
+                  <span class="step-num">I</span>
+                  <strong>Incremental Parsing</strong>
+                  <small>InputEdit patch, reslices dirty lines only</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">II</span>
+                  <strong>Syntax AST Mounting</strong>
+                  <small>Reuses unchanged inline syntax nodes</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                  <span class="step-num">III</span>
+                  <strong>Markdown Snapshot</strong>
+                  <small>Builds flat row store & syntax indices</small>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card step-highlight-worker">
+                  <span class="step-num">IV</span>
+                  <strong>Atomic State Swap</strong>
+                  <small>(epoch, generation) guard against ghost frames</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Architecture 3 Pillars -->
+          <div class="arch-pillars-grid">
+            <article class="pillar-card">
+              <div class="pillar-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              </div>
+              <h3>Three Orthogonal Pipelines</h3>
+              <p>
+                <strong>Formulas, diagrams, and tables compute independently.</strong>
+                LaTeX formulas debounce updates; Mermaid diagrams compile on-demand with viewport caching; tables adaptively measure column widths. Editing prose never triggers costly diagram recalculations.
+              </p>
+              <div class="pillar-tags">
+                <span>Formula Snapshots</span>
+                <span>Mermaid Viewport Cache</span>
+                <span>Adaptive Tables</span>
+              </div>
+            </article>
+
+            <article class="pillar-card">
+              <div class="pillar-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>
+              </div>
+              <h3>Heterogeneous CPU & GPU Separation</h3>
+              <p>
+                <strong>Clear separation of concerns eliminates cross-domain overhead.</strong>
+                The CPU manages Rope piece-tree transactions, hit-testing, incremental Tree-sitter slicing, and SIMD statistics; the GPU manages glyph atlases, layer compositing, and vector rasterization.
+              </p>
+              <div class="pillar-tags">
+                <span>Rope Piece-Tree</span>
+                <span>Glyph Shaping Cache</span>
+                <span>GPU Hardware Acceleration</span>
+              </div>
+            </article>
+
+            <article class="pillar-card">
+              <div class="pillar-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+              </div>
+              <h3>Resilient Crash Recovery</h3>
+              <p>
+                <strong>Protecting your thoughts against sudden power loss.</strong>
+                A built-in time machine retains up to 100 historical snapshots with offline diffing, paired with an atomic binary <code>AKREC001</code> crash journal that restores work immediately upon restart.
+              </p>
+              <div class="pillar-tags">
+                <span>100-Snapshot History</span>
+                <span>Binary Recovery Log</span>
+                <span>Atomic Swap</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="arch-action-bar">
+            <p>Want to explore the internal engineering design and benchmark methodology?</p>
+            <a class="button button-secondary" href="docs/architecture.html">
+              Read the technical manual <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Privacy Band -->
+      <section class="privacy-band">
+        <div class="shell privacy-inner">
+          <div>
+            <p class="section-kicker">Private by Default</p>
+            <h2>No Accounts. No Ads. Zero Telemetry.</h2>
+          </div>
+          <div>
+            <p>
+              Akileas processes all your documents strictly on your local machine. Network activity occurs only when you explicitly open external links or load remote assets.
+            </p>
+            <a class="text-link" href="privacy.html">Read full Privacy Policy <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="final-cta shell">
+        <img src="assets/akileas-icon.png" width="88" height="88" alt="Akileas logo" />
+        <p class="section-kicker">Start Writing</p>
+        <h2>Swift by Nature. Built for Pure Focus.</h2>
+        <p>Download the pre-built release package, or compile freely from source under the Apache 2.0 license.</p>
+        <div class="hero-actions">
+          <a class="button button-store" href="https://apps.microsoft.com/detail/9PF44S6NS06D" target="_blank" rel="noopener">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.949-1.801"/></svg>
+            <span>Get from Microsoft Store</span>
+          </a>
+          <a class="button button-primary" href="https://github.com/WSPlXA/akileas/releases/latest" target="_blank" rel="noopener">
+            Download Latest Release
+          </a>
+          <a class="button button-secondary" href="https://github.com/WSPlXA/akileas#build-and-run" target="_blank" rel="noopener">
+            Build from Source
+          </a>
+        </div>
+      </section>
+    </main>

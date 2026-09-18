@@ -1,0 +1,234 @@
+---
+{
+  "out": "zh/docs/architecture.html",
+  "lang": "zh",
+  "title": "技术栈与核心系统架构 — Akileas 技术手册",
+  "description": "深入 Akileas 内部：Rust 2024 与 GPUI、异构 CPU/GPU 分工模型、微秒级双阶段热路径、基于 Rope 分块的零拷贝 Tree-sitter 解析，以及断电安全的存储体系。",
+  "nav": "docs",
+  "docSlug": "architecture",
+  "bodyClass": "docs-page",
+  "mermaid": true,
+  "altOut": "docs/architecture.html"
+}
+---
+<header class="docs-hero">
+  <p class="section-kicker">第二章</p>
+  <h1>技术栈与核心系统架构</h1>
+  <p class="docs-lede">
+    Akileas 秉承"异构硬件各司其职"的设计哲学，将计算密集型与分支密集型任务严格划分，
+    避免盲目移植 GPU 或将所有逻辑堆在主线程的传统弊端。
+  </p>
+</header>
+
+<section class="doc-section" id="layers">
+  <h2>2.1 分层架构</h2>
+  <p>整个工程遵循单向向内的依赖方向，自顶层应用逻辑逐层下沉到存储与安全边界。</p>
+  <pre class="mermaid">flowchart TB
+    subgraph ArchLayers ["Akileas 单向向内依赖系统层次"]
+        direction TB
+        AppLayer["app/ ：顶层状态机、多窗口会话、命令路由与快捷键"]
+        UILayer["ui/ ：GPUI 视图组件、虚拟化渲染管线、外观主题"]
+        RichRenderLayer["render/ + text/ ：Ratex 公式、Rusty-Mermaid 矢量、8MB 字形排版缓存"]
+        CoreEngine["markdown/ + editor/ ：Tree-sitter 增量解析、Ropey 缓冲、对数级 HeightMap"]
+        StorageEngine["storage/ + agent/ ：SaveTicket 保序锁、原子落盘、本地时光机、Agent 嗅探"]
+    end
+
+    AppLayer --&gt; UILayer
+    UILayer --&gt; RichRenderLayer
+    RichRenderLayer --&gt; CoreEngine
+    CoreEngine --&gt; StorageEngine</pre>
+  <p class="doc-note">
+    每一层只依赖其下方相邻层，箭头方向即编译期可见的依赖方向，不允许反向引用。
+  </p>
+</section>
+
+<section class="doc-section" id="stack">
+  <h2>2.2 核心技术选型一览</h2>
+  <ul class="doc-list">
+    <li><strong>编程语言</strong>：<code>Rust 2024 Edition</code>，利用零成本抽象与强类型系统规避竞态，以编译期内存管理代替运行时 GC。</li>
+    <li><strong>UI 与图形引擎</strong>：<code>GPUI</code>（Zed 团队开发），采用全 GPU 渲染管线（macOS 下为原生 Metal，Windows / Linux 下支持 DirectX 12 / Vulkan），支持 120Hz / 144Hz 超高刷新率与亚像素字体渲染。</li>
+    <li><strong>内存分配引擎</strong>：<code>mimalloc</code>（Microsoft），替代系统默认 malloc，针对小对象和多线程场景优化，消除堆内存碎片与抖动。</li>
+    <li><strong>文本数据结构</strong>：<code>Ropey</code>，基于 B-Tree 的不可变绳索（Rope）结构，支持大规模文本的 <em>O</em>(log <em>N</em>) 插入、删除与无拷贝切片。</li>
+    <li><strong>语法增量分析</strong>：<code>Tree-sitter</code>（<code>tree-sitter-md</code>），采用两级架构（块级语法树与行级内联语法树），基于字节范围实施局部"外科手术式"增量修剪。</li>
+    <li><strong>TeX 盒模型排版</strong>：<code>Ratex</code>，纯 Rust 实现的宏包解析与 Knuth-TeX 盒模型求解算法，脱离任何 JavaScript / Node / 浏览器运行时。</li>
+    <li><strong>矢量图表编译器</strong>：<code>Rusty-Mermaid</code>，纯 Rust 将 Mermaid DSL 编译为不可变 GPU 矢量图元（路径、多边形、贝塞尔曲线），内建 360x240 局部着色器放大镜。</li>
+    <li><strong>出版级排版输出</strong>：<code>Typst 0.15</code>，现代化排版框架，将 Markdown AST 转换为 Typst 格式直出高精矢量 PDF。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="threads">
+  <h2>2.3 异构计算硬件与线程分工模型</h2>
+  <p>
+    四类执行单元各自承担性质完全不同的工作：主线程只做极轻量的物理投影，
+    CPU 向量单元负责扫描，后台线程池负责解析与求解，GPU 只做最终的光栅化。
+  </p>
+  <pre class="mermaid">flowchart LR
+    subgraph UI_Thread ["UI 主线程（延迟 &lt; 0.03ms）"]
+        A1["键盘/鼠标事件"] --&gt; A2["TextBuffer (Ropey) 编辑"]
+        A2 --&gt; A3["project_raw_lines 物理行即刻投影"]
+        A3 --&gt; A4["GPUI 局部场景图提交"]
+    end
+
+    subgraph CPU_SIMD ["CPU SIMD 向量化单元"]
+        B1["memchr 指令集分发 (AVX2 / NEON)"] --&gt; B2["11.5 GB/s 向量扫描与表格分割"]
+    end
+
+    subgraph Worker_Pool ["后台多核 Worker 线程池"]
+        C1["Tree-sitter 增量解析（Rope Chunks）"]
+        C2["Ratex TeX 盒模型求解"]
+        C3["Rusty-Mermaid 拓扑编译"]
+        C4["DocumentAst / SyntaxIndex 派生"]
+    end
+
+    subgraph GPU_Direct ["GPU 硬件加速管线"]
+        D1["字形 Atlas 纹理光栅化"] --&gt; D2["矢量路径细分与贝塞尔渲染"]
+        D2 --&gt; D3["平滑缩放与着色器放大镜"]
+    end
+
+    A2 -.->|派发解析| C1
+    C1 --&gt; C4
+    C4 --&gt; C2
+    C4 --&gt; C3
+    C2 -.->|无锁 Arc 交换| A3
+    C3 -.->|无锁 Arc 交换| A3
+    A4 --&gt; D1</pre>
+</section>
+
+<section class="doc-section" id="hotpath">
+  <h2>2.4 微秒级双阶段热路径机制</h2>
+  <p>
+    为了彻底根除大文档输入卡顿，Akileas 创新性地将文本变更解耦为两个阶段：
+    主线程立刻投影未着色的物理行，后台线程池随后异步补齐权威语法。
+  </p>
+  <pre class="mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户键盘
+    participant UI as UI 主线程 (EditorView)
+    participant Proj as 待定物理行投影
+    participant Worker as 后台 Worker 线程池
+    participant TS as Tree-sitter 语法权威
+    participant GPUI as GPU 呈现管线
+
+    User-&gt;&gt;UI: 按下按键（如插入字符）
+    UI-&gt;&gt;UI: TextBuffer 递增 generation 并完成 Rope 变更
+
+    rect rgb(238, 244, 252)
+    Note over UI, GPUI: 【阶段 1：待定物理行即刻投影（~0.019 ms）】
+    UI-&gt;&gt;Proj: 仅重投影受波及的原始物理行（Raw Pending Projection）
+    Proj--&gt;&gt;UI: 瞬时输出保留光标/IME 锚点的未着色渲染行
+    UI-&gt;&gt;GPUI: 提交最小脏矩形场景
+    GPUI--&gt;&gt;User: 屏幕第 1 帧刷新，光标移动与字符显示（0 感知延迟）
+    end
+
+    rect rgb(240, 246, 238)
+    Note over UI, TS: 【阶段 2：后台权威异步增量解析（~0.137 ms）】
+    UI-)Worker: 派发解析任务（携带 document_epoch, generation）
+    Worker-&gt;&gt;TS: 流式读取 Rope Chunks 进行增量修正
+    TS--&gt;&gt;Worker: 生成 MarkdownSnapshot、RenderLineStore 与 SyntaxIndex
+    Worker-)UI: 提交权威快照
+    end
+
+    rect rgb(250, 245, 232)
+    Note over UI: 【原子 Arc 交换生效】
+    alt 当前代际匹配
+        UI-&gt;&gt;UI: 原子替换 RenderLineStore（Arc 浅拷贝）
+        UI-&gt;&gt;GPUI: 平滑更新高亮语法与富文本装饰
+    else 用户已键入新内容（代际过时）
+        UI-&gt;&gt;UI: 丢弃过时快照，继续等待最新代际结果（防止倒流）
+    end
+    end</pre>
+</section>
+
+<section class="doc-section" id="treesitter">
+  <h2>2.5 Tree-sitter 双层增量解析与零拷贝 Rope Chunks 流式驱动</h2>
+  <p>
+    传统编辑器在传递文档给解析器时，往往需要调用 <code>to_string()</code> 分配一个数十兆字节的巨大连续内存，
+    导致剧烈的内存分配与 GC。Akileas 的突破性方案有两点。
+  </p>
+  <ol class="doc-list">
+    <li>
+      <strong>直接流式读取 Rope Chunks</strong>：通过自定义流式读取器，
+      Tree-sitter 直接读取 Ropey 分块内部的不连续内存页，<strong>零内存拷贝</strong>。
+    </li>
+    <li>
+      <strong>两级语法树隔离</strong>：<em>块级语法树（Block Tree）</em>仅划分段落、标题、代码块、引用与列表边界；
+      <em>行级语法树（Inline Tree）</em>按需挂载在变化块上。当修改正文字符时，块结构保持不变，
+      仅受影响的那一行重新解析行内语法，周围 99,999 行完全复用既有树节点。
+    </li>
+  </ol>
+  <div class="callout callout-note">
+    <p class="callout-title">NOTE</p>
+    <p>
+      零拷贝流式读取意味着打开十万行文档时，内存中不会出现第二份完整的文档副本，
+      冷启动的 1.84 秒中绝大部分耗时来自首次权威解析，而非文本搬运。
+    </p>
+  </div>
+</section>
+
+<section class="doc-section" id="pipelines">
+  <h2>2.6 纯 Rust 富文本三大独立解耦渲染管线</h2>
+  <p>
+    Akileas 拥有三大相互隔离的富文本渲染管线，各自具备独立的防抖机制、代际校验与缓存淘汰策略。
+  </p>
+  <pre class="mermaid">flowchart TD
+    Snap["权威 MarkdownSnapshot 生成"] --&gt; Idx["扫描 SyntaxIndex 变更"]
+
+    Idx --&gt;|公式区间变更| TeX["Ratex LaTeX 管线&lt;br/&gt;• 700ms 键盘防抖&lt;br/&gt;• 32MB 盒模型 LRU 缓存&lt;br/&gt;• 直出 GPUI DisplayList"]
+    Idx --&gt;|代码块或视口滚动| Mer["Rusty-Mermaid 矢量管线&lt;br/&gt;• 视口裁剪窗口绑定&lt;br/&gt;• 32MB 几何路径拓扑缓存&lt;br/&gt;• 支持 box/&lt;br/&gt; 语法与放大镜"]
+    Idx --&gt;|表格内容微调| Tab["表格自适应布局管线&lt;br/&gt;• memchr 硬件向量加速切分&lt;br/&gt;• 基于 Unicode 显示单元动态算宽"]
+
+    TeX --&gt; Merge["EditorView 混合场景图组装"]
+    Mer --&gt; Merge
+    Tab --&gt; Merge
+    Merge --&gt; Out["GPU 硬件光栅化呈现"]</pre>
+</section>
+
+<section class="doc-section" id="heightmap">
+  <h2>2.7 对数级虚拟化高度树 DocumentHeightMap</h2>
+  <p>
+    在长达十万行的文档中，如果使用线性累加计算总高度，滚动视口或拖拽滚动条将引发灾难性的计算瓶颈。
+    Akileas 实现了 <code>DocumentHeightMap</code> 对数级高度树。
+  </p>
+  <ul class="doc-list">
+    <li>
+      <strong>前缀和高度累加树</strong>：以分块构建累积高度索引。当用户编辑第 500 行时，
+      仅更新局部块的高度差值，不需要遍历全篇。
+    </li>
+    <li>
+      <strong><em>O</em>(log <em>N</em>) 二分快速定位</strong>：鼠标拖拽滚动条到 85% 位置时，
+      通过二分查找在<strong>数微秒内</strong>直接命中精确行号与行内像素偏移。
+    </li>
+    <li>
+      <strong>渲染平滑防抖</strong>：将非视口内的未知行预估为均值高度，当用户平滑拖拽时逐步细化，
+      彻底消除滚动条跳跃与抖动。
+    </li>
+  </ul>
+</section>
+
+<section class="doc-section" id="storage">
+  <h2>2.8 存储安全韧性：SaveTicket 保序、原子落盘与灾难恢复</h2>
+  <p>针对写文件竞态与异常断电场景，Akileas 建立了高可靠的存储安全体系。</p>
+  <pre class="mermaid">flowchart TD
+    SaveReq["触发保存（Cmd+S / 自动定时保存）"] --&gt; Ticket["分配递增票据 SaveTicket（seq = N）"]
+    Ticket --&gt; Queue["进入文件专属并发队列"]
+    Queue --&gt; Check{"持锁期间校验：&lt;br/&gt;latest_sequence == N ?"}
+
+    Check --&gt;|否（已有更新的保存任务）| Drop["自动废弃过期任务（杜绝旧写覆盖新内容）"]
+    Check --&gt;|是（允许写入）| Tmp["1. 同目录下创建 .tmp.UUID 临时文件"]
+    Tmp --&gt; Write["2. 写入完整数据并计算 CRC32"]
+    Write --&gt; Fsync["3. 调用 OS 底层 sync_all / fsync 强制物理扇区落盘"]
+    Fsync --&gt; Rename["4. 原子覆盖（POSIX rename / Windows MoveFileEx）"]
+    Rename --&gt; TM["5. 本地时光机 LocalHistoryStore 记录滚动版本（至多 100 份）"]</pre>
+
+  <h3>断电恢复与本地时光机</h3>
+  <ul class="doc-list">
+    <li>
+      <strong>RecoveryJournal 恢复日志</strong>：每次编辑流式追加带 CRC32 校验的轻量日志；
+      即使遭遇断电关机，再次启动时也会自动校验并秒级重放恢复。
+    </li>
+    <li>
+      <strong>LocalHistoryStore 本地时光机</strong>：完全不依赖 Git。每次保存自动在本地数据库记录一份历史版本快照，
+      支持内置 Myers Diff 算法进行字符级增删对比，随时一键还原。
+    </li>
+  </ul>
+</section>

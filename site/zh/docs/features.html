@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="Akileas 全部能力详解：就地混合所见即所得、分屏视口、大纲与检索体系、免 Git 本地时光机、原生 LaTeX 与 Mermaid、Agent 工作台、Typst PDF 导出，以及完整快捷键速查表。" />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/zh/docs/features.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/features.html" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/features.html" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/features.html" />
+    <link rel="icon" type="image/png" href="../../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="产品用法与功能全景 — Akileas 技术手册" />
+    <meta property="og:description" content="Akileas 全部能力详解：就地混合所见即所得、分屏视口、大纲与检索体系、免 Git 本地时光机、原生 LaTeX 与 Mermaid、Agent 工作台、Typst PDF 导出，以及完整快捷键速查表。" />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/zh/docs/features.html" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="产品用法与功能全景 — Akileas 技术手册" />
+    <meta name="twitter:description" content="Akileas 全部能力详解：就地混合所见即所得、分屏视口、大纲与检索体系、免 Git 本地时光机、原生 LaTeX 与 Mermaid、Agent 工作台、Typst PDF 导出，以及完整快捷键速查表。" />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>产品用法与功能全景 — Akileas 技术手册</title>
+  </head>
+  <body class="docs-page lang-zh">
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../../zh/" aria-label="Akileas 首页">
+          <img src="../../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../../#vision" class="nav-anchor">设计理念</a>
+          <a href="../../#features" class="nav-anchor">功能特性</a>
+          <a href="../../#tech-specs" class="nav-anchor">技术细节</a>
+          <a href="../../#architecture" class="nav-anchor">系统架构</a>
+          <a href="../../zh/docs/" aria-current="page">技术手册</a>
+          <a href="../../zh/privacy.html">隐私政策</a>
+          <a class="lang-switch" href="../../docs/features.html" hreflang="en" lang="en">English</a>
+          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="技术手册">
+        <p class="docs-sidebar-title">技术手册</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>总览</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">一</span>
+              <span>性能基准</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html">
+              <span class="docs-nav-num" aria-hidden="true">二</span>
+              <span>系统架构</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">三</span>
+              <span>功能全景</span>
+            </a>
+          </li>
+          <li>
+            <a href="screenshots.html">
+              <span class="docs-nav-num" aria-hidden="true">四</span>
+              <span>截图指南</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../../zh/"><span aria-hidden="true">←</span> 返回产品总览</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">第三章</p>
+          <h1>产品用法与功能全景</h1>
+          <p class="docs-lede">
+            从书写交互、多视口协作、检索导航，到公式图表、智能体配置与出版级导出，
+            本章完整介绍 Akileas 的每一项用户可用能力与对应操作方式。
+          </p>
+        </header>
+
+        <section class="doc-section" id="wysiwyg">
+          <h2>3.1 就地混合所见即所得</h2>
+          <p>
+            传统 Markdown 编辑器要么是生硬的"左边写源码、右边看预览"割裂式双栏，
+            要么是容易破坏语法的富文本排版。Akileas 采用<strong>就地混合所见即所得</strong>交互模式。
+          </p>
+          <ul class="doc-list">
+            <li>
+              <strong>编辑即源码</strong>：当光标移入某一自然段、数学公式、表格或标题块时，
+              该块即刻以清晰的 Markdown 语法源码展开，方便精准微调。
+            </li>
+            <li>
+              <strong>移开即排版</strong>：当光标移出该块后，内容瞬间在原地渲染为精美的矢量排版效果
+              （标题加粗缩放、公式直接转为印刷级数学式、表格转为自适应网格、代码块加上语法高亮）。
+            </li>
+            <li>
+              <strong>零语法破坏</strong>：底层始终存储纯净的 Markdown 纯文本，绝不引入冗余无序的 HTML 废弃标签。
+            </li>
+          </ul>
+          <div class="callout callout-tip">
+            <p class="callout-title">TIP</p>
+            <p>
+              由于语法展开只发生在光标所在的那一块，长篇文档中不会出现满屏 `#` 与 `*` 的干扰，
+              阅读与写作共用同一块画布。
+            </p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="split-view">
+          <h2>3.2 多文档多视口双向实时分屏</h2>
+          <p>针对文献对比、长篇章节对照编写与资料参考场景，Akileas 提供原生分屏支持。</p>
+          <ul class="doc-list">
+            <li><strong>水平拆分（Split Right）</strong>：将当前视口水平一分为二（快捷键可在菜单触发），左右独立滚动。</li>
+            <li><strong>垂直拆分（Split Down）</strong>：上下并列对比。</li>
+            <li>
+              <strong>同文档双向实时同步</strong>：左右视口同时打开同一篇文档时，它们在内存中
+              <strong>共享同一份 <code>TextBuffer</code> 引用</strong>。在左侧打字的同时，
+              右侧视口在微秒级别同步更新渲染，且各自保持完全独立的滚动距离与光标选区。
+            </li>
+            <li>
+              <strong>无缝焦点穿梭</strong>：按下 <kbd>Ctrl</kbd> + <kbd>H</kbd> / <kbd>J</kbd> /
+              <kbd>K</kbd> / <kbd>L</kbd>，即可在多个分屏视口间如同 Vim 般顺畅切换焦点。
+            </li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="navigation">
+          <h2>3.3 悬浮大纲导航树与全向检索体系</h2>
+          <h3>悬浮文档大纲树</h3>
+          <p>
+            按下 <kbd>Cmd</kbd> + <kbd>D</kbd>（Windows / Linux 下为 <kbd>Ctrl</kbd> + <kbd>D</kbd>）
+            唤出大纲树：自动提取当前文档中的所有 H1 ~ H6 标题，以树状层级缩进展示，
+            支持点击一键平滑跳转到对应章节，并随滚动自动高亮当前阅读位置所属的标题节点。
+          </p>
+          <h3>内联查找与替换</h3>
+          <p>
+            <kbd>Cmd</kbd> + <kbd>F</kbd> / <kbd>Ctrl</kbd> + <kbd>F</kbd> 激活查找面板，
+            <kbd>Cmd</kbd> + <kbd>H</kbd> / <kbd>Ctrl</kbd> + <kbd>H</kbd> 激活替换面板。支持：
+          </p>
+          <ul class="doc-list">
+            <li>普通文本搜索、全字匹配（Whole Word）、大小写敏感（Match Case）。</li>
+            <li>强大且极速的正则表达式模式（Regex Match）。</li>
+            <li>
+              命中结果在视口中以半透明金色高亮浮层展示，按 <kbd>Enter</kbd> / <kbd>Shift</kbd> + <kbd>Enter</kbd>
+              快速上下穿梭。
+            </li>
+          </ul>
+          <h3>全局工作区检索与资源管理器</h3>
+          <ul class="doc-list">
+            <li>
+              <strong>全局检索</strong>（<kbd>Cmd</kbd> + <kbd>B</kbd> / <kbd>Ctrl</kbd> + <kbd>B</kbd>）：
+              瞬时扫描当前打开文件夹下的所有 Markdown 文档，支持按文件名或文本片段模糊搜索。
+            </li>
+            <li>
+              <strong>快速资源管理器</strong>（<kbd>Cmd</kbd> + <kbd>E</kbd> / <kbd>Ctrl</kbd> + <kbd>E</kbd>）：
+              便捷在侧边唤出文件目录树，轻量高效管理工作区结构。
+            </li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="time-machine">
+          <h2>3.4 独立免 Git 的本地版本时光机</h2>
+          <p>
+            许多用户在未配置 Git 的项目目录中工作，面临误删文字、文件损坏或内容意外覆盖的风险。
+            Akileas 提供开箱即用的内置时光机。
+          </p>
+          <ul class="doc-list">
+            <li>
+              <strong>呼出时光机面板</strong>：按下 <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>（macOS）
+              或 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>（Windows / Linux）。
+            </li>
+            <li>
+              <strong>无依赖独立运行</strong>：无论当前文件是否位于 Git 仓库中，
+              Akileas 都会自动维护专属的历史版本数据库，滚动保留多达 <strong>100 份</strong>保存快照。
+            </li>
+            <li>
+              <strong>Myers Diff 离线对比</strong>：直观呈现不同历史版本之间的字符级增删差异
+              （绿色新增、红色删除、行号对应）。
+            </li>
+            <li>
+              <strong>秒级检出与还原</strong>：点击版本历史记录即可快速预览历史状态，
+              点击"还原此版本（Restore）"即可安全回退。
+            </li>
+            <li>
+              <strong>里程碑快照</strong>：随时通过 <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> /
+              <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 手动创建版本锚点。
+            </li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="math-diagrams">
+          <h2>3.5 纯原生 LaTeX 数学公式与现代 Mermaid 矢量图表</h2>
+          <p>无需任何外部插件或联网，Akileas 原生渲染专业排版组件。</p>
+          <h3>LaTeX 数学公式</h3>
+          <ul class="doc-list">
+            <li>
+              <strong>行内公式</strong>：使用 <code>$E = mc^2$</code>，在文字流中优雅排版。
+            </li>
+            <li>
+              <strong>块级展示公式</strong>：使用 <code>$$ ... $$</code>，支持复杂积分、矩阵、微积分、方程组等。
+              19 套 KaTeX 矢量字体轮廓深度内置，字形优美清晰。
+            </li>
+          </ul>
+          <h3>现代 Mermaid 矢量图表</h3>
+          <ul class="doc-list">
+            <li>支持流程图（<code>graph TD</code>）、时序图（<code>sequenceDiagram</code>）、状态图、类图、思维导图。</li>
+            <li>
+              <strong>完整支持现代 Mermaid 语法</strong>：包括时序图中的 <code>box</code> 分组容器
+              （例如 <code>box rgb(240, 248, 255) 业务模块 ... end</code>）以及多行换行标签
+              （<code>&lt;br&gt;</code> 或 <code>&lt;br/&gt;</code>）。
+            </li>
+            <li>
+              <strong>动态交互与局部放大镜</strong>：支持鼠标滚轮平滑缩放与按住拖拽平移。
+              当图表缩小时，自动激活 <strong>360x240 局部着色器放大镜</strong>，让复杂架构图细节纤毫毕现。
+            </li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="agent">
+          <h2>3.6 AI Agent 配置专属工作台</h2>
+          <p>
+            作为面向下一代开发者与 AI Agent 架构师的利器，Akileas 原生内建智能体配置规范工作台。
+          </p>
+          <ul class="doc-list">
+            <li>
+              <strong>自动规范识别</strong>：当打开 <code>SKILL.md</code>、<code>AGENTS.md</code> 或
+              <code>.github/copilot-instructions.md</code> 时，编辑器自动切换到专属 Agent 增强工作模式。
+            </li>
+            <li>
+              <strong>无损行级词法分析</strong>：在 64KB / 512 行安全边界内快速扫描 Frontmatter 元数据，
+              严格保留用户的原始字段排布与注释格式。
+            </li>
+            <li>
+              <strong>悬浮 Problems 诊断面板</strong>：自动检测必填字段缺漏（如 <code>name</code>、
+              <code>description</code>、<code>version</code> 等）；校验 Skill 规范中的目录名称与标识符匹配；
+              严格校验语义化版本号（SemVer）格式。
+            </li>
+            <li>
+              <strong>Quick Fix 一键补全修复</strong>：点击诊断提示中的修复按钮，
+              即刻自动将规范模板与缺漏字段打补丁注入文档。
+            </li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="pdf-export">
+          <h2>3.7 出版级 Typst 矢量 PDF 导出</h2>
+          <p>
+            告别无头浏览器（Headless Chrome）导出 PDF 产生的模糊与排版错乱。
+            Akileas 内置了由 Rust 编写的现代化排版引擎 <strong>Typst 0.15</strong>。
+          </p>
+          <ul class="doc-list">
+            <li>
+              <strong>触发导出</strong>：点击菜单 <code>File -&gt; Export as PDF…</code>。
+            </li>
+            <li>
+              <strong>专业导出参数配置</strong>：页面尺寸支持国际标准 A4 或 US Letter；
+              版面方向支持纵向（Portrait）或横向（Landscape）；边距可从 5mm 到 60mm 精确设定；
+              页眉、页脚及动态页码可自由选择是否打印。
+            </li>
+            <li>
+              <strong>真矢量嵌入</strong>：Markdown 文本、数学公式与 Mermaid 拓扑图均转换为高精矢量元数据嵌入 PDF，
+              放大万倍依然绝对平滑清晰，达到学术期刊与出版物级的打印品质。
+            </li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="shortcuts">
+          <h2>3.8 全平台快捷键速查表</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>功能操作</th><th>macOS 快捷键</th><th>Windows / Linux 快捷键</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>新建 Markdown</td><td><kbd>Cmd</kbd> + <kbd>N</kbd></td><td><kbd>Ctrl</kbd> + <kbd>N</kbd></td><td>快速创建无标题新文档</td></tr>
+                <tr><td>打开文件</td><td><kbd>Cmd</kbd> + <kbd>O</kbd></td><td><kbd>Ctrl</kbd> + <kbd>O</kbd></td><td>打开本地已有 Markdown 文件</td></tr>
+                <tr><td>打开文件夹</td><td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td><td>打开工作区目录</td></tr>
+                <tr><td>保存文件</td><td><kbd>Cmd</kbd> + <kbd>S</kbd></td><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>触发原子落盘与时光机快照</td></tr>
+                <tr><td>手动记录快照</td><td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td><td>手动在时光机中打入版本锚点</td></tr>
+                <tr><td>版本时光机</td><td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td><td>唤出本地历史版本对比面板</td></tr>
+                <tr><td>关闭标签页</td><td><kbd>Cmd</kbd> + <kbd>W</kbd></td><td><kbd>Ctrl</kbd> + <kbd>W</kbd></td><td>关闭当前活动编辑标签</td></tr>
+                <tr><td>行内查找</td><td><kbd>Cmd</kbd> + <kbd>F</kbd></td><td><kbd>Ctrl</kbd> + <kbd>F</kbd></td><td>激活当前文档查找面板</td></tr>
+                <tr><td>替换文本</td><td><kbd>Cmd</kbd> + <kbd>H</kbd></td><td><kbd>Ctrl</kbd> + <kbd>H</kbd></td><td>激活当前文档替换面板</td></tr>
+                <tr><td>工作区全局搜索</td><td><kbd>Cmd</kbd> + <kbd>B</kbd></td><td><kbd>Ctrl</kbd> + <kbd>B</kbd></td><td>跨文件全局秒级搜索</td></tr>
+                <tr><td>跳转到指定行</td><td><kbd>Cmd</kbd> + <kbd>G</kbd></td><td><kbd>Ctrl</kbd> + <kbd>G</kbd></td><td>快速定位行号</td></tr>
+                <tr><td>文档大纲树</td><td><kbd>Cmd</kbd> + <kbd>D</kbd></td><td><kbd>Ctrl</kbd> + <kbd>D</kbd></td><td>打开 / 折叠 H1~H6 标题目录</td></tr>
+                <tr><td>快速资源管理</td><td><kbd>Cmd</kbd> + <kbd>E</kbd></td><td><kbd>Ctrl</kbd> + <kbd>E</kbd></td><td>呼出工作区文件资源管理器</td></tr>
+                <tr><td>标签管理</td><td><kbd>Cmd</kbd> + <kbd>T</kbd></td><td><kbd>Ctrl</kbd> + <kbd>T</kbd></td><td>打开双向文件分类标签面板</td></tr>
+                <tr><td>分屏视口穿梭</td><td><kbd>Ctrl</kbd> + <kbd>H</kbd>/<kbd>J</kbd>/<kbd>K</kbd>/<kbd>L</kbd></td><td><kbd>Ctrl</kbd> + <kbd>H</kbd>/<kbd>J</kbd>/<kbd>K</kbd>/<kbd>L</kbd></td><td>在左 / 下 / 上 / 右各分屏间穿梭</td></tr>
+                <tr><td>切换全屏模式</td><td><kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> / <kbd>F11</kbd></td><td><kbd>F11</kbd></td><td>进入沉浸式无干扰全屏写作</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../../zh/" aria-label="Akileas">
+          <img src="../../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>疾步如飞的性能。原生 Markdown 桌面编辑器。</p>
+        <nav aria-label="Footer">
+          <a href="../../zh/privacy.html">隐私政策</a>
+          <a href="../../zh/docs/">技术手册</a>
+          <a href="https://github.com/WSPlXA/akileas/releases">版本发布</a>
+          <a href="https://github.com/WSPlXA/akileas/issues">问题反馈</a>
+          <a href="https://github.com/WSPlXA/akileas/blob/master/LICENSE">开源协议</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

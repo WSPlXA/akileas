@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="The complete Akileas technical manual: measured performance benchmarks, Rust and GPUI architecture, the full feature and shortcut reference, and the interface screenshot specification." />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <link rel="icon" type="image/png" href="../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Technical Manual — Akileas" />
+    <meta property="og:description" content="The complete Akileas technical manual: measured performance benchmarks, Rust and GPUI architecture, the full feature and shortcut reference, and the interface screenshot specification." />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/docs/index.html" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Technical Manual — Akileas" />
+    <meta name="twitter:description" content="The complete Akileas technical manual: measured performance benchmarks, Rust and GPUI architecture, the full feature and shortcut reference, and the interface screenshot specification." />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>Technical Manual — Akileas</title>
+  </head>
+  <body class="docs-page lang-en">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../" aria-label="Akileas home">
+          <img src="../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../#vision" class="nav-anchor">Philosophy</a>
+          <a href="../#features" class="nav-anchor">Features</a>
+          <a href="../#tech-specs" class="nav-anchor">Capabilities</a>
+          <a href="../#architecture" class="nav-anchor">Architecture</a>
+          <a href="../docs/" aria-current="page">Manual</a>
+          <a href="../privacy.html">Privacy</a>
+          <a class="lang-switch" href="../zh/docs/index.html" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="Technical Manual">
+        <p class="docs-sidebar-title">Technical Manual</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>Overview</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">I</span>
+              <span>Benchmarks</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html">
+              <span class="docs-nav-num" aria-hidden="true">II</span>
+              <span>Architecture</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html">
+              <span class="docs-nav-num" aria-hidden="true">III</span>
+              <span>Features</span>
+            </a>
+          </li>
+          <li>
+            <a href="screenshots.html">
+              <span class="docs-nav-num" aria-hidden="true">IV</span>
+              <span>Screenshots</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../"><span aria-hidden="true">←</span> Back to overview</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">Documentation</p>
+          <h1>The Akileas Technical Manual</h1>
+          <p class="docs-lede">
+            Four chapters covering measured performance, the systems underneath the editor, every
+            user-facing capability, and the specification for capturing the interface. Written for
+            engineering reviews, product demonstrations, and architecture briefings.
+          </p>
+        </header>
+
+        <section class="doc-section" id="overview">
+          <h2>What this manual covers</h2>
+          <p>
+            Akileas is a native, latency-first Markdown editor built on <strong>Rust 2024</strong> and
+            <strong>GPUI</strong>, with a pure-Rust LaTeX and Mermaid rendering core and
+            publication-grade Typst vector PDF export. It holds to a single performance invariant:
+            <strong>the UI thread never waits.</strong>
+          </p>
+          <p>
+            Whether you are editing a thousand-line note or a hundred-thousand-line engineering
+            manuscript, the physical response stays sub-millisecond. The chapters below document how that
+            is measured, how it is built, how it behaves in daily use, and how to photograph it.
+          </p>
+
+          <ol class="docs-toc">
+            <li>
+              <a href="benchmarks.html">
+                <span class="docs-toc-num">Chapter I</span>
+                <strong>Performance &amp; Benchmarks</strong>
+                <span>Microsecond-scale pending projection, authority parse latency at 10k and 100k lines,
+                  SIMD search throughput, memory ceilings, and the full editor comparison matrix.</span>
+              </a>
+            </li>
+            <li>
+              <a href="architecture.html">
+                <span class="docs-toc-num">Chapter II</span>
+                <strong>Stack &amp; Architecture</strong>
+                <span>Rust 2024 and GPUI, heterogeneous CPU/GPU division of labour, the dual-stage hot path,
+                  zero-copy Tree-sitter parsing over Rope chunks, and crash-safe storage.</span>
+              </a>
+            </li>
+            <li>
+              <a href="features.html">
+                <span class="docs-toc-num">Chapter III</span>
+                <strong>Usage &amp; Feature Guide</strong>
+                <span>In-place hybrid WYSIWYG, split views, outline and search, the Git-free time machine,
+                  native LaTeX and Mermaid, the Agent workbench, and Typst PDF export.</span>
+              </a>
+            </li>
+            <li>
+              <a href="screenshots.html">
+                <span class="docs-toc-num">Chapter IV</span>
+                <strong>Screenshot Guide</strong>
+                <span>Capture environment and conventions, the shared demo document, and a shot-by-shot
+                  brief for the eight canonical interface screenshots.</span>
+              </a>
+            </li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="using-this-material">
+          <h2>How to use this material</h2>
+          <p>
+            The four chapters are written to be cited independently. Each opens with the claim it
+            supports and backs it with measurements, diagrams, or reproducible commands.
+          </p>
+          <div class="card-grid">
+            <article class="doc-card">
+              <h3>Technical briefings</h3>
+              <p>
+                Lead with the microsecond-scale benchmark tables in Chapter I and the heterogeneous-compute
+                and dual-stage hot-path diagrams in Chapter II.
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>User documentation</h3>
+              <p>
+                Chapter III stands alone as an onboarding guide. The shortcut reference at the end maps
+                every action across macOS, Windows, and Linux.
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>Visual and presentation material</h3>
+              <p>
+                Follow Chapter IV to capture the eight canonical screenshots into
+                <code>assets/screenshots/</code>. Each scene lists its subject, staging steps, and
+                window size.
+              </p>
+            </article>
+          </div>
+          <p class="doc-note">
+            Every benchmark figure in Chapter I was measured on the reference machine recorded in that
+            chapter. Reproduce them with the commands in the final section rather than quoting them out
+            of context.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../" aria-label="Akileas">
+          <img src="../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>Swift-footed performance. Native Markdown desktop editor.</p>
+        <nav aria-label="Footer">
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../docs/">Manual</a>
+          <a href="https://github.com/WSPlXA/akileas/releases">Releases</a>
+          <a href="https://github.com/WSPlXA/akileas/issues">Support</a>
+          <a href="https://github.com/WSPlXA/akileas/blob/master/LICENSE">License</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

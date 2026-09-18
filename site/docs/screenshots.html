@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="A shot-by-shot specification for capturing the eight canonical Akileas interface screenshots, including capture environment, the shared demo document, and file naming." />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/screenshots.html" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+    <link rel="icon" type="image/png" href="../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Screenshot Guide — Akileas Manual" />
+    <meta property="og:description" content="A shot-by-shot specification for capturing the eight canonical Akileas interface screenshots, including capture environment, the shared demo document, and file naming." />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Screenshot Guide — Akileas Manual" />
+    <meta name="twitter:description" content="A shot-by-shot specification for capturing the eight canonical Akileas interface screenshots, including capture environment, the shared demo document, and file naming." />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>Screenshot Guide — Akileas Manual</title>
+  </head>
+  <body class="docs-page lang-en">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../" aria-label="Akileas home">
+          <img src="../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../#vision" class="nav-anchor">Philosophy</a>
+          <a href="../#features" class="nav-anchor">Features</a>
+          <a href="../#tech-specs" class="nav-anchor">Capabilities</a>
+          <a href="../#architecture" class="nav-anchor">Architecture</a>
+          <a href="../docs/" aria-current="page">Manual</a>
+          <a href="../privacy.html">Privacy</a>
+          <a class="lang-switch" href="../zh/docs/screenshots.html" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="Technical Manual">
+        <p class="docs-sidebar-title">Technical Manual</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>Overview</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">I</span>
+              <span>Benchmarks</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html">
+              <span class="docs-nav-num" aria-hidden="true">II</span>
+              <span>Architecture</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html">
+              <span class="docs-nav-num" aria-hidden="true">III</span>
+              <span>Features</span>
+            </a>
+          </li>
+          <li>
+            <a href="screenshots.html" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">IV</span>
+              <span>Screenshots</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../"><span aria-hidden="true">←</span> Back to overview</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">Chapter IV</p>
+          <h1>Screenshot Guide</h1>
+          <p class="docs-lede">A repeatable recipe for producing the eight canonical Akileas interface screenshots: one capture environment, one shared demo document, and eight precisely staged scenes.</p>
+        </header>
+
+        <section class="doc-section" id="conventions">
+          <h2>4.1 Capture Conventions</h2>
+          <p>Recommended operating system environments: Windows 11 (with dark mode enabled) or macOS Sonoma / Sequoia (with dark mode enabled).</p>
+          <p>Recommended uniform screenshot resolutions: <strong>1920 × 1080</strong> or <strong>1440 × 900</strong> for full-screen or large-window interfaces; <strong>800 × 600</strong>, or the 16:10 golden ratio, for close-ups of local dialogs and panels.</p>
+          <p>For the appearance theme, use Akileas&rsquo; default refined dark theme (Dark Mode), which better highlights syntax highlighting and the premium feel of vector diagrams.</p>
+          <p>Screenshots must be saved uniformly as 24-bit PNG (lossless compression) to keep fine license and credential details crisp along with the smooth edges of type. Store screenshots in the <code>assets/screenshots/</code> directory.</p>
+          <div class="callout callout-tip">
+            <p class="callout-title">TIP</p>
+            <p>Capture every scene in the same theme and at the suggested window size so the resulting set reads as one coherent product tour rather than eight unrelated windows.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="sample-doc">
+          <h2>4.2 The Shared Demo Document</h2>
+          <p>Before capturing any screenshot, create a new file named <code>demo_showcase.md</code> in Akileas and paste the following comprehensive test document into it in full. A single file then yields every polished typographic effect at once.</p>
+          <p>The sample content includes: the H1 heading &ldquo;Akileas: 纯 Rust 原生极速 Markdown 编辑体验&rdquo;; the blockquote &ldquo;UI 线程永不等待：微秒级双阶段投影，十万行巨型文档丝滑交互&rdquo;; the H2 heading &ldquo;1. 核心架构与时序协作&rdquo; followed by a Mermaid <code>sequenceDiagram</code> (with two <code>box</code> groups: <code>box rgb(30, 41, 59) 前台渲染</code> containing <code>participant UI as EditorView</code> and <code>participant GPUI as GPU Pipeline</code>; and <code>box rgb(15, 23, 42) 后台引擎</code> containing <code>participant Worker as Worker Thread</code> and <code>participant TS as Tree-sitter</code>; with the messages, in order, <code>UI-&gt;&gt;GPUI: 阶段 1：待定物理行投影 (19 μs)</code>, <code>UI-)Worker: 阶段 2：异步派发 Rope 变更</code>, <code>Worker-&gt;&gt;TS: 增量外科手术修剪</code>, and <code>Worker--&gt;&gt;UI: 原子 Arc 交换更新快照</code>); the H2 heading &ldquo;2. 印刷级 LaTeX 理论公式&rdquo; followed by the Einstein field equations <code>R_{\mu\nu} - \frac{1}{2}R g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}</code> and the Gaussian normal density function <code>f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}</code>; the H2 heading &ldquo;3. 硬件性能指标对比&rdquo; followed by a table (columns: 文档规模 | Authority p50 | Authority p95 | 优化提升倍数 | 内存基线; rows: 10,000 行 | 0.102 ms | 0.120 ms | 388x | ~32 MB, and 100,000 行 | 0.137 ms | 0.148 ms | 3629x | ~65 MB); and a three-item task list: <code>[x] 微软 mimalloc 零 GC 停顿</code>, <code>[x] 双层增量 Tree-sitter 语法树</code>, <code>[ ] 自动化 CI 端到端性能守卫</code>.</p>
+          <pre class="code-block"><code># Akileas: 纯 Rust 原生极速 Markdown 编辑体验
+
+        &gt; UI 线程永不等待：微秒级双阶段投影，十万行巨型文档丝滑交互
+
+        ## 1. 核心架构与时序协作
+
+        ```mermaid
+        sequenceDiagram
+            box rgb(30, 41, 59) 前台渲染
+                participant UI as EditorView
+                participant GPUI as GPU Pipeline
+            end
+            box rgb(15, 23, 42) 后台引擎
+                participant Worker as Worker Thread
+                participant TS as Tree-sitter
+            end
+            UI-&gt;&gt;GPUI: 阶段 1：待定物理行投影 (19 μs)
+            UI-)Worker: 阶段 2：异步派发 Rope 变更
+            Worker-&gt;&gt;TS: 增量外科手术修剪
+            Worker--&gt;&gt;UI: 原子 Arc 交换更新快照
+        ```
+
+        ## 2. 印刷级 LaTeX 理论公式
+
+        $$
+        R_{\mu\nu} - \frac{1}{2}R g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}
+        $$
+
+        $$
+        f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}
+        $$
+
+        ## 3. 硬件性能指标对比
+
+        | 文档规模 | Authority p50 | Authority p95 | 优化提升倍数 | 内存基线 |
+        | --- | --- | --- | --- | --- |
+        | 10,000 行 | 0.102 ms | 0.120 ms | 388x | ~32 MB |
+        | 100,000 行 | 0.137 ms | 0.148 ms | 3629x | ~65 MB |
+
+        - [x] 微软 mimalloc 零 GC 停顿
+        - [x] 双层增量 Tree-sitter 语法树
+        - [ ] 自动化 CI 端到端性能守卫</code></pre>
+          <p class="doc-note">Keep the file exactly as pasted for all eight scenes; each capture reuses this same document so the screenshots stay visually consistent.</p>
+        </section>
+
+        <section class="doc-section" id="scenes">
+          <h2>4.3 The Eight Canonical Scenes</h2>
+          <p>Each scene below lists its target storage path, the points it must demonstrate, the preparation steps, the recommended window size, and the caption to use.</p>
+
+          <h3>Scene 1: Main Editing Workbench, Full View (Immersive Typesetting and Hybrid WYSIWYG)</h3>
+          <p><strong>Focus:</strong> Show the minimal, distraction-free main editor window: the immersive title-bar-free design, beautifully rendered H1/H2 headings, highlighted blockquote borders, and checkbox components. Target storage path: <code>assets/screenshots/01_main_editor_view.png</code>.</p>
+          <ol class="doc-list">
+            <li>Open the <code>demo_showcase.md</code> file described above.</li>
+            <li>Place the cursor inside an ordinary body paragraph (do not select any block, so that pure typesetting is shown).</li>
+            <li>Make sure the window is centered, presenting a clean, restrained visual design.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1440 × 900.</p>
+          <figure class="shot" id="scene-1">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/01_main_editor_view.png" alt="Akileas main editing workspace in a dark theme, showing rendered headings, a highlighted blockquote, and task checkboxes" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/01_main_editor_view.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 1</span> Panoramic view of the Akileas main editing workspace — immersive dark theme with in-place hybrid WYSIWYG typesetting.</figcaption>
+          </figure>
+
+          <h3>Scene 2: Multi-Viewport Bidirectional Real-Time Split View</h3>
+          <p><strong>Focus:</strong> Show the same document presented in two viewports under a horizontal split (Split Right). The left side stays in Markdown source editing state (for example, while a table or list is being edited) while the right side renders the typeset result in real time, directly demonstrating &ldquo;millisecond-generation synchronization across multiple viewports of one source&rdquo;. Target storage path: <code>assets/screenshots/02_split_screen_editing.png</code>.</p>
+          <ol class="doc-list">
+            <li>Click the menu <code>Document -&gt; Split Right</code> (or press the keyboard shortcut).</li>
+            <li>In the left viewport, click a paragraph so it is in source input state (cursor blinking).</li>
+            <li>Keep the right viewport in reading/rendered state; scroll down slightly to show a different section.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1600 × 900.</p>
+          <figure class="shot" id="scene-2">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/02_split_screen_editing.png" alt="Akileas split view with editable Markdown source on the left and the rendered document on the right" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/02_split_screen_editing.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 2</span> Two-viewport real-time split collaboration — independent scrolling on each side with millisecond-synchronized rendering over a shared buffer.</figcaption>
+          </figure>
+
+          <h3>Scene 3: Modern Complex Mermaid Vector Architecture Diagram (with box Containers and Line Breaks) and the Local Magnifier</h3>
+          <p><strong>Focus:</strong> Show a complex Mermaid sequence diagram compiled purely in Rust, emphasizing the supported modern syntax features: <code>box</code> color grouping containers, <code>&lt;br&gt;</code> line breaks, and the hover interaction viewport (a zoom-factor readout or the local magnifier Lens mode). Target storage path: <code>assets/screenshots/03_mermaid_diagram_lens.png</code>.</p>
+          <ol class="doc-list">
+            <li>Scroll to the Mermaid sequence diagram region of <code>demo_showcase.md</code>.</li>
+            <li>Use the mouse wheel to fine-tune the zoom level (for example, zoom to 75% to summon the detail magnifier, or center the clear topology arrows and text).</li>
+            <li>Make sure the translucent light-blue <code>box</code> background blocks and the <code>participant</code> lifelines in the sequence diagram are crisp and attractive.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1200 × 750.</p>
+          <figure class="shot" id="scene-3">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/03_mermaid_diagram_lens.png" alt="A Mermaid sequence diagram in Akileas with translucent box groups, participant lifelines, and a zoomed detail view" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/03_mermaid_diagram_lens.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 3</span> Modern Mermaid vector diagram rendering — native support for <code>box</code> container grouping plus GPU-accelerated topology pan and zoom.</figcaption>
+          </figure>
+
+          <h3>Scene 4: Ratex High-Fidelity LaTeX Complex Math Typesetting</h3>
+          <p><strong>Focus:</strong> Show Knuth box-model mathematical formulas solved by the pure-Rust Ratex engine, demonstrating the Einstein gravitational field tensor equation and the vector smoothness of complex sub/superscripts, radicals, and fraction bars. Target storage path: <code>assets/screenshots/04_latex_math_typesetting.png</code>.</p>
+          <ol class="doc-list">
+            <li>Locate the document region containing the two block-level LaTeX formulas.</li>
+            <li>Capture a close-up of either the formula region or the main editor window with the formulas centered and their glyph outlines sharply defined.</li>
+            <li>Optionally show a paragraph above the formulas containing the inline formula <code>$E=mc^2$</code> as a comparison.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1000 × 600.</p>
+          <figure class="shot" id="scene-4">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/04_latex_math_typesetting.png" alt="Two block-level LaTeX formulas rendered in Akileas, including the Einstein field equations and a Gaussian density function" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/04_latex_math_typesetting.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 4</span> Ratex pure-Rust LaTeX box-model math typesetting — publication-grade formulas from built-in vector fonts, with no web dependency.</figcaption>
+          </figure>
+
+          <h3>Scene 5: The Git-Independent Local Version Time Machine and Myers Diff Comparison</h3>
+          <p><strong>Focus:</strong> Show the Time Machine panel. The left side is the scrolling timeline history list, and the right side is the character-level Myers Diff comparison view (prominent green inserted lines and red deleted lines), conveying extreme reliability with no Git dependency. Target storage path: <code>assets/screenshots/05_time_machine_diff.png</code>.</p>
+          <ol class="doc-list">
+            <li>Make two small edits to the document and press <kbd>Cmd</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>S</kbd> to save each one, producing two history snapshots.</li>
+            <li>Press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd> (macOS) or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd> (Windows/Linux) to open the Time Machine dialog.</li>
+            <li>Select the previous version so that the right side clearly shows the red/green diff comparison.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1280 × 800.</p>
+          <figure class="shot" id="scene-5">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/05_time_machine_diff.png" alt="Akileas Time Machine panel with a version timeline on the left and a green-and-red Myers diff view on the right" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/05_time_machine_diff.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 5</span> The local version Time Machine — built-in Myers Diff comparison, ready to roll back at any moment with zero Git dependency.</figcaption>
+          </figure>
+
+          <h3>Scene 6: Document Hierarchy Outline Tree and Global Quick Search</h3>
+          <p><strong>Focus:</strong> Show the floating document outline (an H1–H6 tree structure) summoned with <kbd>Cmd</kbd>+<kbd>D</kbd> / <kbd>Ctrl</kbd>+<kbd>D</kbd>, or the inline highlighted search box summoned with <kbd>Cmd</kbd>+<kbd>F</kbd> / <kbd>Ctrl</kbd>+<kbd>F</kbd>, highlighting the precise navigation experience. Target storage path: <code>assets/screenshots/06_outline_and_search.png</code>.</p>
+          <ol class="doc-list">
+            <li>In a long document, press <kbd>Cmd</kbd>+<kbd>D</kbd> (on Windows, <kbd>Ctrl</kbd>+<kbd>D</kbd>) to expand the side or floating outline view.</li>
+            <li>Summon the find overlay at the same time or separately (enter a keyword such as <code>Authority</code> so that multiple matches in the viewport are highlighted in gold).</li>
+            <li>Capture the interface state showing the outline highlight anchors together with the search input box.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1440 × 900.</p>
+          <figure class="shot" id="scene-6">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/06_outline_and_search.png" alt="Akileas outline tree over a long document with the find overlay highlighting every occurrence of a keyword" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/06_outline_and_search.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 6</span> Document outline navigation tree and instant find — live tree anchoring and highlighted location across H1–H6 headings.</figcaption>
+          </figure>
+
+          <h3>Scene 7: The AI Agent Specification Workbench and the Problems Diagnostic Repair Panel</h3>
+          <p><strong>Focus:</strong> Show the dedicated agent-configuration experience that appears when a <code>SKILL.md</code> or <code>AGENTS.md</code> file is opened. A specification diagnostics Problems panel floats at the bottom of the interface, marking missing fields and offering a &ldquo;Quick Fix&rdquo; one-click repair action. Target storage path: <code>assets/screenshots/07_agent_workbench_problems.png</code>.</p>
+          <ol class="doc-list">
+            <li>Create or open a <code>SKILL.md</code> file and deliberately omit the <code>version</code> field — for example frontmatter containing <code>name: sample-agent-skill</code> and <code>description: 用于自动化测试的智能体技能配置</code>, with the body <code># 技能正文</code>.</li>
+            <li>Check the status bar or trigger the overlay to bring up the stutter-free diagnostics panel, which occupies only 8 lines.</li>
+            <li>Capture the detail showing the yellow warning / red error lines together with the &ldquo;fill in required fields&rdquo; button.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1280 × 750.</p>
+          <figure class="shot" id="scene-7">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/07_agent_workbench_problems.png" alt="Akileas editing a SKILL.md file with a floating Problems panel listing a missing version field and a Quick Fix action" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/07_agent_workbench_problems.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 7</span> The AI Agent specification workbench — streaming lexical analysis of <code>SKILL.md</code> with lightweight, real-time Problems diagnostics and repair.</figcaption>
+          </figure>
+
+          <h3>Scene 8: Publication-Grade Typst Vector PDF Export and High-Fidelity Print Preview</h3>
+          <p><strong>Focus:</strong> Show the export configuration dialog that opens from <code>File -&gt; Export as PDF…</code> (A4 paper, margin fine-tuning, vector options) alongside the final exported high-resolution PDF page, conveying a journal-grade quality of layout. Target storage path: <code>assets/screenshots/08_typst_pdf_export.png</code>.</p>
+          <ol class="doc-list">
+            <li>Click the menu <code>File -&gt; Export as PDF…</code> to open the export configuration dialog.</li>
+            <li>Export the generated <code>demo_showcase.pdf</code> and open its first page in a PDF reader.</li>
+            <li>Capture the export configuration dialog, or arrange the editor and the exported PDF side by side.</li>
+          </ol>
+          <p class="doc-note">Recommended window size: 1440 × 900.</p>
+          <figure class="shot" id="scene-8">
+            <div class="shot-frame">
+              <img src="../../assets/screenshots/08_typst_pdf_export.png" alt="The Akileas PDF export dialog with A4 paper and vector options shown next to the exported document page" loading="lazy"
+                   onerror="this.closest('figure').classList.add('shot-missing')" />
+              <div class="shot-fallback">
+                <span class="shot-fallback-mark" aria-hidden="true">▣</span>
+                <strong>Awaiting capture</strong>
+                <code>assets/screenshots/08_typst_pdf_export.png</code>
+              </div>
+            </div>
+            <figcaption><span class="shot-num">Figure 8</span> Publication-grade Typst vector PDF export — lossless vector text and graphics with journal-grade mathematical layout, produced by the native compiler.</figcaption>
+          </figure>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../" aria-label="Akileas">
+          <img src="../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>Swift-footed performance. Native Markdown desktop editor.</p>
+        <nav aria-label="Footer">
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../docs/">Manual</a>
+          <a href="https://github.com/WSPlXA/akileas/releases">Releases</a>
+          <a href="https://github.com/WSPlXA/akileas/issues">Support</a>
+          <a href="https://github.com/WSPlXA/akileas/blob/master/LICENSE">License</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="Akileas 完整技术手册：真实性能基准实测、Rust 与 GPUI 核心架构、全量功能与快捷键速查，以及界面截图拍摄规范。" />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <link rel="icon" type="image/png" href="../../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="技术手册 — Akileas" />
+    <meta property="og:description" content="Akileas 完整技术手册：真实性能基准实测、Rust 与 GPUI 核心架构、全量功能与快捷键速查，以及界面截图拍摄规范。" />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/zh/docs/index.html" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="技术手册 — Akileas" />
+    <meta name="twitter:description" content="Akileas 完整技术手册：真实性能基准实测、Rust 与 GPUI 核心架构、全量功能与快捷键速查，以及界面截图拍摄规范。" />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>技术手册 — Akileas</title>
+  </head>
+  <body class="docs-page lang-zh">
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../../zh/" aria-label="Akileas 首页">
+          <img src="../../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../../#vision" class="nav-anchor">设计理念</a>
+          <a href="../../#features" class="nav-anchor">功能特性</a>
+          <a href="../../#tech-specs" class="nav-anchor">技术细节</a>
+          <a href="../../#architecture" class="nav-anchor">系统架构</a>
+          <a href="../../zh/docs/" aria-current="page">技术手册</a>
+          <a href="../../zh/privacy.html">隐私政策</a>
+          <a class="lang-switch" href="../../docs/index.html" hreflang="en" lang="en">English</a>
+          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="技术手册">
+        <p class="docs-sidebar-title">技术手册</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>总览</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">一</span>
+              <span>性能基准</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html">
+              <span class="docs-nav-num" aria-hidden="true">二</span>
+              <span>系统架构</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html">
+              <span class="docs-nav-num" aria-hidden="true">三</span>
+              <span>功能全景</span>
+            </a>
+          </li>
+          <li>
+            <a href="screenshots.html">
+              <span class="docs-nav-num" aria-hidden="true">四</span>
+              <span>截图指南</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../../zh/"><span aria-hidden="true">←</span> 返回产品总览</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">技术文档</p>
+          <h1>Akileas 技术手册</h1>
+          <p class="docs-lede">
+            全书共四章，分别覆盖真实性能实测数据、编辑器底层系统架构、全部用户可用能力，以及界面截图的拍摄规范。
+            面向工程技术评审、产品演示与架构汇报场景编写。
+          </p>
+        </header>
+
+        <section class="doc-section" id="overview">
+          <h2>本手册涵盖的内容</h2>
+          <p>
+            Akileas 是基于 <strong>Rust 2024</strong> 与 <strong>GPUI</strong> 打造的原生极速 Markdown 编辑器，
+            内置纯 Rust 的 LaTeX / Mermaid 渲染内核，并支持出版级的 Typst 矢量 PDF 导出。
+            它只坚守一条性能铁律：<strong>UI 线程永不等待</strong>。
+          </p>
+          <p>
+            无论是在一千行的日常笔记中，还是在十万行的工程长文里，交互物理响应均保持在亚毫秒级别。
+            以下四章分别记录这些指标如何被测量、系统如何被构建、日常使用中如何表现，以及界面如何被拍摄。
+          </p>
+
+          <ol class="docs-toc">
+            <li>
+              <a href="benchmarks.html">
+                <span class="docs-toc-num">第一章</span>
+                <strong>性能测评与基准实测</strong>
+                <span>微秒级待定投影、一万行与十万行的权威解析延迟、SIMD 检索吞吐量、内存预算上限，
+                  以及完整的编辑器横向对比矩阵。</span>
+              </a>
+            </li>
+            <li>
+              <a href="architecture.html">
+                <span class="docs-toc-num">第二章</span>
+                <strong>技术栈与核心系统架构</strong>
+                <span>Rust 2024 与 GPUI、异构 CPU/GPU 分工模型、双阶段热路径、基于 Rope 分块的零拷贝
+                  Tree-sitter 解析，以及断电安全的存储体系。</span>
+              </a>
+            </li>
+            <li>
+              <a href="features.html">
+                <span class="docs-toc-num">第三章</span>
+                <strong>产品用法与功能全景</strong>
+                <span>就地混合所见即所得、多视口分屏、大纲与检索体系、免 Git 本地时光机、原生
+                  LaTeX 与 Mermaid、Agent 工作台，以及 Typst PDF 导出。</span>
+              </a>
+            </li>
+            <li>
+              <a href="screenshots.html">
+                <span class="docs-toc-num">第四章</span>
+                <strong>界面实例与截图指引</strong>
+                <span>截图环境与规范、统一体验演示样本文档，以及八大核心场景的逐张拍摄指引。</span>
+              </a>
+            </li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="using-this-material">
+          <h2>材料使用建议</h2>
+          <p>
+            四章内容均可独立引用。每一章都先给出它所要支撑的结论，再用实测数据、架构图或可复现命令加以佐证。
+          </p>
+          <div class="card-grid">
+            <article class="doc-card">
+              <h3>技术宣讲与架构汇报</h3>
+              <p>
+                重点引用第一章的微秒级基准数据表，以及第二章的异构计算分工图与双阶段热路径时序图。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>用户手册与新人培训</h3>
+              <p>
+                第三章可独立作为上手指南使用，章末的快捷键速查表覆盖 macOS、Windows 与 Linux 全平台操作。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>视觉材料与演示文稿</h3>
+              <p>
+                按第四章指引拍摄八张标准截图并放入 <code>assets/screenshots/</code> 目录。
+                每个场景都列出了演示重点、准备步骤与推荐窗口尺寸。
+              </p>
+            </article>
+          </div>
+          <p class="doc-note">
+            第一章的全部基准数据均测量自该章所记录的参考机器。请使用末节的命令自行复现，
+            而不要脱离上下文直接引用其中的数字。
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../../zh/" aria-label="Akileas">
+          <img src="../../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>疾步如飞的性能。原生 Markdown 桌面编辑器。</p>
+        <nav aria-label="Footer">
+          <a href="../../zh/privacy.html">隐私政策</a>
+          <a href="../../zh/docs/">技术手册</a>
+          <a href="https://github.com/WSPlXA/akileas/releases">版本发布</a>
+          <a href="https://github.com/WSPlXA/akileas/issues">问题反馈</a>
+          <a href="https://github.com/WSPlXA/akileas/blob/master/LICENSE">开源协议</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

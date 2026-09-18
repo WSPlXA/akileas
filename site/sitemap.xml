@@ -1,11 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://wsplxa.github.io/akileas/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <loc>https://wsplxa.github.io/akileas/docs/architecture.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/docs/benchmarks.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/benchmarks.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/benchmarks.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/benchmarks.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/docs/features.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/features.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/features.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/features.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/docs/index.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/index.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/docs/screenshots.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/screenshots.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/index.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/index.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/index.html" />
   </url>
   <url>
     <loc>https://wsplxa.github.io/akileas/privacy.html</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/privacy.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/docs/architecture.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/docs/benchmarks.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/benchmarks.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/benchmarks.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/benchmarks.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/docs/features.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/features.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/features.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/features.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/docs/index.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/index.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/index.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/docs/screenshots.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/screenshots.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/screenshots.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/index.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/index.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/index.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/index.html" />
+  </url>
+  <url>
+    <loc>https://wsplxa.github.io/akileas/zh/privacy.html</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/privacy.html" />
   </url>
 </urlset>

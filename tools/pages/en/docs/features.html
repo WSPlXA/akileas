@@ -1,0 +1,213 @@
+---
+{
+  "out": "docs/features.html",
+  "lang": "en",
+  "title": "Usage & Feature Guide — Akileas Manual",
+  "description": "Every Akileas capability explained: in-place hybrid WYSIWYG, split views, the outline and search system, the Git-free time machine, native LaTeX and Mermaid, the Agent workbench, Typst PDF export, and the full shortcut reference.",
+  "nav": "docs",
+  "docSlug": "features",
+  "bodyClass": "docs-page",
+  "altOut": "zh/docs/features.html"
+}
+---
+
+<header class="docs-hero">
+  <p class="section-kicker">Chapter III</p>
+  <h1>Usage &amp; Feature Guide</h1>
+  <p class="docs-lede">A complete tour of Akileas: the in-place editing model, multi-viewport writing, outline navigation and search, the Git-free local time machine, native LaTeX and Mermaid rendering, the AI Agent workbench, publication-grade Typst PDF export, and every keyboard shortcut.</p>
+</header>
+
+<section class="doc-section" id="wysiwyg">
+  <h2>3.1 In-Place Hybrid WYSIWYG</h2>
+  <p>Traditional Markdown editors fall into one of two camps: the rigid, disconnected two-pane layout where you write source on the left and preview on the right, or a rich-text presentation that easily corrupts the underlying syntax. Akileas takes an in-place hybrid WYSIWYG approach.</p>
+  <ul class="doc-list">
+    <li><strong>Editing reveals the source.</strong> When the cursor enters a paragraph, math formula, table, or heading block, that block immediately expands into clear Markdown source syntax so you can fine-tune it with precision.</li>
+    <li><strong>Leaving renders the layout.</strong> Once the cursor leaves the block, the content is rendered in place as polished vector typesetting: headings gain weight and scale, formulas become print-quality mathematical notation, tables become self-adapting grids, and code blocks receive syntax highlighting.</li>
+    <li><strong>Zero syntax corruption.</strong> Clean, plain Markdown text is always what gets stored underneath. No redundant, disordered, deprecated HTML tags are ever introduced.</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="split-view">
+  <h2>3.2 Multi-Document Split Views</h2>
+  <p>For literature comparison, long-form chapter-by-chapter writing, and reference-heavy work, Akileas provides native split-screen support.</p>
+  <ul class="doc-list">
+    <li><strong>Split Right.</strong> Divide the current viewport horizontally into two (the shortcut can be triggered from the menu), each side scrolling independently.</li>
+    <li><strong>Split Down.</strong> Place two viewports one above the other for vertical comparison.</li>
+    <li><strong>Bidirectional live sync for the same document.</strong> When both viewports have the same document open, they share a single <code>TextBuffer</code> reference in memory. Typing in the left viewport updates the rendered right viewport at microsecond-level latency, while each side keeps its own fully independent scroll position and cursor selection.</li>
+    <li><strong>Seamless focus travel.</strong> Press <kbd>Ctrl</kbd> + <kbd>H</kbd> / <kbd>J</kbd> / <kbd>K</kbd> / <kbd>L</kbd> to move focus between split viewports as smoothly as in Vim.</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="navigation">
+  <h2>3.3 Outline Navigation &amp; the Search System</h2>
+  <h3>Floating outline navigation tree</h3>
+  <p>The floating document outline tree (<kbd>Cmd</kbd> + <kbd>D</kbd> / <kbd>Ctrl</kbd> + <kbd>D</kbd>) automatically extracts every H1 through H6 heading in the current document and displays them as an indented tree hierarchy. Click a node to jump smoothly to the matching section, and the tree automatically highlights the heading node that owns the reading position as you scroll.</p>
+  <h3>Inline find and replace</h3>
+  <p>Inline find and replace (<kbd>Cmd</kbd> + <kbd>F</kbd> / <kbd>Ctrl</kbd> + <kbd>F</kbd>, <kbd>Cmd</kbd> + <kbd>H</kbd> / <kbd>Ctrl</kbd> + <kbd>H</kbd>) supports plain text search, Whole Word matching, and Match Case, plus a powerful and extremely fast Regex Match mode. Hits are shown in the viewport as a translucent golden highlight overlay, and <kbd>Enter</kbd> / <kbd>Shift</kbd> + <kbd>Enter</kbd> move quickly up and down through them.</p>
+  <h3>Workspace-wide and file-level access</h3>
+  <ul class="doc-list">
+    <li><strong>Global workspace search</strong> (<kbd>Cmd</kbd> + <kbd>B</kbd> / <kbd>Ctrl</kbd> + <kbd>B</kbd>) instantly scans every Markdown document under the currently open folder, with fast fuzzy search by file name or text fragment.</li>
+    <li><strong>Quick explorer</strong> (<kbd>Cmd</kbd> + <kbd>E</kbd> / <kbd>Ctrl</kbd> + <kbd>E</kbd>) conveniently summons the file directory tree at the side, so you can manage your workspace structure lightly and efficiently.</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="time-machine">
+  <h2>3.4 The Git-Free Local Time Machine</h2>
+  <p>Many users work in project directories that are not configured with Git, and so risk accidentally deleting text, corrupting files, or overwriting content. Akileas ships with a built-in time machine that works out of the box.</p>
+  <ul class="doc-list">
+    <li><strong>Summon the time machine panel.</strong> Press <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> (macOS) or <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> (Windows/Linux).</li>
+    <li><strong>Runs independently, with no dependencies.</strong> Whether or not the current file sits inside a Git repository, Akileas maintains its own dedicated history database and keeps a rolling set of up to 100 saved snapshots.</li>
+    <li><strong>Offline Myers Diff comparison.</strong> The time machine interface presents character-level additions and deletions between different historical versions (green for additions, red for deletions, with corresponding line numbers).</li>
+    <li><strong>Second-scale checkout and restore.</strong> Click a version in the history list to preview that historical state, then click <strong>Restore</strong> to roll back safely.</li>
+  </ul>
+  <p>You can also create a milestone snapshot manually at any time with <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>.</p>
+</section>
+
+<section class="doc-section" id="math-diagrams">
+  <h2>3.5 Native LaTeX and Mermaid Diagrams</h2>
+  <p>No external plug-ins and no network connection are required: Akileas renders professional typesetting components natively.</p>
+  <h3>LaTeX math formulas</h3>
+  <p>Inline formulas use <code>$E = mc^2$</code> and are typeset elegantly within the flow of text. Block-level display formulas use <code>$$ ... $$</code> and support complex integrals, matrices, calculus, and systems of equations. Nineteen KaTeX vector font outlines are built in deeply, giving beautiful and crisp glyphs.</p>
+  <h3>Modern Mermaid vector diagrams</h3>
+  <ul class="doc-list">
+    <li>Supports flowcharts (<code>graph TD</code>), sequence diagrams (<code>sequenceDiagram</code>), state diagrams, class diagrams, and mind maps.</li>
+    <li>Full support for modern Mermaid syntax, including <code>box</code> grouping containers in sequence diagrams (for example <code>box rgb(240, 248, 255)</code> business module <code>... end</code>) and multi-line labels (<code>&lt;br&gt;</code> or <code>&lt;br/&gt;</code>).</li>
+    <li>Dynamic interaction and a local magnifier: smooth mouse-wheel zooming and hold-and-drag panning, and when a diagram is scaled down a 360x240 locally shaded magnifier activates automatically so that the details of complex architecture diagrams stay perfectly legible.</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="agent">
+  <h2>3.6 The AI Agent Configuration Workbench</h2>
+  <p>A purpose-built tool for next-generation developers and AI Agent architects working with <code>SKILL.md</code> and <code>AGENTS.md</code>.</p>
+  <ul class="doc-list">
+    <li><strong>Automatic specification recognition.</strong> When you open <code>SKILL.md</code>, <code>AGENTS.md</code>, or <code>.github/copilot-instructions.md</code>, the editor switches automatically into the dedicated Agent-enhanced working mode.</li>
+    <li><strong>Lossless line-level lexical analysis.</strong> Within a safe boundary of 64KB / 512 lines, frontmatter metadata is scanned quickly while the user's original field ordering and comment formatting are strictly preserved.</li>
+    <li><strong>Floating Problems diagnostics panel.</strong> Automatically detects missing required fields (such as <code>name</code>, <code>description</code>, and <code>version</code>), validates that directory names and identifiers match the Skill specification, and strictly validates Semantic Versioning (SemVer) formats.</li>
+    <li><strong>One-click Quick Fix.</strong> Click the fix button in a diagnostic, and the specification template and any missing fields are patched into the document immediately.</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="pdf-export">
+  <h2>3.7 Publication-Grade Typst PDF Export</h2>
+  <p>Say goodbye to the blurriness and broken layout produced by exporting PDFs through a headless browser (Headless Chrome). Akileas embeds Typst 0.15, a modern typesetting engine written in Rust.</p>
+  <ul class="doc-list">
+    <li><strong>Trigger the export.</strong> Click the menu <strong>File -&gt; Export as PDF…</strong>.</li>
+    <li><strong>Professional export parameters.</strong> International standard page sizes A4 or US Letter; Portrait or Landscape orientation; custom margins set precisely from 5mm to 60mm; and page number and header controls that let you freely choose whether to print headers, footers, and dynamic page numbers.</li>
+    <li><strong>True vector embedding.</strong> Markdown text, mathematical formulas, and Mermaid topology diagrams are all converted into high-precision vector metadata and embedded in the PDF, staying absolutely smooth and sharp at ten-thousand-fold magnification and reaching the print quality of academic journals and publications.</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="shortcuts">
+  <h2>3.8 Cross-Platform Shortcut Reference</h2>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>macOS shortcut</th>
+          <th>Windows / Linux shortcut</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>New Markdown</td>
+          <td><kbd>Cmd</kbd> + <kbd>N</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>N</kbd></td>
+          <td>Quickly create a new untitled document</td>
+        </tr>
+        <tr>
+          <td>Open file</td>
+          <td><kbd>Cmd</kbd> + <kbd>O</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>O</kbd></td>
+          <td>Open an existing local Markdown file</td>
+        </tr>
+        <tr>
+          <td>Open folder</td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td>
+          <td>Open a workspace directory</td>
+        </tr>
+        <tr>
+          <td>Save file</td>
+          <td><kbd>Cmd</kbd> + <kbd>S</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>S</kbd></td>
+          <td>Trigger the atomic write to disk and a time machine snapshot</td>
+        </tr>
+        <tr>
+          <td>Manual snapshot</td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td>
+          <td>Manually place a version anchor in the time machine</td>
+        </tr>
+        <tr>
+          <td>Version time machine</td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td>
+          <td>Summon the local history comparison panel</td>
+        </tr>
+        <tr>
+          <td>Close tab</td>
+          <td><kbd>Cmd</kbd> + <kbd>W</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>W</kbd></td>
+          <td>Close the currently active editor tab</td>
+        </tr>
+        <tr>
+          <td>Inline find</td>
+          <td><kbd>Cmd</kbd> + <kbd>F</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>F</kbd></td>
+          <td>Activate the find panel for the current document</td>
+        </tr>
+        <tr>
+          <td>Replace text</td>
+          <td><kbd>Cmd</kbd> + <kbd>H</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>H</kbd></td>
+          <td>Activate the replace panel for the current document</td>
+        </tr>
+        <tr>
+          <td>Workspace-wide search</td>
+          <td><kbd>Cmd</kbd> + <kbd>B</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>B</kbd></td>
+          <td>Second-scale global search across files</td>
+        </tr>
+        <tr>
+          <td>Go to line</td>
+          <td><kbd>Cmd</kbd> + <kbd>G</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>G</kbd></td>
+          <td>Jump quickly to a line number</td>
+        </tr>
+        <tr>
+          <td>Document outline tree</td>
+          <td><kbd>Cmd</kbd> + <kbd>D</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>D</kbd></td>
+          <td>Open or collapse the H1~H6 heading outline</td>
+        </tr>
+        <tr>
+          <td>Quick resource management</td>
+          <td><kbd>Cmd</kbd> + <kbd>E</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>E</kbd></td>
+          <td>Summon the workspace file explorer</td>
+        </tr>
+        <tr>
+          <td>Tag management</td>
+          <td><kbd>Cmd</kbd> + <kbd>T</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>T</kbd></td>
+          <td>Open the bidirectional file classification tag panel</td>
+        </tr>
+        <tr>
+          <td>Split viewport travel</td>
+          <td><kbd>Ctrl</kbd> + <kbd>H</kbd>/<kbd>J</kbd>/<kbd>K</kbd>/<kbd>L</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>H</kbd>/<kbd>J</kbd>/<kbd>K</kbd>/<kbd>L</kbd></td>
+          <td>Travel between the left / down / up / right split panes</td>
+        </tr>
+        <tr>
+          <td>Toggle fullscreen mode</td>
+          <td><kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> / <kbd>F11</kbd></td>
+          <td><kbd>F11</kbd></td>
+          <td>Enter immersive, distraction-free fullscreen writing</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="doc-note">Shortcuts follow each platform's conventions; macOS uses <kbd>Cmd</kbd> where Windows and Linux use <kbd>Ctrl</kbd>, except for split viewport travel, which is <kbd>Ctrl</kbd>-based everywhere.</p>
+</section>

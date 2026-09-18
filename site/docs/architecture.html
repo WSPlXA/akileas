@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="Inside Akileas: Rust 2024 and GPUI, heterogeneous CPU/GPU division of labour, the dual-stage hot path, zero-copy Tree-sitter parsing over Rope chunks, and crash-safe storage." />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <link rel="icon" type="image/png" href="../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Stack &amp; Architecture — Akileas Manual" />
+    <meta property="og:description" content="Inside Akileas: Rust 2024 and GPUI, heterogeneous CPU/GPU division of labour, the dual-stage hot path, zero-copy Tree-sitter parsing over Rope chunks, and crash-safe storage." />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Stack &amp; Architecture — Akileas Manual" />
+    <meta name="twitter:description" content="Inside Akileas: Rust 2024 and GPUI, heterogeneous CPU/GPU division of labour, the dual-stage hot path, zero-copy Tree-sitter parsing over Rope chunks, and crash-safe storage." />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>Stack &amp; Architecture — Akileas Manual</title>
+  </head>
+  <body class="docs-page lang-en">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../" aria-label="Akileas home">
+          <img src="../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../#vision" class="nav-anchor">Philosophy</a>
+          <a href="../#features" class="nav-anchor">Features</a>
+          <a href="../#tech-specs" class="nav-anchor">Capabilities</a>
+          <a href="../#architecture" class="nav-anchor">Architecture</a>
+          <a href="../docs/" aria-current="page">Manual</a>
+          <a href="../privacy.html">Privacy</a>
+          <a class="lang-switch" href="../zh/docs/architecture.html" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="Technical Manual">
+        <p class="docs-sidebar-title">Technical Manual</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>Overview</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">I</span>
+              <span>Benchmarks</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">II</span>
+              <span>Architecture</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html">
+              <span class="docs-nav-num" aria-hidden="true">III</span>
+              <span>Features</span>
+            </a>
+          </li>
+          <li>
+            <a href="screenshots.html">
+              <span class="docs-nav-num" aria-hidden="true">IV</span>
+              <span>Screenshots</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../"><span aria-hidden="true">←</span> Back to overview</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">Chapter II</p>
+          <h1>Stack &amp; Architecture</h1>
+          <p class="docs-lede">Akileas is built as a strictly layered native application: Rust 2024 and GPUI below, five one-way-dependent layers above, and a hot path measured in microseconds between a keystroke and the first refreshed frame.</p>
+        </header>
+
+        <section class="doc-section" id="layers">
+          <h2>2.1 Layered Architecture</h2>
+          <p>
+            The site enforces a single-direction, inward-facing dependency hierarchy. Each layer is aware only of the
+            layer directly beneath it, and no dependency ever points back upward.
+          </p>
+          <ul class="doc-list">
+            <li><code>app/</code> — the top-level state machine, multi-window sessions, command routing and keybindings.</li>
+            <li><code>ui/</code> — GPUI view components, the virtualised render pipeline and appearance themes.</li>
+            <li><code>render/</code> + <code>text/</code> — Ratex formulas, Rusty-Mermaid vectors and an 8MB glyph layout cache.</li>
+            <li><code>markdown/</code> + <code>editor/</code> — Tree-sitter incremental parsing, Ropey buffers and the logarithmic HeightMap.</li>
+            <li><code>storage/</code> + <code>agent/</code> — the SaveTicket ordering lock, atomic writes, the local time machine and Agent sniffing.</li>
+          </ul>
+          <p>The dependency direction runs one way only, from the top down.</p>
+          <pre class="mermaid">flowchart TB
+            subgraph ArchLayers ["Akileas: one-way inward dependencies"]
+                direction TB
+                AppLayer["app/ : top-level state machine, multi-window sessions, command routing, keybindings"]
+                UILayer["ui/ : GPUI view components, virtualised render pipeline, appearance themes"]
+                RichRenderLayer["render/ + text/ : Ratex formulas, Rusty-Mermaid vectors, 8MB glyph layout cache"]
+                CoreEngine["markdown/ + editor/ : Tree-sitter incremental parsing, Ropey buffers, logarithmic HeightMap"]
+                StorageEngine["storage/ + agent/ : SaveTicket ordering lock, atomic writes, local time machine, Agent sniffing"]
+            end
+            AppLayer --&gt; UILayer
+            UILayer --&gt; RichRenderLayer
+            RichRenderLayer --&gt; CoreEngine
+            CoreEngine --&gt; StorageEngine</pre>
+          <p class="doc-note">Because dependencies point downward only, a layer can be exercised without any of the layers above it.</p>
+        </section>
+
+        <section class="doc-section" id="stack">
+          <h2>2.2 Core Technology Choices</h2>
+          <p>Eight choices define the runtime envelope of the editor.</p>
+          <ul class="doc-list">
+            <li>
+              <strong>Programming language:</strong> Rust 2024 Edition. Zero-cost abstractions and a strong type system
+              rule out data races, and compile-time memory management replaces a runtime GC.
+            </li>
+            <li>
+              <strong>UI and graphics engine:</strong> GPUI (built by the Zed team). A fully GPU-driven rendering pipeline
+              (native Metal on macOS; DirectX 12 / Vulkan on Windows and Linux), with support for 120Hz/144Hz ultra-high
+              refresh rates and subpixel font rendering.
+            </li>
+            <li>
+              <strong>Memory allocator:</strong> mimalloc (Microsoft). It replaces the system default <code>malloc</code>,
+              is tuned for small objects and multi-threaded workloads, and eliminates heap fragmentation and jitter.
+            </li>
+            <li>
+              <strong>Text data structure:</strong> Ropey. A B-Tree-based immutable rope supporting O(log N) insertion and
+              deletion plus copy-free slicing of very large texts.
+            </li>
+            <li>
+              <strong>Incremental syntax analysis:</strong> Tree-sitter (<code>tree-sitter-md</code>). A two-tier
+              architecture (a block-level syntax tree and a line-level inline syntax tree) performs local,
+              "surgical" incremental pruning over byte ranges.
+            </li>
+            <li>
+              <strong>TeX box-model typesetting:</strong> Ratex. A pure-Rust implementation of macro-package parsing and
+              Knuth-TeX box-model solving, with no dependency on any JavaScript / Node / browser runtime.
+            </li>
+            <li>
+              <strong>Vector diagram compiler:</strong> Rusty-Mermaid. Pure Rust compiles Mermaid DSL into immutable GPU
+              vector primitives (paths, polygons, Bézier curves), with a built-in 360x240 locally shaded magnifier.
+            </li>
+            <li>
+              <strong>Publication-grade typesetting output:</strong> Typst 0.15. A modern typesetting framework that
+              converts the Markdown AST into Typst format and emits high-fidelity vector PDF directly.
+            </li>
+          </ul>
+          <pre class="code-block"><code>markdown/   Tree-sitter (tree-sitter-md) + Ropey
+        editor/     DocumentHeightMap, RenderLineStore, SyntaxIndex
+        storage/    SaveTicket, RecoveryJournal, LocalHistoryStore</code></pre>
+          <p class="doc-note">Crate names, API names and version numbers are reproduced exactly as the project declares them.</p>
+        </section>
+
+        <section class="doc-section" id="threads">
+          <h2>2.3 Heterogeneous Compute &amp; Thread Model</h2>
+          <p>
+            The design philosophy is that heterogeneous hardware should each do its own job: compute-intensive and
+            branch-intensive work is divided strictly, rather than blindly porting everything to the GPU or piling all
+            logic onto the main thread.
+          </p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Lane</th><th>Responsibility</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>UI main thread <em>(latency &lt; 0.03&nbsp;ms)</em></td>
+                  <td>Keyboard/mouse events → <code>TextBuffer</code> (Ropey) edit → immediate physical-line projection via <code>project_raw_lines</code> → GPUI partial scene-graph submission</td>
+                </tr>
+                <tr>
+                  <td>CPU SIMD vectorised unit</td>
+                  <td><code>memchr</code> instruction-set dispatch (AVX2 / NEON) → 11.5 GB/s vector scanning and table splitting</td>
+                </tr>
+                <tr>
+                  <td>Background multi-core worker thread pool</td>
+                  <td>Tree-sitter incremental parsing (Rope Chunks); Ratex TeX box-model solving; Rusty-Mermaid topology compilation; <code>DocumentAst</code> / <code>SyntaxIndex</code> derivation</td>
+                </tr>
+                <tr>
+                  <td>GPU hardware acceleration pipeline</td>
+                  <td>Glyph atlas texture rasterisation → vector path tessellation and Bézier rendering → smooth scaling and the shader magnifier</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pre class="mermaid">flowchart LR
+            subgraph UI_Thread ["UI main thread (latency below 0.03 ms)"]
+                UI_Events["Keyboard/mouse events"]
+                UI_Buffer["TextBuffer (Ropey) edit"]
+                UI_Project["project_raw_lines: immediate physical-line projection"]
+                UI_Scene["GPUI partial scene-graph submission"]
+                UI_Events --&gt; UI_Buffer
+                UI_Buffer --&gt; UI_Project
+                UI_Project --&gt; UI_Scene
+            end
+
+            subgraph CPU_SIMD ["CPU SIMD vectorised unit"]
+                SIMD_Dispatch["memchr instruction-set dispatch (AVX2 / NEON)"]
+                SIMD_Scan["11.5 GB/s vector scan and table splitting"]
+                SIMD_Dispatch --&gt; SIMD_Scan
+            end
+
+            subgraph Worker_Pool ["Background multi-core worker thread pool"]
+                W_TS["Tree-sitter incremental parsing (Rope Chunks)"]
+                W_Ratex["Ratex TeX box-model solving"]
+                W_Mermaid["Rusty-Mermaid topology compilation"]
+                W_Derive["DocumentAst / SyntaxIndex derivation"]
+            end
+
+            subgraph GPU_Direct ["GPU hardware acceleration pipeline"]
+                G_Atlas["Glyph atlas texture rasterisation"]
+                G_Vector["Vector path tessellation and Bezier rendering"]
+                G_Zoom["Smooth scaling and shader magnifier"]
+                G_Atlas --&gt; G_Vector
+                G_Vector --&gt; G_Zoom
+            end
+
+            UI_Buffer -.dispatch parse.-&gt; W_TS
+            W_Derive --&gt; W_Ratex
+            W_Derive --&gt; W_Mermaid
+            W_Ratex -.lock-free Arc swap.-&gt; UI_Project
+            W_Mermaid -.lock-free Arc swap.-&gt; UI_Project</pre>
+          <p>
+            The wiring is therefore short and explicit: a <code>TextBuffer</code> edit dispatches a parse to Tree-sitter
+            incremental parsing; <code>DocumentAst</code> / <code>SyntaxIndex</code> derivation feeds Ratex and
+            Rusty-Mermaid; Ratex and Rusty-Mermaid hand results back to physical-line projection through a lock-free
+            <code>Arc</code> swap; and the GPU pipeline is connected sequentially inside itself.
+          </p>
+          <div class="callout callout-note">
+            <p class="callout-title">NOTE</p>
+            <p>Nothing on the GPU lane ever blocks the UI lane: the main thread only ever submits a minimal dirty rectangle, while rasterisation, tessellation and shading stay on the hardware pipeline.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="hotpath">
+          <h2>2.4 The Dual-Stage Hot Path</h2>
+          <p>
+            To eliminate input stutter in large documents at the root, a text change is decoupled into two stages: an
+            immediate provisional projection on the UI thread, and an authoritative asynchronous parse on a worker pool.
+          </p>
+          <pre class="mermaid">sequenceDiagram
+            autonumber
+            actor User as User keystroke
+            participant UI as UI main thread (EditorView)
+            participant Proj as Pending raw-line projection
+            participant Worker as Background worker pool
+            participant TS as Tree-sitter authority
+            participant GPUI as GPU presentation
+
+            User-&gt;&gt;UI: Press a key (for example, insert a character)
+            UI-&gt;&gt;UI: TextBuffer increments generation and completes the Rope change
+
+            rect rgb(240, 248, 255)
+                note over UI,GPUI: Stage 1 - Pending raw-line projection (~0.019 ms)
+                UI-&gt;&gt;Proj: Reproject only the affected raw physical lines (Raw Pending Projection)
+                Proj--&gt;&gt;UI: Unstyled render lines that preserve cursor/IME anchors
+                UI-&gt;&gt;GPUI: Submit the minimal dirty-rect scene
+                GPUI--&gt;&gt;User: Screen frame 1 refresh - cursor movement and character display (zero perceived latency)
+            end
+
+            rect rgb(245, 245, 245)
+                note over UI,TS: Stage 2 - Authoritative background async incremental parse (~0.137 ms)
+                UI-)Worker: Dispatch the parse task (carrying document_epoch, generation)
+                Worker-&gt;&gt;Worker: Stream Rope chunks for incremental correction
+                TS--&gt;&gt;Worker: Produce MarkdownSnapshot, RenderLineStore and SyntaxIndex
+                Worker-)UI: Submit the authoritative snapshot
+            end
+
+            rect rgb(255, 250, 240)
+                note over UI,TS: Atomic Arc swap takes effect
+                alt The current generation matches
+                    UI-&gt;&gt;UI: Atomically replace RenderLineStore (shallow Arc clone) and smoothly update syntax highlighting and rich-text decorations
+                else The user has already typed new content (the generation is stale)
+                    UI-&gt;&gt;UI: Discard the stale snapshot and keep waiting for the newest generation (prevent rollback)
+                end
+            end</pre>
+          <h3>Stage 1: immediate pending raw-line projection (~0.019 ms)</h3>
+          <p>
+            Only the affected raw physical lines are reprojected. The instantaneous output is an unstyled render line that
+            still preserves the cursor and IME anchor, after which the UI submits the minimal dirty-rect scene to the GPU
+            presentation pipeline. The first screen frame therefore shows the moved cursor and the new character with zero
+            perceived latency.
+          </p>
+          <h3>Stage 2: authoritative background async incremental parse (~0.137 ms)</h3>
+          <p>
+            A parse task is dispatched to the worker thread pool carrying <code>document_epoch</code> and
+            <code>generation</code>. The worker reads Rope chunks as a stream and corrects the parse incrementally; the
+            Tree-sitter authority then yields a <code>MarkdownSnapshot</code>, a <code>RenderLineStore</code> and a
+            <code>SyntaxIndex</code>, which the worker submits back to the UI.
+          </p>
+          <h3>Atomic Arc swap takes effect</h3>
+          <ol class="doc-list">
+            <li>If the current generation matches, the <code>RenderLineStore</code> is replaced atomically (a shallow <code>Arc</code> clone), and syntax highlighting and rich-text decorations update smoothly.</li>
+            <li>If the user has already typed new content and the generation is stale, the outdated snapshot is discarded and the editor keeps waiting for the newest generation, which prevents rollback.</li>
+          </ol>
+          <div class="callout callout-important">
+            <p class="callout-title">IMPORTANT</p>
+            <p>Generation matching is what makes the two stages safe to run concurrently. A stale snapshot can never overwrite newer text: it is dropped rather than rendered.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="treesitter">
+          <h2>2.5 Two-Tier Tree-sitter Parsing over Zero-Copy Rope Chunks</h2>
+          <p>
+            A conventional editor usually hands the document to its parser through a <code>to_string()</code> call, which
+            allocates tens of megabytes of contiguous memory and triggers violent allocation churn and GC pressure.
+            Akileas takes a different route.
+          </p>
+          <ol class="doc-list">
+            <li>
+              <strong>Streaming reads straight from Rope chunks.</strong> Through a custom streaming reader, Tree-sitter
+              reads the non-contiguous memory pages inside Ropey's chunks directly, with zero memory copying.
+            </li>
+            <li>
+              <strong>Two-level syntax-tree isolation.</strong> The block-level syntax tree (Block Tree) only delimits
+              paragraphs, headings, code blocks, block quotes and list boundaries; the line-level syntax tree (Inline Tree)
+              is attached on demand to the blocks that changed. When body characters are edited the block structure stays
+              untouched, so only the affected line is re-parsed for inline syntax while the surrounding 99,999 lines reuse
+              their existing tree nodes in full.
+            </li>
+          </ol>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Tree</th><th>Scope</th><th>Behaviour on edit</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Block Tree (block level)</td>
+                  <td>Paragraphs, headings, code blocks, block quotes and list boundaries</td>
+                  <td>Remains unchanged while body characters change</td>
+                </tr>
+                <tr>
+                  <td>Inline Tree (line level)</td>
+                  <td>Inline syntax, mounted on demand on changed blocks</td>
+                  <td>Only the affected line is re-parsed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout callout-tip">
+            <p class="callout-title">TIP</p>
+            <p>Zero-copy input plus two-tier isolation is what keeps parse cost proportional to the edit rather than to the size of the document.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="pipelines">
+          <h2>2.6 Three Decoupled Rich-Text Pipelines</h2>
+          <p>
+            Three mutually isolated rich-text rendering pipelines each carry their own debounce policy, generation
+            validation and cache-eviction strategy.
+          </p>
+          <div class="card-grid">
+            <article class="doc-card">
+              <h3>Ratex LaTeX pipeline</h3>
+              <p>Triggered when formula ranges change: 700ms keyboard debounce, a 32MB box-model LRU cache, and direct GPUI <code>DisplayList</code> output.</p>
+            </article>
+            <article class="doc-card">
+              <h3>Rusty-Mermaid vector pipeline</h3>
+              <p>Triggered by a code block or viewport scroll: viewport clip-window binding, a 32MB geometry path topology cache, and support for the <code>box/</code> syntax plus the magnifier.</p>
+            </article>
+            <article class="doc-card">
+              <h3>Adaptive table layout pipeline</h3>
+              <p>Triggered when table content is tweaked: hardware-vector <code>memchr</code> splitting and dynamic width computation based on Unicode display units.</p>
+            </article>
+          </div>
+          <pre class="mermaid">flowchart TD
+            Snapshot["Authoritative MarkdownSnapshot produced"]
+            Scan["Scan SyntaxIndex for changes"]
+            Snapshot --&gt; Scan
+
+            Scan --&gt;|Formula ranges changed| RatexPipe
+            Scan --&gt;|Code block or viewport scroll| MermaidPipe
+            Scan --&gt;|Table content tweaked| TablePipe
+
+            RatexPipe["Ratex LaTeX pipeline"]
+            RatexDebounce["700ms keyboard debounce"]
+            RatexCache["32MB box-model LRU cache"]
+            RatexOut["Direct GPUI DisplayList output"]
+            RatexPipe --&gt; RatexDebounce
+            RatexDebounce --&gt; RatexCache
+            RatexCache --&gt; RatexOut
+
+            MermaidPipe["Rusty-Mermaid vector pipeline"]
+            MermaidClip["Viewport clip-window binding"]
+            MermaidCache["32MB geometry path topology cache"]
+            MermaidSyntax["box/ syntax and magnifier support"]
+            MermaidPipe --&gt; MermaidClip
+            MermaidClip --&gt; MermaidCache
+            MermaidCache --&gt; MermaidSyntax
+
+            TablePipe["Adaptive table layout pipeline"]
+            TableSplit["memchr hardware-vector splitting"]
+            TableWidth["Dynamic width from Unicode display units"]
+            TablePipe --&gt; TableSplit
+            TableSplit --&gt; TableWidth
+
+            Assemble["EditorView mixed scene-graph assembly"]
+            Raster["GPU hardware rasterisation"]
+            RatexOut --&gt; Assemble
+            MermaidSyntax --&gt; Assemble
+            TableWidth --&gt; Assemble
+            Assemble --&gt; Raster</pre>
+          <p>
+            All three pipelines converge on <code>EditorView</code> mixed scene-graph assembly and then on GPU hardware
+            rasterisation. Because each pipeline debounces and validates generations independently, a burst of typing in a
+            table never invalidates a cached formula layout.
+          </p>
+        </section>
+
+        <section class="doc-section" id="heightmap">
+          <h2>2.7 DocumentHeightMap: Logarithmic Virtualisation</h2>
+          <p>
+            In a hundred-thousand-line document, accumulating total height linearly turns any viewport scroll or scrollbar
+            drag into a catastrophic computational bottleneck. Akileas instead implements <code>DocumentHeightMap</code>,
+            a logarithmic height tree.
+          </p>
+          <ul class="doc-list">
+            <li>
+              <strong>Prefix-sum height accumulation tree.</strong> Cumulative height indices are built per block, so
+              editing line 500 updates only the height delta of the local block instead of walking the whole document.
+            </li>
+            <li>
+              <strong>O(log N) binary-search lookup.</strong> Dragging the scrollbar to the 85% position resolves through
+              binary search directly to the exact line number and the in-line pixel offset within a few microseconds.
+            </li>
+            <li>
+              <strong>Smooth-render debounce.</strong> Lines outside the viewport whose height is still unknown are
+              estimated at the mean height and refined progressively while the user drags, which eliminates scrollbar
+              jumping and jitter entirely.
+            </li>
+          </ul>
+          <p class="doc-note">The height tree is what makes virtualised scrolling feel continuous: unknown heights are an estimate that converges, never a blocking full measurement.</p>
+        </section>
+
+        <section class="doc-section" id="storage">
+          <h2>2.8 Storage Durability: SaveTicket, Atomic Writes, Disaster Recovery</h2>
+          <p>
+            Saving is triggered by <kbd>Cmd</kbd>+<kbd>S</kbd> or by an automatic timed save, and every request passes
+            through an ordering lock before it is allowed to touch the file.
+          </p>
+          <pre class="mermaid">flowchart TD
+            Trigger["Save triggered (Cmd+S / automatic timed save)"]
+            Ticket["Allocate an increasing SaveTicket (seq = N)"]
+            Queue["Enter the file-specific concurrent queue"]
+            Check{"While holding the lock: latest_sequence == N ?"}
+            Discard["Discard the superseded task (never let an old write clobber newer content)"]
+            Tmp["1. Create a .tmp.UUID temporary file in the same directory"]
+            Write["2. Write the full payload and compute CRC32"]
+            Fsync["3. Call the OS-level sync_all / fsync to force physical sectors to disk"]
+            Replace["4. Atomic replace (POSIX rename / Windows MoveFileEx)"]
+            History["5. LocalHistoryStore records a rolling version (at most 100)"]
+
+            Trigger --&gt; Ticket
+            Ticket --&gt; Queue
+            Queue --&gt; Check
+            Check --&gt;|No: a newer save task already exists| Discard
+            Check --&gt;|Yes: writing is permitted| Tmp
+            Tmp --&gt; Write
+            Write --&gt; Fsync
+            Fsync --&gt; Replace
+            Replace --&gt; History</pre>
+          <h3>The ordering lock</h3>
+          <ol class="doc-list">
+            <li>A monotonically increasing <code>SaveTicket</code> is allocated with <code>seq = N</code>.</li>
+            <li>The task enters the file-specific concurrent queue.</li>
+            <li>While the lock is held, the guard validates <code>latest_sequence == N</code>. If it does not match, a newer save task already exists and the superseded task is discarded automatically, which guarantees that an old write never clobbers newer content.</li>
+            <li>If it matches, the write proceeds through the five atomic steps below.</li>
+          </ol>
+          <h3>Atomic write sequence</h3>
+          <ol class="doc-list">
+            <li>A <code>.tmp.UUID</code> temporary file is created in the same directory.</li>
+            <li>The complete payload is written and its CRC32 is computed.</li>
+            <li>The OS-level <code>sync_all</code> / <code>fsync</code> is called to force the data onto physical sectors.</li>
+            <li>The destination is replaced atomically (POSIX <code>rename</code> / Windows <code>MoveFileEx</code>).</li>
+            <li><code>LocalHistoryStore</code> records a rolling version, at most 100 of them.</li>
+          </ol>
+          <h3>RecoveryJournal recovery log</h3>
+          <p>
+            Every edit streams a lightweight journal entry with a CRC32 checksum appended. Even after a power loss, the next
+            launch verifies the journal automatically and replays it to recover within seconds.
+          </p>
+          <h3>LocalHistoryStore local time machine</h3>
+          <p>
+            This relies on Git in no way at all. Each save records a snapshot version in a local database, and the built-in
+            Myers diff algorithm provides character-level insertion and deletion comparison, so any version can be restored
+            with a single click.
+          </p>
+          <div class="callout callout-warning">
+            <p class="callout-title">WARNING</p>
+            <p>Durability depends on the ordering lock being honoured: bypassing the ticket check is exactly how a stale
+              write would silently overwrite newer content on disk.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../" aria-label="Akileas">
+          <img src="../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>Swift-footed performance. Native Markdown desktop editor.</p>
+        <nav aria-label="Footer">
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../docs/">Manual</a>
+          <a href="https://github.com/WSPlXA/akileas/releases">Releases</a>
+          <a href="https://github.com/WSPlXA/akileas/issues">Support</a>
+          <a href="https://github.com/WSPlXA/akileas/blob/master/LICENSE">License</a>
+        </nav>
+      </div>
+    </footer>
+    <script type="module">
+      // Mermaid bootstrap, inlined by tools/build-site.mjs into pages that contain
+      // diagrams. The CDN import is intentionally unguarded: if it fails, the source
+      // inside each <pre class="mermaid"> simply stays on screen as readable text.
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+      const nodes = document.querySelectorAll("pre.mermaid");
+      if (nodes.length) {
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: "base",
+          fontFamily: '"EB Garamond", "Cormorant Garamond", Garamond, Georgia, serif',
+          fontSize: 17,
+          themeVariables: {
+            background: "#fdf8ec",
+            primaryColor: "#f8f1e0",
+            primaryTextColor: "#241d12",
+            primaryBorderColor: "#bda87c",
+            secondaryColor: "#ece0c6",
+            secondaryTextColor: "#241d12",
+            secondaryBorderColor: "#bda87c",
+            tertiaryColor: "#f1e6cf",
+            tertiaryTextColor: "#241d12",
+            tertiaryBorderColor: "#bda87c",
+            lineColor: "#8a6a2a",
+            textColor: "#241d12",
+            mainBkg: "#f8f1e0",
+            nodeBorder: "#bda87c",
+            clusterBkg: "#f2e8d5",
+            clusterBorder: "#bda87c",
+            edgeLabelBackground: "#fdf8ec",
+            actorBkg: "#f8f1e0",
+            actorBorder: "#bda87c",
+            actorTextColor: "#241d12",
+            actorLineColor: "#bda87c",
+            signalColor: "#5f5138",
+            signalTextColor: "#241d12",
+            labelBoxBkgColor: "#f8f1e0",
+            labelBoxBorderColor: "#bda87c",
+            labelTextColor: "#241d12",
+            loopTextColor: "#241d12",
+            noteBkgColor: "#f6ecd2",
+            noteBorderColor: "#a5813a",
+            noteTextColor: "#241d12",
+            activationBkgColor: "#ece0c6",
+            activationBorderColor: "#a5813a",
+            sequenceNumberColor: "#fdf8ec",
+            pie1: "#2b4d7d",
+            pie2: "#a5813a",
+            pie3: "#4d6b4a",
+            pie4: "#9c4230",
+            pieOpacity: "0.85",
+          },
+          flowchart: { curve: "basis", htmlLabels: true, padding: 14, useMaxWidth: true },
+          sequence: { useMaxWidth: true, mirrorActors: false, actorMargin: 60, boxMargin: 10 },
+          pie: { useMaxWidth: true, textPosition: 0.62 },
+        });
+
+        try {
+          await mermaid.run({ nodes });
+        } catch (err) {
+          console.warn("[akileas] mermaid render failed; showing diagram source instead.", err);
+        }
+      }
+    </script>
+  </body>
+</html>
