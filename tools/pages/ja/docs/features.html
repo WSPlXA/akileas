@@ -1,0 +1,212 @@
+---
+{
+  "out": "ja/docs/features.html",
+  "lang": "ja",
+  "title": "使い方と機能ガイド — Akileas マニュアル",
+  "description": "Akileas のすべての機能を解説します。その場で編集するハイブリッド WYSIWYG、分割ビュー、アウトラインと検索の仕組み、Git 不要のタイムマシン、ネイティブな LaTeX と Mermaid、Agent ワークベンチ、Typst による PDF 書き出し、そしてショートカットの完全なリファレンス。",
+  "nav": "docs",
+  "docSlug": "features",
+  "bodyClass": "docs-page"
+}
+---
+
+<header class="docs-hero">
+  <p class="section-kicker">第 3 章</p>
+  <h1>使い方 &amp; 機能ガイド</h1>
+  <p class="docs-lede">Akileas の全体像を一通りご案内します。その場で編集する編集モデル、マルチビューポートでの執筆、アウトラインによるナビゲーションと検索、Git 不要のローカルタイムマシン、ネイティブな LaTeX と Mermaid のレンダリング、AI Agent ワークベンチ、出版品質の Typst PDF 書き出し、そしてすべてのキーボードショートカットです。</p>
+</header>
+
+<section class="doc-section" id="wysiwyg">
+  <h2>3.1 その場で編集するハイブリッド WYSIWYG</h2>
+  <p>従来の Markdown エディターは、大きく二つの方式に分かれます。左側でソースを書き、右側でプレビューを確認する、分断された固定的な 2 ペイン方式。あるいは、基盤となる構文を容易に壊してしまうリッチテキスト表示方式です。Akileas は、その場で編集するハイブリッド WYSIWYG というアプローチを採用しています。</p>
+  <ul class="doc-list">
+    <li><strong>編集時はソースを表示します。</strong>カーソルが段落、数式、表、見出しのブロックに入ると、そのブロックはただちに明快な Markdown ソース構文へと展開され、細部まで正確に調整できます。</li>
+    <li><strong>離れるとレイアウトを描画します。</strong>カーソルがブロックから離れると、内容はその場で美しいベクター組版として描画されます。見出しは太さと大きさを増し、数式は印刷品質の数学的表記になり、表は自動で調整されるグリッドになり、コードブロックには構文ハイライトが適用されます。</li>
+    <li><strong>構文を壊しません。</strong>保存される内容は常にクリーンで素朴な Markdown テキストです。冗長で乱れた非推奨の HTML タグが混入することは一切ありません。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="split-view">
+  <h2>3.2 複数ドキュメントの分割ビュー</h2>
+  <p>文献の比較、章ごとに進める長編の執筆、参照の多い作業のために、Akileas はネイティブな分割画面を備えています。</p>
+  <ul class="doc-list">
+    <li><strong>右に分割。</strong>現在のビューポートを左右 2 つに分割します（ショートカットはメニューから実行できます）。それぞれが独立してスクロールします。</li>
+    <li><strong>下に分割。</strong>2 つのビューポートを上下に配置し、縦方向の比較を行えます。</li>
+    <li><strong>同一ドキュメントの双方向ライブ同期。</strong>両方のビューポートで同じドキュメントを開いている場合、内容は 1 つのコピーを共有します。左側のビューポートで入力すると、右側の描画中のビューポートがミリ秒単位の遅延で更新され、それぞれのスクロール位置とカーソル選択は完全に独立して保たれます。</li>
+    <li><strong>シームレスなフォーカス移動。</strong><kbd>Ctrl</kbd> + <kbd>H</kbd> / <kbd>J</kbd> / <kbd>K</kbd> / <kbd>L</kbd> を押すと、Vim と同じように滑らかに分割ビューポート間でフォーカスを移動できます。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="navigation">
+  <h2>3.3 アウトラインによるナビゲーション &amp; 検索システム</h2>
+  <h3>フローティングのアウトラインナビゲーションツリー</h3>
+  <p>フローティングのドキュメントアウトラインツリー（<kbd>Cmd</kbd> + <kbd>D</kbd> / <kbd>Ctrl</kbd> + <kbd>D</kbd>）は、現在のドキュメント内の H1 から H6 までのすべての見出しを自動的に抽出し、インデントされたツリー階層として表示します。ノードをクリックすると該当するセクションへ滑らかにジャンプし、スクロールに合わせて、いま読んでいる位置を含む見出しノードが自動的にハイライトされます。</p>
+  <h3>インラインの検索と置換</h3>
+  <p>インラインの検索と置換（<kbd>Cmd</kbd> + <kbd>F</kbd> / <kbd>Ctrl</kbd> + <kbd>F</kbd>、<kbd>Cmd</kbd> + <kbd>H</kbd> / <kbd>Ctrl</kbd> + <kbd>H</kbd>）は、プレーンテキスト検索、単語単位の一致、大文字と小文字の区別に加えて、強力で非常に高速な Regex 一致モードをサポートします。一致した箇所は半透明の金色のハイライトとしてビューポート上に重ねて表示され、<kbd>Enter</kbd> / <kbd>Shift</kbd> + <kbd>Enter</kbd> で前後へすばやく移動できます。</p>
+  <h3>ワークスペース全体とファイル単位のアクセス</h3>
+  <ul class="doc-list">
+    <li><strong>ワークスペース全体の検索</strong>（<kbd>Cmd</kbd> + <kbd>B</kbd> / <kbd>Ctrl</kbd> + <kbd>B</kbd>）は、現在開いているフォルダー配下のすべての Markdown ドキュメントを即座に走査し、ファイル名またはテキストの断片による高速なあいまい検索を行えます。</li>
+    <li><strong>クイックエクスプローラー</strong>（<kbd>Cmd</kbd> + <kbd>E</kbd> / <kbd>Ctrl</kbd> + <kbd>E</kbd>）は、サイドのファイルディレクトリツリーを手軽に呼び出し、ワークスペースの構成を軽快かつ効率的に管理できます。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="time-machine">
+  <h2>3.4 Git 不要のローカルタイムマシン</h2>
+  <p>多くのユーザーは Git を設定していないプロジェクトディレクトリで作業しており、誤ってテキストを削除したり、ファイルを破損させたり、内容を上書きしたりするリスクがあります。Akileas には、導入するだけでそのまま使えるタイムマシンが組み込まれています。</p>
+  <ul class="doc-list">
+    <li><strong>タイムマシンパネルを呼び出します。</strong><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>（macOS）または <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd>（Windows/Linux）を押します。</li>
+    <li><strong>依存関係なしで独立して動作します。</strong>現在のファイルが Git リポジトリ内にあるかどうかに関わらず、Akileas は独自の専用履歴データベースを維持し、最大 100 件のスナップショットを巡回的に保存します。</li>
+    <li><strong>文字単位の差分表示。</strong>タイムマシンの画面では、異なる履歴バージョン間の文字単位の追加と削除を表示します（追加は緑、削除は赤、対応する行番号付き）。外部ツールは必要ありません。</li>
+    <li><strong>秒単位のチェックアウトと復元。</strong>履歴一覧でバージョンをクリックするとその時点の状態をプレビューでき、続けて <strong>Restore</strong> をクリックすれば安全に巻き戻せます。</li>
+  </ul>
+  <p>また、<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> を使えば、いつでも手動でマイルストーンのスナップショットを作成できます。</p>
+</section>
+
+<section class="doc-section" id="math-diagrams">
+  <h2>3.5 ネイティブな LaTeX と Mermaid 図</h2>
+  <p>外部プラグインもネットワーク接続も必要ありません。Akileas はプロ品質の組版要素をネイティブに描画します。</p>
+  <h3>LaTeX 数式</h3>
+  <p>インライン数式は <code>$E = mc^2$</code> のように記述し、テキストの流れの中に美しく組版されます。ブロックレベルの表示数式は <code>$$ ... $$</code> を使用し、複雑な積分、行列、微積分、連立方程式をサポートします。19 種類の数学用ベクターフォントを内蔵しており、美しく鮮明な字形を実現します。</p>
+  <h3>モダンな Mermaid ベクター図</h3>
+  <ul class="doc-list">
+    <li>フローチャート（<code>graph TD</code>）、シーケンス図（<code>sequenceDiagram</code>）、状態図、クラス図、マインドマップをサポートします。</li>
+    <li>シーケンス図の <code>box</code> グループ化コンテナ（例：<code>box rgb(240, 248, 255)</code> business module <code>... end</code>）や複数行ラベル（<code>&lt;br&gt;</code> または <code>&lt;br/&gt;</code>）など、モダンな Mermaid 構文を完全にサポートします。</li>
+    <li>動的な操作とローカル拡大鏡。マウスホイールによる滑らかなズームと、押したままドラッグするパン操作に対応し、図を縮小すると 360x240 のローカルシェーディング付き拡大鏡が自動的に有効になるため、複雑なアーキテクチャ図の細部まで鮮明に読み取れます。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="agent">
+  <h2>3.6 AI Agent 設定ワークベンチ</h2>
+  <p><code>SKILL.md</code> や <code>AGENTS.md</code> を扱う次世代の開発者と AI Agent アーキテクトのために作られた専用ツールです。</p>
+  <ul class="doc-list">
+    <li><strong>仕様の自動認識。</strong><code>SKILL.md</code>、<code>AGENTS.md</code>、または <code>.github/copilot-instructions.md</code> を開くと、エディターは専用の Agent 拡張モードへ自動的に切り替わります。</li>
+    <li><strong>無損失の行単位字句解析。</strong>64KB / 512 行という安全な範囲内で frontmatter メタデータをすばやく走査しつつ、ユーザーの元のフィールド順序とコメント書式を厳密に保持します。</li>
+    <li><strong>フローティングの問題診断パネル。</strong>必須フィールドの欠落（<code>name</code>、<code>description</code>、<code>version</code> など）を自動検出し、ディレクトリ名と識別子が Skill 仕様に適合しているかを検証し、セマンティックバージョニング（SemVer）形式を厳密に検証します。</li>
+    <li><strong>ワンクリックのクイック修正。</strong>診断結果の中の修正ボタンをクリックすると、仕様テンプレートと不足しているフィールドがただちにドキュメントへ適用されます。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="pdf-export">
+  <h2>3.7 出版品質の Typst PDF 書き出し</h2>
+  <p>ブラウザー経由で PDF を印刷したときに生じるぼやけやレイアウトの崩れとはお別れです。Akileas はモダンな組版エンジンである <strong>Typst</strong> を内蔵し、ベクタードキュメントを直接書き出します。</p>
+  <ul class="doc-list">
+    <li><strong>書き出しを実行します。</strong>メニューの <strong>File -&gt; Export as PDF…</strong> をクリックします。</li>
+    <li><strong>プロ仕様の書き出しパラメーター。</strong>国際標準のページサイズ A4 または US Letter、縦向きまたは横向きの向き、5mm から 60mm まで精密に設定できるカスタム余白、そしてヘッダー、フッター、動的なページ番号を印刷するかどうかを自由に選べるページ番号とヘッダーの設定を備えています。</li>
+    <li><strong>真のベクター埋め込み。</strong>Markdown のテキスト、数式、Mermaid のトポロジー図はすべて高精度のベクターメタデータに変換されて PDF に埋め込まれ、1 万倍に拡大しても完全に滑らかで鮮明なまま、学術誌や出版物に匹敵する印刷品質を実現します。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="shortcuts">
+  <h2>3.8 クロスプラットフォーム ショートカット一覧</h2>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>操作</th>
+          <th>macOS ショートカット</th>
+          <th>Windows / Linux ショートカット</th>
+          <th>説明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>新規 Markdown</td>
+          <td><kbd>Cmd</kbd> + <kbd>N</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>N</kbd></td>
+          <td>タイトル未設定の新規ドキュメントをすばやく作成します</td>
+        </tr>
+        <tr>
+          <td>ファイルを開く</td>
+          <td><kbd>Cmd</kbd> + <kbd>O</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>O</kbd></td>
+          <td>既存のローカル Markdown ファイルを開きます</td>
+        </tr>
+        <tr>
+          <td>フォルダーを開く</td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td>
+          <td>ワークスペースのディレクトリを開きます</td>
+        </tr>
+        <tr>
+          <td>ファイルを保存</td>
+          <td><kbd>Cmd</kbd> + <kbd>S</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>S</kbd></td>
+          <td>ディスクへのアトミック書き込みとタイムマシンのスナップショットを実行します</td>
+        </tr>
+        <tr>
+          <td>手動スナップショット</td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td>
+          <td>タイムマシンに手動でバージョンのアンカーを設定します</td>
+        </tr>
+        <tr>
+          <td>バージョンタイムマシン</td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td>
+          <td>ローカル履歴の比較パネルを呼び出します</td>
+        </tr>
+        <tr>
+          <td>タブを閉じる</td>
+          <td><kbd>Cmd</kbd> + <kbd>W</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>W</kbd></td>
+          <td>現在アクティブなエディタータブを閉じます</td>
+        </tr>
+        <tr>
+          <td>インライン検索</td>
+          <td><kbd>Cmd</kbd> + <kbd>F</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>F</kbd></td>
+          <td>現在のドキュメントの検索パネルを有効にします</td>
+        </tr>
+        <tr>
+          <td>テキストを置換</td>
+          <td><kbd>Cmd</kbd> + <kbd>H</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>H</kbd></td>
+          <td>現在のドキュメントの置換パネルを有効にします</td>
+        </tr>
+        <tr>
+          <td>ワークスペース全体の検索</td>
+          <td><kbd>Cmd</kbd> + <kbd>B</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>B</kbd></td>
+          <td>ファイルをまたぐ秒単位のグローバル検索を行います</td>
+        </tr>
+        <tr>
+          <td>指定行へ移動</td>
+          <td><kbd>Cmd</kbd> + <kbd>G</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>G</kbd></td>
+          <td>指定した行番号へすばやくジャンプします</td>
+        </tr>
+        <tr>
+          <td>ドキュメントアウトラインツリー</td>
+          <td><kbd>Cmd</kbd> + <kbd>D</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>D</kbd></td>
+          <td>H1〜H6 見出しのアウトラインを開閉します</td>
+        </tr>
+        <tr>
+          <td>クイックリソース管理</td>
+          <td><kbd>Cmd</kbd> + <kbd>E</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>E</kbd></td>
+          <td>ワークスペースのファイルエクスプローラーを呼び出します</td>
+        </tr>
+        <tr>
+          <td>タグ管理</td>
+          <td><kbd>Cmd</kbd> + <kbd>T</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>T</kbd></td>
+          <td>双方向のファイル分類タグパネルを開きます</td>
+        </tr>
+        <tr>
+          <td>分割ビューポートの移動</td>
+          <td><kbd>Ctrl</kbd> + <kbd>H</kbd>/<kbd>J</kbd>/<kbd>K</kbd>/<kbd>L</kbd></td>
+          <td><kbd>Ctrl</kbd> + <kbd>H</kbd>/<kbd>J</kbd>/<kbd>K</kbd>/<kbd>L</kbd></td>
+          <td>左 / 下 / 上 / 右の分割ペイン間を移動します</td>
+        </tr>
+        <tr>
+          <td>全画面モードの切り替え</td>
+          <td><kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> / <kbd>F11</kbd></td>
+          <td><kbd>F11</kbd></td>
+          <td>没入感のある、気が散らない全画面での執筆に入ります</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="doc-note">ショートカットは各プラットフォームの慣例に従います。macOS が <kbd>Cmd</kbd> を使う場面では、Windows と Linux は <kbd>Ctrl</kbd> を使います。ただし分割ビューポートの移動だけは、どの環境でも <kbd>Ctrl</kbd> を基本とします。</p>
+</section>

@@ -3,8 +3,7 @@
 //
 //   node tools/check-links.mjs
 //
-// Exits non-zero on any broken link. Screenshot assets that have not been
-// captured yet are reported as pending rather than failures.
+// Exits non-zero on any broken link.
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
@@ -71,9 +70,7 @@ for (const file of files) {
     }
 
     if (!existsSync(realFile)) {
-      const label = `${relative(SITE, file).split(sep).join("/")} -> ${raw}`;
-      if (/assets\/screenshots\//.test(raw)) pending.push(label);
-      else broken.push(`${label} (no such file)`);
+      broken.push(`${relative(SITE, file).split(sep).join("/")} -> ${raw} (no such file)`);
       continue;
     }
 

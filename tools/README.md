@@ -39,9 +39,7 @@ followed by the page markup:
   "description": "…",
   "nav": "docs",
   "docSlug": "benchmarks",
-  "bodyClass": "docs-page",
-  "mermaid": true,
-  "altOut": "zh/docs/benchmarks.html"
+  "bodyClass": "docs-page"
 }
 ---
 <header class="docs-hero">…</header>
@@ -49,13 +47,18 @@ followed by the page markup:
 
 | Field | Meaning |
 | --- | --- |
-| `out` | Output path relative to `site/`. Determines the relative prefix used for all chrome links. |
-| `lang` | `en` or `zh`. Selects the chrome strings and the locale path prefix. |
+| `out` | Output path relative to `site/`, including the locale prefix. Determines the relative prefix used for all chrome links. |
+| `lang` | `en`, `zh` or `ja`. Must match the directory the file lives in. Selects the chrome strings, the path prefix and the font request. |
 | `nav` | Which top-level nav item is marked `aria-current`. `home`, `docs`, `privacy`. |
 | `docSlug` | Docs pages only. Must match a `slug` in `LOCALES.<lang>.docs`. |
 | `bodyClass` | Extra `<body>` class, e.g. `legal-page`, `docs-page`. |
-| `altOut` | Output path of the counterpart page in the other language. Drives `hreflang` and the language switch. |
 | `jsonLd` | Optional object, emitted as a `application/ld+json` script. |
+
+There is deliberately no per-page "other language" field. A page's **neutral path**
+is its `out` with the locale prefix stripped (`zh/docs/benchmarks.html` →
+`docs/benchmarks.html`), and the generator builds every counterpart URL, `hreflang`
+alternate and language-switch link from that. Adding a locale therefore means adding
+an entry to `LOCALES` and a `tools/pages/<locale>/` tree — no edits to existing pages.
 
 Two page shapes are supported:
 
@@ -63,8 +66,9 @@ Two page shapes are supported:
 - **Docs pages** supply only their inner content; the generator wraps them in the
   `<div class="shell docs-layout">` sidebar shell and gives them `<main id="main" class="docs-main">`.
 
-The build fails loudly on a duplicate output path or an `altOut` that does not
-correspond to a real generated page, so the two locales cannot silently drift apart.
+The build fails loudly on a duplicate output path, a `lang` that disagrees with its
+directory, or a locale that does not cover exactly the same set of neutral paths as
+English — so the locales cannot silently drift apart.
 
 ### Diagrams
 
@@ -90,10 +94,33 @@ commit, or the deployed site will not match the sources.
 
 ## Conventions
 
-- Locale root: English lives at `/`, Chinese at `/zh/`. Every page has a counterpart;
-  `hreflang` alternates (including `x-default` → English) are emitted automatically.
-- All chrome links are resolved through `navHref()` so they stay inside the current
-  locale; `altOut` links use `abs()` because they already carry a locale prefix.
-- Screenshot assets referenced by `docs/screenshots.html` are reported by
-  `check-links.mjs` as *pending* rather than broken until they are captured into
-  `site/assets/screenshots/`.
+- Locale roots: English at `/`, Simplified Chinese at `/zh/`, Japanese at `/ja/`.
+  Every page exists in every locale; `hreflang` alternates for all three — plus
+  `x-default` pointing at English — are emitted automatically, as is the language
+  switcher in the header.
+- Chrome links (nav, footer, sidebar) go through `navHref()` so they stay inside the
+  current locale. Counterpart links use `base + localePath(...)` because they already
+  carry a locale prefix.
+- CJK locales set their own `--font-*` variables in `styles.css` (`.lang-zh`,
+  `.lang-ja`) so Latin text keeps the Garamond faces while Chinese and Japanese fall
+  through to a matching Song / Mincho serif. The requested CJK family is appended to
+  the Google Fonts URL per locale.
+
+## Distribution claims
+
+Akileas ships **only** through the Microsoft Store. The site must not offer or imply
+any other channel:
+
+- No GitHub links anywhere — no download, release, source-build, issue-tracker or
+  repository links in the header, footer, body copy or front-matter `jsonLd`.
+- No open-source claim and no licence name. Do not state a licence unless the
+  publisher supplies one.
+- The only download call to action is the Microsoft Store button
+  (`https://apps.microsoft.com/detail/9PF44S6NS06D`).
+- The privacy page's contact section points at the Microsoft Store listing's support
+  channel rather than a public issue tracker.
+
+There is also no interface-tour chapter: the manual has three chapters (benchmarks,
+why it is fast, features) and deliberately shows no application screenshots yet. The
+`.shot` / `.shot-frame` styles were removed with it — re-add both together if
+screenshots are reintroduced.

@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="キーを打ってから画面が描き直されるまでの間に何が起きているのか。即座の応答と背景での精密化、変更された部分だけの再計算、互いに足を引っ張らない 3 つの描画経路、10 万行の文書での瞬時の移動、そしてクラッシュや電源断にも耐える保存の仕組みを解説します。" />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/ja/docs/architecture.html" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/architecture.html" />
+    <link rel="alternate" hreflang="ja" href="https://wsplxa.github.io/akileas/ja/docs/architecture.html" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/architecture.html" />
+    <link rel="icon" type="image/png" href="../../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content="なぜ Akileas はこれほど速いのか — Akileas マニュアル" />
+    <meta property="og:description" content="キーを打ってから画面が描き直されるまでの間に何が起きているのか。即座の応答と背景での精密化、変更された部分だけの再計算、互いに足を引っ張らない 3 つの描画経路、10 万行の文書での瞬時の移動、そしてクラッシュや電源断にも耐える保存の仕組みを解説します。" />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/ja/docs/architecture.html" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="なぜ Akileas はこれほど速いのか — Akileas マニュアル" />
+    <meta name="twitter:description" content="キーを打ってから画面が描き直されるまでの間に何が起きているのか。即座の応答と背景での精密化、変更された部分だけの再計算、互いに足を引っ張らない 3 つの描画経路、10 万行の文書での瞬時の移動、そしてクラッシュや電源断にも耐える保存の仕組みを解説します。" />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>なぜ Akileas はこれほど速いのか — Akileas マニュアル</title>
+  </head>
+  <body class="docs-page lang-ja">
+    <a class="skip-link" href="#main">コンテンツへスキップ</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../../ja/" aria-label="Akileas ホーム">
+          <img src="../../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../../#vision" class="nav-anchor">設計思想</a>
+          <a href="../../#features" class="nav-anchor">機能</a>
+          <a href="../../#tech-specs" class="nav-anchor">詳細仕様</a>
+          <a href="../../#architecture" class="nav-anchor">アーキテクチャ</a>
+          <a href="../../ja/docs/" aria-current="page">マニュアル</a>
+          <a href="../../ja/privacy.html">プライバシー</a>
+          <span class="lang-switch" role="group" aria-label="言語">
+            <a href="../../docs/architecture.html" hreflang="en" lang="en">EN</a>
+            <a href="../../zh/docs/architecture.html" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+            <span class="lang-current" aria-current="true">日本語</span>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="テクニカルマニュアル">
+        <p class="docs-sidebar-title">テクニカルマニュアル</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>概要</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">I</span>
+              <span>ベンチマーク</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">II</span>
+              <span>高速化の仕組み</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html">
+              <span class="docs-nav-num" aria-hidden="true">III</span>
+              <span>機能ガイド</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../../ja/"><span aria-hidden="true">←</span> 概要に戻る</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">第 2 章</p>
+          <h1>なぜ Akileas はこれほど速いのか</h1>
+          <p class="docs-lede">
+            多くのエディターは、文書が長くなると「表示する前に考える」ようになり、入力中のもたつきが
+            体感できるようになります。Akileas は、それが決して起きないように設計されています。
+            <strong>キーを押した瞬間には、画面はすでに更新されています</strong>。残りの細かな組版は
+            裏側で静かに埋められ、あなたと書いている文字の間に割り込むことはありません。
+          </p>
+        </header>
+
+        <section class="doc-section" id="instant">
+          <h2>2.1 キー入力は、その場で表示される</h2>
+          <p>
+            エディターの内部では、「キーが押された」という出来事は 2 つに分けて扱われます。
+            <strong>すぐに表示する</strong>部分と、<strong>あとから精密に整える</strong>部分です。
+            前者は必要最小限のことだけを行うので、同じフレームの中で必ず画面が更新されます。
+            後者はやることは多いものの、時間をかけてよく、新しい入力が来ればいつでも中断できます。
+          </p>
+
+          <figure class="diagram">
+            <figcaption class="diagram-title">1 文字のキー入力で起きること</figcaption>
+            <div class="dgm-lanes">
+              <section class="dgm-lane dgm-lane-now">
+                <h4>すぐに起きること</h4>
+                <p>同じフレームの中で終わらせる必要があります。そうでなければ、遅れとして見えてしまいます。</p>
+                <ol class="dgm-steps">
+                  <li>カーソル位置に 1 文字を入力します</li>
+                  <li>その 1 行だけが描き直されます</li>
+                  <li>文字とカーソルが正しい位置に置かれた状態で、画面が更新されます</li>
+                </ol>
+              </section>
+              <section class="dgm-lane dgm-lane-later">
+                <h4>あとから起きること</h4>
+                <p>裏側で実行され、入力の邪魔をすることはありません。</p>
+                <ol class="dgm-steps">
+                  <li>エディターが、文書のどこが変わったかの解析を始めます</li>
+                  <li>影響を受けた部分だけが再計算されます</li>
+                  <li>シンタックスハイライトと細かな組版が滑らかに反映されます</li>
+                  <li>その間も入力し続けていれば、古くなった結果は自動的に破棄されます</li>
+                </ol>
+              </section>
+            </div>
+          </figure>
+
+          <p>
+            そのため、10 万行の文書に入力するときも、白紙のページに入力するときとほとんど同じ感覚で
+            済みます。実測では、キーを押してから画面が更新されるまでの時間はわずか
+            <strong>37 マイクロ秒</strong>で、1 フレーム分の予算（8.33 ms）の 100 分の 1 にも満たない
+            ほどです。
+          </p>
+        </section>
+
+        <section class="doc-section" id="incremental">
+          <h2>2.2 変更した行だけが再計算される</h2>
+          <p>
+            ふつうの文書は、長くなるほど動作が重くなります。1 文字入力するたびに全文を最初から
+            読み直しているからです。Akileas はそうしません。
+          </p>
+          <p>
+            Akileas は文書を 2 つの階層で読み取ります。一方は<em>どこが段落で、見出しで、
+            コードブロックで、リストなのか</em>を記録し、もう一方は<em>あるブロックの中にある
+            太字やリンク、数式</em>を記録します。本文中の数語を書き換えても外側の構造はまったく
+            変わらないため、<strong>編集中のその 1 行だけを読み直せばよく、残りの 99,999 行は
+            そのまま再利用されます</strong>。
+          </p>
+          <div class="callout callout-note">
+            <p class="callout-title">NOTE</p>
+            <p>
+              ふつうの文章を入力しているときにまったく遅れを感じないのも、そして <code># </code> の
+              ように見出しの構造を変え、ブロック全体を巻き込む入力だけが裏側に少し余分な時間を
+              かけるのも、同じ理由です。それでも画面の更新は 85 マイクロ秒以内に終わっているので、
+              裏側が働いていることに気づくことはありません。
+            </p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="pipelines">
+          <h2>2.3 互いに足を引っ張らない数式・図・表</h2>
+          <p>
+            数式、Mermaid の図、表は、文書の中でもっとも「高コスト」な 3 種類の内容です。これらが
+            1 つの更新経路を共有していると、1 文字入力するたびに図の再計算が走り、入力が途切れ
+            途切れになってしまいます。
+          </p>
+          <p>
+            Akileas はこれらを独立させています。<strong>実際に変わった種類だけが再計算されます</strong>。
+            本文に入力しても、すぐ隣に描かれている構成図が乱れることはありません。
+          </p>
+
+          <figure class="diagram">
+            <figcaption class="diagram-title">3 つの独立した描画経路</figcaption>
+            <div class="dgm-split">
+              <div class="dgm-pill dgm-pill-source">文書が変化する</div>
+              <div class="dgm-link" aria-hidden="true"></div>
+              <div class="dgm-branches">
+                <article class="dgm-branch">
+                  <strong>数式</strong>
+                  <ul>
+                    <li>入力が止まってから配置し直されます</li>
+                    <li>計算済みの数式は記憶されます</li>
+                    <li>カーソルが別の場所にある間は再計算されません</li>
+                  </ul>
+                </article>
+                <article class="dgm-branch">
+                  <strong>Mermaid の図</strong>
+                  <ul>
+                    <li>表示領域に見えている図だけが変換されます</li>
+                    <li>拡大や移動をしても図が描き直されることはありません</li>
+                    <li>図の形状はキャッシュされて再利用されます</li>
+                  </ul>
+                </article>
+                <article class="dgm-branch">
+                  <strong>表</strong>
+                  <ul>
+                    <li>列幅は実際の表示幅に合わせて調整されます</li>
+                    <li>中国語と英語が混在した文章でも桁がそろいます</li>
+                    <li>セルを編集しても、影響はその表だけにとどまります</li>
+                  </ul>
+                </article>
+              </div>
+              <div class="dgm-link" aria-hidden="true"></div>
+              <div class="dgm-pill dgm-pill-accent">1 枚の画像に合成され、GPU に渡されて描画されます</div>
+            </div>
+          </figure>
+        </section>
+
+        <section class="doc-section" id="scrolling">
+          <h2>2.4 10 万行のどこへでも瞬時に移動できる</h2>
+          <p>
+            非常に長い文書でスクロールバーをドラッグすると、多くのエディターはまず固まり、そのあとで
+            飛ぶように移動します。原因は、ドラッグした位置が何行目にあたるのかを知るために、
+            先頭からすべての行の高さを足し合わせているからです。
+          </p>
+          <p>
+            Akileas は、文書全体の高さを、すばやく検索できる索引としてまとめています。文書が
+            どれだけ長くても、位置を特定するための計算量は長さの対数に比例するだけです。
+            <strong>スクロールバーを 85% までドラッグすれば、それが何行目の何文字目なのかを
+            数マイクロ秒で答えることができます</strong>。まだ計測していない行は、スクロール中は
+            平均的な高さで見積もられ、ドラッグを続けるにつれて精度が上がっていくため、飛びや
+            ちらつきは起きません。
+          </p>
+          <div class="stat-grid">
+            <div class="stat-card"><span class="stat-label">位置特定にかかる時間</span><strong>数マイクロ秒</strong><small>文書の長さにほとんど依存しません</small></div>
+            <div class="stat-card"><span class="stat-label">スクロールのちらつき</span><strong>なし</strong><small>未計測の行は見積もられ、あとで精度が上がります</small></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="safety">
+          <h2>2.5 クラッシュや電源断で作業を失うことはない</h2>
+          <p>
+            保存は 1 つの操作に見えますが、書き込みの途中で電源が落ちると、書きかけのファイルが、
+            せっかくの完璧な下書きを台無しにしてしまうことがあります。Akileas はこれを避けるために、
+            まずコピーを書き、それを検証してから、はじめて元のファイルを一気に置き換えます。
+          </p>
+
+          <figure class="diagram">
+            <figcaption class="diagram-title">保存したときに実際に起きること</figcaption>
+            <ol class="dgm-flow">
+              <li>
+                <span class="dgm-idx">1</span>
+                <strong>新しい内容を組み立てる</strong>
+                <small>現在の内容を 1 つの完全なファイルにまとめます</small>
+              </li>
+              <li>
+                <span class="dgm-idx">2</span>
+                <strong>一時コピーを書き出す</strong>
+                <small>まず一時ファイルに書き出します。この時点では元のファイルは手つかずです</small>
+              </li>
+              <li>
+                <span class="dgm-idx">3</span>
+                <strong>内容を検証する</strong>
+                <small>書き出したデータが完全で正しいことを確認し、ディスクに確実に書き込みます</small>
+              </li>
+              <li>
+                <span class="dgm-idx">4</span>
+                <strong>一気に置き換える</strong>
+                <small>コピーを元のファイルとアトミックに入れ替え、書きかけの状態を残しません</small>
+              </li>
+              <li>
+                <span class="dgm-idx">5</span>
+                <strong>タイムマシンに記録する</strong>
+                <small>いつでも比較したり巻き戻したりできる履歴を残します</small>
+              </li>
+            </ol>
+          </figure>
+
+          <p>
+            さらにエディターは、軽量で検証済みの編集記録を追記し続けています。電源が落ちたあとでも、
+            次にその文書を開いたときにこの記録を自動的に確認して再現し、保存していなかった内容を
+            返してくれます。
+          </p>
+        </section>
+
+        <section class="doc-section" id="foundation">
+          <h2>2.6 土台にあるもの</h2>
+          <p>
+            これらの性能は、いくつかの根本的な設計判断から生まれています。ブラウザーエンジンの上に
+            作られたエディターとは、出発点からまったく違う道を進むという選択です。
+          </p>
+          <div class="card-grid">
+            <article class="doc-card">
+              <h3>ネイティブにコンパイルされ、中にブラウザーエンジンを持たない</h3>
+              <p>
+                アプリケーション全体がネイティブコードにコンパイルされ、システムの描画
+                インターフェースを直接呼び出します。ブラウザーエンジンを内蔵していないため、起動に
+                数秒待たされることも、数百 MB のメモリを消費することもありません。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>ガベージコレクションによる停止がない</h3>
+              <p>
+                メモリをいつ解放するかをコンパイラーがコンパイル時に決めるため、アプリケーションの
+                実行中にガベージコレクションは行われません。数秒ごとに動作が引っかかる原因となる
+                フレーム落ちは、ここでは起こりません。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>GPU が直接描画する</h3>
+              <p>
+                文字、ベクターグラフィックス、インターフェースの要素はすべて GPU が描画し、
+                120 FPS の高リフレッシュレートディスプレイと、くっきりとしたサブピクセル描画に
+                対応します。文書がどれだけ長くても、スクロールとズームは滑らかなままです。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>メモリとキャッシュの上限が決まっている</h3>
+              <p>
+                画像、数式、図にはそれぞれ明確なキャッシュの上限があり、それを超えると、最後に
+                使われた時刻が最も古いものから自動的に破棄されます。そのため、非常に大きな文書を
+                長い時間編集し続けても遅くなることはありません。
+              </p>
+            </article>
+          </div>
+          <p class="doc-note">
+            こうした設計の直接の結果です。軽い文書ではメモリ使用量はおよそ 25 MB から 45 MB、
+            10 万行の文書でも 60 MB から 110 MB の間で安定し、編集を続けてもどちらも増えて
+            いきません。
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../../ja/" aria-label="Akileas">
+          <img src="../../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>疾走する性能。ネイティブ Markdown デスクトップエディタ。</p>
+        <nav aria-label="Footer">
+          <a href="../../ja/privacy.html">プライバシーポリシー</a>
+          <a href="../../ja/docs/">マニュアル</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

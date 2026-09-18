@@ -1,0 +1,250 @@
+---
+{
+  "out": "ja/docs/benchmarks.html",
+  "lang": "ja",
+  "title": "パフォーマンスとベンチマーク — Akileas マニュアル",
+  "description": "計測済みの Akileas パフォーマンス。マイクロ秒スケールの応答、1 万行・10 万行ドキュメントの解析レイテンシ、大規模ドキュメントの検索速度、メモリ使用量、そしてエディターの総合比較。",
+  "nav": "docs",
+  "docSlug": "benchmarks",
+  "bodyClass": "docs-page"
+}
+---
+<header class="docs-hero">
+  <p class="section-kicker">第 1 章</p>
+  <h1>パフォーマンスとベンチマーク</h1>
+  <p class="docs-lede">
+    Akileas はパフォーマンスに関する一つの鉄則を守っています。<strong>UI スレッドは決して待たない</strong>ことです。
+    1,000 行のデイリーノートでも 100,000 行の設計ドキュメントでも、操作はミリ秒未満の速度を保ちます。
+    以下の数値はすべて、同一の実機における公式リリースビルドで計測したものです。
+  </p>
+</header>
+
+<section class="doc-section" id="hardware">
+  <h2>1.1 テスト環境</h2>
+  <p>以下のデータはすべて同一のリファレンスマシンで計測しているため、各行をそのまま比較できます。</p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>項目</th><th>構成</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>オペレーティングシステム</td><td>Windows 11（64 ビット）</td></tr>
+        <tr><td>プロセッサー</td><td>Intel Core（第 12 / 13 / 14 世代アーキテクチャ）</td></tr>
+        <tr><td>ビルド形態</td><td>公式リリースビルド（コンパイラーの最適化をすべて有効化）</td></tr>
+        <tr><td>比較環境</td><td>macOS / Apple M1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="doc-note">
+    以下に登場する「実機」の列は、すべて上の表にある Windows 11 / Intel Core のリファレンスマシンを指します。
+  </p>
+</section>
+
+<section class="doc-section" id="latency">
+  <h2>1.2 連続編集時の解析レイテンシ</h2>
+  <p>
+    連続して入力している間、バックグラウンドはドキュメントのあらゆる変更に追随しなければなりません。以下の表では、
+    最適化前の数値、実機での計測値、そして macOS / Apple M1 でのパフォーマンスを比較しています。
+  </p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ドキュメントサイズ</th>
+          <th>指標</th>
+          <th>実機<br />（Windows 11 / Intel Core）</th>
+          <th>比較環境<br />（macOS / Apple M1）</th>
+          <th>最適化前</th>
+          <th>高速化倍率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="4">10,000 行</td><td>コールドスタート（起動）</td><td><strong>176.19 ms</strong></td><td>~180 ms</td><td>—</td><td>—</td></tr>
+        <tr><td>即時応答（p50 / p95）</td><td><strong>0.031 ms / 0.037 ms</strong></td><td>0.019 ms / 0.025 ms</td><td>—</td><td>マイクロ秒スケール</td></tr>
+        <tr><td>バックグラウンド解析 p50</td><td><strong>0.208 ms</strong></td><td><strong>0.102 ms</strong></td><td>39.602 ms</td><td><strong>~190x ~ 388x</strong></td></tr>
+        <tr><td>バックグラウンド解析 p95</td><td><strong>0.274 ms</strong></td><td><strong>0.120 ms</strong></td><td>41.117 ms</td><td><strong>~150x ~ 342x</strong></td></tr>
+        <tr><td rowspan="4">100,000 行<br />（超長文ドキュメント）</td><td>コールドスタート（起動）</td><td><strong>1845.18 ms（1.84 秒）</strong></td><td>1228.56 ms</td><td>—</td><td>—</td></tr>
+        <tr><td>即時応答（p50 / p95）</td><td><strong>0.037 ms / 0.050 ms</strong></td><td>0.019 ms / 0.024 ms</td><td>—</td><td>マイクロ秒スケール</td></tr>
+        <tr><td>バックグラウンド解析 p50</td><td><strong>0.703 ms</strong></td><td><strong>0.137 ms</strong></td><td>497.175 ms</td><td><strong>~707x ~ 3629x</strong></td></tr>
+        <tr><td>バックグラウンド解析 p95</td><td><strong>0.860 ms</strong></td><td><strong>0.148 ms</strong></td><td>550.450 ms</td><td><strong>~640x ~ 3719x</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-label">即時応答 p50</span><strong>0.037 ms</strong><small>100,000 行での計測値</small></div>
+    <div class="stat-card"><span class="stat-label">バックグラウンド解析 p50</span><strong>0.703 ms</strong><small>100,000 行での計測値</small></div>
+    <div class="stat-card"><span class="stat-label">1 フレームに占める割合</span><strong>&lt; 1%</strong><small>120 FPS 時の 8.33 ms に対して</small></div>
+    <div class="stat-card"><span class="stat-label">最大の高速化倍率</span><strong>~3629x</strong><small>10 万行のバックグラウンド解析</small></div>
+  </div>
+
+  <div class="callout callout-note">
+    <p class="callout-title">NOTE</p>
+    <p>
+      <strong>即時応答</strong>とは、キーを押してから文字とカーソルが画面に現れるまでの時間です。
+      100,000 行で計測してもわずか <strong>37 マイクロ秒（0.037 ms）</strong>で、1 フレームの予算の 100 分の 1 未満です。
+      そのためドキュメントがどれほど長くても、操作感は空のドキュメントと変わりません。
+    </p>
+    <p>
+      <strong>バックグラウンド解析</strong>とは、エディターが背後でシンタックスハイライトと美麗な組版を埋めるために要する時間です。
+      入力が妨げられることは一切なく、100,000 行でも <strong>0.703 ms</strong> を計測しています。
+    </p>
+  </div>
+</section>
+
+<section class="doc-section" id="scenarios">
+  <h2>1.3 編集シナリオ別のパフォーマンス</h2>
+  <p>
+    巨大な <strong>100,000 行</strong>のドキュメントでは、エディターが前バージョンの解析済み結果を再利用できるよう保持しているため、
+    操作ごとの差が大きく現れます。各シナリオは 40 回のサンプルの中央値と 95 パーセンタイルを採用しています。
+  </p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>編集シナリオ</th>
+          <th>即時応答</th>
+          <th>バックグラウンド解析 p50</th>
+          <th>バックグラウンド解析 p95</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>通常の文字入力と置換</td><td>0.038 ms</td><td>0.716 ms</td><td>0.786 ms</td></tr>
+        <tr><td>文字の挿入と削除の交互操作</td><td>0.038 ms</td><td>0.712 ms</td><td>1.218 ms</td></tr>
+        <tr><td>インライン強調記法の変更</td><td>0.038 ms</td><td>0.716 ms</td><td>0.934 ms</td></tr>
+        <tr><td>複数段落にまたがるランダムな移動</td><td>0.044 ms</td><td>0.466 ms</td><td>0.626 ms</td></tr>
+        <tr><td>構造的な見出しの書き換え</td><td><strong>0.085 ms</strong></td><td>997.10 ms</td><td>1162.17 ms</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>まとめ</h3>
+  <ol class="doc-list">
+    <li>
+      <strong>日常的な高頻度の入力はきわめて滑らかです</strong>。文字入力、バックスペースでの削除、インラインの太字化、
+      段落をまたぐ編集では、バックグラウンド解析は <strong>0.46 ms ~ 0.71 ms</strong> の範囲で安定し、
+      即時応答はわずか <strong>38 マイクロ秒</strong>です。
+    </li>
+    <li>
+      <strong>構造の変更でも引っかかりません</strong>。<code># </code> を入力して見出しブロックの書き換えが始まると、
+      バックグラウンドはブロック全体を再計算する必要があります（約 997 ms）。それでも画面は
+      <strong>85 マイクロ秒</strong>以内に更新され、キー入力やカーソルのフィードバックに遅延やフレーム落ちはありません。
+    </li>
+  </ol>
+</section>
+
+<section class="doc-section" id="subsystems">
+  <h2>1.4 専門機能の計測結果</h2>
+  <p>
+    入力のホットパスに加えて、大規模ドキュメントの検索、設定ファイルの検証、図のコンパイルについても、それぞれ
+    計測を行いました。
+  </p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>機能</th><th>テストシナリオ</th><th>計測結果</th><th>備考</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>全文検索</td>
+          <td>16 MiB の大規模ドキュメント<br />全文キーワード一致（20 回サンプリング）</td>
+          <td><strong>9,788.94 MiB/s</strong><br />（1.635 ms / パス）</td>
+          <td>検索速度は 10 GB/s に迫り、1 万行のドキュメントは瞬時に完了します。入力が妨げられることもありません。</td>
+        </tr>
+        <tr>
+          <td>設定ファイルの検証</td>
+          <td>本文 100,000 行<br />＋フロントマター（200 回サンプリング）</td>
+          <td><strong>1.6 マイクロ秒</strong><br />（平均 1.7 マイクロ秒）</td>
+          <td>本文がどれほど長くなっても冒頭メタデータの検証は遅くならず、1 文字ずつ入力するそばからヒントが即座に更新されます。</td>
+        </tr>
+        <tr>
+          <td>図のコンパイル</td>
+          <td>120 メッセージのシーケンス図<br />240 接続の複雑なフローチャート</td>
+          <td><strong>シーケンス図 0.116 ms</strong><br />複雑なフローチャート 17.264 ms</td>
+          <td>ベクターグラフィックスへ直接コンパイルされるため、起動するブラウザーエンジンもスクロールの引っかかりもありません。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="doc-section" id="memory">
+  <h2>1.5 メモリ使用量とキャッシュ上限</h2>
+  <p>
+    Akileas には実行時のガベージコレクションがないため、ブラウザーエンジン製エディターのような周期的な引っかかりが生じません。
+    一般的なエディターと比較したコールドスタート時のメモリ使用量を以下に示します。
+  </p>
+
+  <figure class="diagram">
+    <figcaption class="diagram-title">コールドスタート時のメモリ使用量（低いほど良い）</figcaption>
+    <div class="dgm-bars">
+      <div class="dgm-bar dgm-bar-hero">
+        <span class="dgm-bar-label">Akileas</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 8%"></span></span>
+        <span class="dgm-bar-value">~28 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">Typora</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 31%"></span></span>
+        <span class="dgm-bar-value">~110 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">Obsidian</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 43%"></span></span>
+        <span class="dgm-bar-value">~150 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">VS Code</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 51%"></span></span>
+        <span class="dgm-bar-value">~180 MB</span>
+      </div>
+      <div class="dgm-bar">
+        <span class="dgm-bar-label">Notion / Web のみ</span>
+        <span class="dgm-bar-track"><span class="dgm-bar-fill" style="--w: 100%"></span></span>
+        <span class="dgm-bar-value">~350 MB</span>
+      </div>
+    </div>
+  </figure>
+
+  <p>
+    常駐メモリの目安は、軽いドキュメントで約 <strong>25 MB ~ 45 MB</strong>、100,000 行の巨大ドキュメントでも
+    <strong>60 MB ~ 110 MB</strong> で安定し、編集を続けても増え続けることはありません。すべてのキャッシュには
+    上限が定められており、超過すると最も長く使われていない内容から自動的に破棄されます。
+  </p>
+  <ul class="doc-list">
+    <li><strong>画像キャッシュ</strong>は上限 64 MiB、最大 256 枚、同時デコードは 8 件までです。異常に大きな画像はメモリ枯渇を防ぐため拒否されます。</li>
+    <li><strong>図形ジオメトリキャッシュ</strong>は上限 32 MiB です。ズームやパンは座標を調整するだけで、図形が再計算されることはありません。</li>
+    <li><strong>数式組版キャッシュ</strong>は上限 32 MiB で、19 種類の組み込み数学用ベクターフォントを備えます。</li>
+    <li><strong>設定ファイルの解析</strong>は冒頭のごく短い区間だけを走査し、ディレクトリの走査ではビルド生成物とバージョン管理ディレクトリを自動的にスキップします。</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="comparison">
+  <h2>1.6 横並び比較</h2>
+  <p>以下の表は、Akileas と一般的な Markdown エディターを項目ごとに比較したものです。</p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>Akileas</th>
+          <th>VS Code<br />（Markdown 拡張機能）</th>
+          <th>Obsidian</th>
+          <th>Typora</th>
+          <th>Notion / Web のみ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>中核となる形態</td><td><strong>ネイティブアプリケーション</strong></td><td>Web エンジン</td><td>Web エンジン</td><td>Web エンジン</td><td>ブラウザーページ</td></tr>
+        <tr><td>メモリ使用量（コールドスタート）</td><td><strong>~28 MB</strong></td><td>~180 MB</td><td>~150 MB</td><td>~110 MB</td><td>~350 MB</td></tr>
+        <tr><td>10 万行を開くまでの時間</td><td><strong>&lt; 1.3 秒</strong></td><td>約 6.5 秒（引っかかりやすい）</td><td>約 8.0 秒（大きなドキュメントについて警告）</td><td>フリーズ / 極端に遅い</td><td>開けない、またはクラッシュする</td></tr>
+        <tr><td>キー入力から初回フレームまでのレイテンシ</td><td><strong>0.019 ms（19 マイクロ秒）</strong></td><td>15 ~ 35 ms</td><td>12 ~ 28 ms</td><td>18 ~ 40 ms</td><td>45 ~ 120 ms</td></tr>
+        <tr><td>長時間の使用で遅くなるか</td><td><strong>いいえ（ガベージコレクションなし）</strong></td><td>周期的なフレーム落ち</td><td>周期的なフレーム落ち</td><td>周期的なフレーム落ち</td><td>頻繁な引っかかり</td></tr>
+        <tr><td>数式</td><td><strong>組み込みのネイティブ組版</strong></td><td>Web コンポーネントに依存</td><td>Web コンポーネントに依存</td><td>Web コンポーネントに依存</td><td>オンラインでレンダリング</td></tr>
+        <tr><td>図のレンダリング</td><td><strong>ネイティブベクター描画</strong></td><td>Web コンポーネントの注入</td><td>Web コンポーネントの注入</td><td>Web コンポーネントの注入</td><td>クラウド / スクリプト描画</td></tr>
+        <tr><td>バージョン履歴</td><td><strong>組み込みのタイムマシン、Git 不要</strong></td><td>Git かプラグインの導入が必要</td><td>基本的なスナップショット復元</td><td>システムのバックアップのみに依存</td><td>クラウドに依存</td></tr>
+        <tr><td>PDF エクスポート</td><td><strong>ネイティブベクター PDF</strong></td><td>ブラウザーの印刷機能に依存</td><td>ブラウザーの印刷機能に依存</td><td>外部ツールに依存</td><td>Web ページへのエクスポートのみ</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>

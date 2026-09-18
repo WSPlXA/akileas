@@ -1,0 +1,93 @@
+---
+{
+  "out": "ja/docs/index.html",
+  "lang": "ja",
+  "title": "マニュアル — Akileas",
+  "description": "Akileasのマニュアル：実測された性能、なぜこれほど高速なのか、そして機能とショートカットの完全なリファレンス。",
+  "nav": "docs",
+  "docSlug": "",
+  "bodyClass": "docs-page"
+}
+---
+<header class="docs-hero">
+  <p class="section-kicker">マニュアル</p>
+  <h1>Akileasマニュアル</h1>
+  <p class="docs-lede">
+    3つの章で構成されています。実測された性能、エディターがこれほど高速な理由、そして機能と
+    ショートカットの完全なリファレンスです。知りたい疑問から読み始めてください。
+  </p>
+</header>
+
+<section class="doc-section" id="overview">
+  <h2>このマニュアルで扱う内容</h2>
+  <p>
+    Akileasは、<strong>妥協のない応答性</strong>のために作られたネイティブのMarkdownエディターです。
+    数式と図をネイティブにレンダリングし、ソースビューと組版ビューのハイブリッドとしてその場で編集でき、
+    出版品質のベクターPDFを書き出します。すべての文書はあなた自身のディスク上に留まります。
+  </p>
+  <p>
+    1000行のメモを書くときも、10万行の原稿を書くときも、
+    応答はサブミリ秒のままです。以下の3つの章では、順に、性能がどう測られるのか、
+    なぜこれほど高速でいられるのか、各機能をどう使うのかを説明します。
+  </p>
+
+  <ol class="docs-toc">
+    <li>
+      <a href="benchmarks.html">
+        <span class="docs-toc-num">第 1 章</span>
+        <strong>性能とベンチマーク</strong>
+        <span>マイクロ秒スケールの応答、1万行と10万行での解析レイテンシ、
+          大きな文書での検索速度、メモリ使用量、そしてエディター比較の全体像。</span>
+      </a>
+    </li>
+    <li>
+      <a href="architecture.html">
+        <span class="docs-toc-num">第 2 章</span>
+        <strong>なぜAkileasはこれほど高速なのか</strong>
+        <span>キーストロークから再描画された画面までの間に起きていること。即時の応答と
+          バックグラウンドでの調整、変更された部分だけの再計算、3つの独立したレンダリング
+          パイプライン、巨大な文書での瞬時の移動、そしてクラッシュに耐える保存。</span>
+      </a>
+    </li>
+    <li>
+      <a href="features.html">
+        <span class="docs-toc-num">第 3 章</span>
+        <strong>使い方と機能ガイド</strong>
+        <span>その場で編集できるハイブリッドWYSIWYG、分割ビュー、アウトラインと検索のシステム、
+          Git不要のタイムマシン、数式と図、Agent設定ワークベンチ、PDF書き出し。</span>
+      </a>
+    </li>
+  </ol>
+</section>
+
+<section class="doc-section" id="using-this-material">
+  <h2>このマニュアルの読み方</h2>
+  <p>3つの章はそれぞれ独立しているので、必要なところへ直接進むことができます。</p>
+  <div class="card-grid">
+    <article class="doc-card">
+      <h3>どれほど高速かを確かめる</h3>
+      <p>
+        第1章の計測表と比較マトリクスをご覧ください。すべての数値は、その章に記録された
+        マシン上の実際のリリースビルドから得られたものです。
+      </p>
+    </article>
+    <article class="doc-card">
+      <h3>高速さの源を理解する</h3>
+      <p>
+        第2章では、キーを押してから画面が再描画されるまでの道のり全体を、
+        図を使って説明します。技術的な予備知識は必要ありません。
+      </p>
+    </article>
+    <article class="doc-card">
+      <h3>使い始める</h3>
+      <p>
+        第3章では、すべての機能とそこへのたどり着き方を扱います。末尾の
+        ショートカットリファレンスは、日々使える早見表として役立ちます。
+      </p>
+    </article>
+  </div>
+  <p class="doc-note">
+    第1章の性能値は、その章に記録されたリファレンスマシンで計測したものです。
+    絶対値は他のハードウェアでは異なりますが、桁の規模と相対的な優位性は変わりません。
+  </p>
+</section>

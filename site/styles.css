@@ -79,6 +79,33 @@
   box-sizing: border-box;
 }
 
+/* — CJK locales ——————————————————————————————————————————
+   Latin characters keep the Garamond faces; Chinese and Japanese fall through
+   to a matching serif (Song / Mincho) instead of whatever the OS picks.
+   CJK also reads better with a little more leading.                        */
+
+.lang-zh {
+  --font-body: "EB Garamond", "Noto Serif SC", "Cormorant Garamond", Garamond, Georgia, serif;
+  --font-display: "Cormorant Garamond", "Noto Serif SC", "EB Garamond", Garamond, Georgia, serif;
+  --font-inscription: "Cinzel", "Noto Serif SC", Georgia, serif;
+}
+
+.lang-ja {
+  --font-body: "EB Garamond", "Noto Serif JP", "Cormorant Garamond", Garamond, Georgia, serif;
+  --font-display: "Cormorant Garamond", "Noto Serif JP", "EB Garamond", Garamond, Georgia, serif;
+  --font-inscription: "Cinzel", "Noto Serif JP", Georgia, serif;
+}
+
+.lang-zh,
+.lang-ja {
+  line-height: 1.82;
+}
+
+.lang-zh .site-header nav > a,
+.lang-ja .site-header nav > a {
+  letter-spacing: 0.08em;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
@@ -299,28 +326,6 @@ footer nav a:hover,
 .site-header nav a:hover::after {
   right: 0;
   left: 0;
-}
-
-.nav-github {
-  padding: 9px 20px !important;
-  border: 1px solid var(--line-bright);
-  border-radius: var(--radius-sm);
-  background: linear-gradient(180deg, rgba(252, 247, 236, 0.9), rgba(238, 229, 208, 0.85));
-  box-shadow: inset 0 0 0 1px rgba(255, 253, 245, 0.7), 0 3px 8px rgba(80, 58, 24, 0.07);
-  color: var(--text) !important;
-  transition: background 180ms ease, border-color 180ms ease, color 180ms ease,
-    box-shadow 180ms ease;
-}
-
-.nav-github::after {
-  display: none;
-}
-
-.nav-github:hover {
-  border-color: var(--gold);
-  background: linear-gradient(180deg, #fdf9ef, #f0e5cc);
-  color: var(--gold-deep) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 253, 245, 0.8), 0 6px 14px rgba(80, 58, 24, 0.12);
 }
 
 /* --------------------------------------------------------------------------
@@ -2161,8 +2166,15 @@ footer nav a:hover {
     font-size: 1.04rem;
   }
 
-  .site-header nav a:not(.nav-github):not(.lang-switch) {
+  .site-header nav > a {
     display: none;
+  }
+
+  .site-header nav .lang-switch a,
+  .site-header nav .lang-switch .lang-current {
+    padding: 4px 6px;
+    font-size: 0.54rem;
+    letter-spacing: 0.02em;
   }
 
   .nav-shell {
@@ -2357,26 +2369,45 @@ footer nav a:hover {
   gap: 24px;
 }
 
-/* Language switch — a small engraved tab, not an underlined nav link */
-.site-header nav a.lang-switch {
-  padding: 7px 13px;
+/* Language switch — a small segmented plaque, not underlined nav links */
+.site-header nav .lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 2px;
   border: 1px solid var(--line-bright);
   border-radius: var(--radius-sm);
   background: rgba(253, 249, 240, 0.72);
   box-shadow: inset 0 0 0 1px rgba(255, 253, 245, 0.7);
-  color: var(--gold-deep);
-  letter-spacing: 0.1em;
-  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
 }
 
-.site-header nav a.lang-switch::after {
+.site-header nav .lang-switch a,
+.site-header nav .lang-switch .lang-current {
+  padding: 5px 9px;
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: var(--font-inscription);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.site-header nav .lang-switch a::after {
   display: none;
 }
 
-.site-header nav a.lang-switch:hover {
-  border-color: var(--gold);
-  background: #fdf9ef;
+.site-header nav .lang-switch a:hover {
+  background: rgba(165, 129, 58, 0.13);
   color: var(--gold-deep);
+}
+
+.site-header nav .lang-switch .lang-current {
+  background: rgba(165, 129, 58, 0.18);
+  color: var(--gold-deep);
+  font-weight: 700;
 }
 
 /* — Two-column docs shell ——————————————————————————————— */
@@ -3191,88 +3222,11 @@ kbd {
   }
 }
 
-/* — Screenshot plates ——————————————————————————————————— */
-
-.shot {
-  margin: 32px 0;
-}
-
-.shot-frame {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line-bright);
-  border-radius: var(--radius-md);
-  outline: 1px solid rgba(165, 129, 58, 0.28);
-  outline-offset: 4px;
-  background: linear-gradient(160deg, rgba(253, 249, 240, 0.95), rgba(240, 231, 211, 0.9));
-}
-
-.shot-frame img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.shot-fallback {
-  display: none;
-  padding: 34px 24px;
-  text-align: center;
-}
-
-.shot-missing .shot-frame img {
-  display: none;
-}
-
-.shot-missing .shot-fallback {
-  display: block;
-}
-
-.shot-fallback-mark {
-  display: block;
-  margin-bottom: 14px;
-  color: var(--gold);
-  font-size: 1.9rem;
-  line-height: 1;
-}
-
-.shot-fallback strong {
-  display: block;
-  color: var(--text);
-  font-family: var(--font-display);
-  font-size: 1.22rem;
-  font-weight: 600;
-}
-
-.shot-fallback code {
-  display: inline-block;
-  margin-top: 12px;
-  font-size: 0.76rem;
-}
-
-.shot figcaption {
-  margin-top: 15px;
-  color: var(--subtle);
-  font-size: 0.96rem;
-  font-style: italic;
-  text-align: center;
-}
-
-.shot-num {
-  margin-right: 9px;
-  color: var(--gold-deep);
-  font-family: var(--font-inscription);
-  font-size: 0.58rem;
-  font-style: normal;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 /* — Docs hub extras ————————————————————————————————————— */
 
 .docs-toc {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
   margin: 28px 0 0;
   padding: 0;
@@ -3390,4 +3344,78 @@ kbd {
   .stat-card strong {
     font-size: 1.3rem;
   }
+}
+
+/* ==========================================================================
+   CJK typography
+   --------------------------------------------------------------------------
+   Chinese and Japanese display type needs a smaller size, looser leading and
+   no negative tracking — the Latin defaults crowd the characters. Synthetic
+   obliques also look wrong on CJK glyphs, so emphasis falls back to the gold
+   accent and weight instead.
+   ========================================================================== */
+
+.lang-zh h1,
+.lang-ja h1 {
+  font-size: clamp(2.3rem, 5vw, 3.8rem);
+  line-height: 1.26;
+  letter-spacing: 0.004em;
+}
+
+.lang-zh h2,
+.lang-ja h2 {
+  line-height: 1.34;
+  letter-spacing: 0.004em;
+}
+
+.lang-zh .feature-card h3,
+.lang-ja .feature-card h3,
+.lang-zh .pillar-card h3,
+.lang-ja .pillar-card h3,
+.lang-zh .spec-card h3,
+.lang-ja .spec-card h3,
+.lang-zh .doc-card h3,
+.lang-ja .doc-card h3,
+.lang-zh .docs-toc strong,
+.lang-ja .docs-toc strong,
+.lang-zh .dgm-flow strong,
+.lang-ja .dgm-flow strong,
+.lang-zh .dgm-branch > strong,
+.lang-ja .dgm-branch > strong {
+  line-height: 1.42;
+  letter-spacing: 0.002em;
+}
+
+.lang-zh h1 em,
+.lang-ja h1 em,
+.lang-zh .verse-translation,
+.lang-ja .verse-translation,
+.lang-zh .docs-lede,
+.lang-ja .docs-lede,
+.lang-zh .app-frame figcaption,
+.lang-ja .app-frame figcaption,
+.lang-zh .shot figcaption,
+.lang-ja .shot figcaption,
+.lang-zh .arch-action-bar p,
+.lang-ja .arch-action-bar p,
+.lang-zh .footer-inner > p,
+.lang-ja .footer-inner > p,
+.lang-zh .track-header strong,
+.lang-ja .track-header strong,
+.lang-zh .doc-section p.doc-note,
+.lang-ja .doc-section p.doc-note,
+.lang-zh .dgm-lane > p,
+.lang-ja .dgm-lane > p,
+.lang-zh .stat-card small,
+.lang-ja .stat-card small,
+.lang-zh .tm-info small,
+.lang-ja .tm-info small,
+.lang-zh .diagnostic small,
+.lang-ja .diagnostic small {
+  font-style: normal;
+}
+
+.lang-zh .section-kicker,
+.lang-ja .section-kicker {
+  line-height: 1.8;
 }

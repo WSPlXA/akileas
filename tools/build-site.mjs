@@ -8,6 +8,11 @@
 // only their inner content and the generator wraps them in the docs shell.
 // Output goes to site/, which GitHub Pages uploads verbatim.
 //
+// Locales mirror each other one-for-one: a page at docs/benchmarks.html exists
+// at docs/benchmarks.html (en), zh/docs/benchmarks.html and ja/docs/benchmarks.html.
+// Counterpart URLs, hreflang alternates and the language switcher are all derived
+// from that shared "neutral" path, so adding a locale needs no per-page fields.
+//
 // No dependencies. Node 18+.
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "node:fs";
@@ -19,26 +24,31 @@ const SITE = join(ROOT, "site");
 const PAGES = join(ROOT, "tools", "pages");
 
 const ORIGIN = "https://wsplxa.github.io/akileas";
-const FONT_HREF =
+
+// Google Fonts request. Each locale appends the CJK serif it needs so Latin
+// text keeps the Garamond faces and CJK falls through to a matching Mincho /
+// Song serif instead of whatever the system happens to pick.
+const FONT_BASE =
   "https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900" +
   "&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700" +
   "&family=EB+Garamond:ital,wght@0,400..800;1,400..800" +
   "&family=GFS+Didot" +
-  "&family=JetBrains+Mono:wght@400;500;600;700" +
-  "&display=swap";
+  "&family=JetBrains+Mono:wght@400;500;600;700";
 
 // ---------------------------------------------------------------------------
-// Localised chrome
+// Locales
 // ---------------------------------------------------------------------------
 
 const LOCALES = {
   en: {
     htmlLang: "en",
+    hreflang: "en",
     prefix: "",
-    switchLabel: "中文",
-    switchLang: "zh-Hans",
+    label: "EN",
+    fontExtra: "",
     skip: "Skip to content",
     brandAlt: "Akileas home",
+    langAria: "Language",
     nav: [
       { key: "vision", label: "Philosophy", href: "#vision" },
       { key: "features", label: "Features", href: "#features" },
@@ -53,25 +63,24 @@ const LOCALES = {
     footerNav: [
       { label: "Privacy Policy", href: "privacy.html" },
       { label: "Manual", href: "docs/" },
-      { label: "Releases", href: "https://github.com/WSPlXA/akileas/releases" },
-      { label: "Support", href: "https://github.com/WSPlXA/akileas/issues" },
-      { label: "License", href: "https://github.com/WSPlXA/akileas/blob/master/LICENSE" },
     ],
     docs: [
       { slug: "", num: "§", label: "Overview" },
       { slug: "benchmarks", num: "I", label: "Benchmarks" },
       { slug: "architecture", num: "II", label: "How it's fast" },
       { slug: "features", num: "III", label: "Features" },
-      { slug: "screenshots", num: "IV", label: "Interface tour" },
     ],
   },
+
   zh: {
     htmlLang: "zh-Hans",
+    hreflang: "zh-Hans",
     prefix: "zh/",
-    switchLabel: "English",
-    switchLang: "en",
+    label: "中文",
+    fontExtra: "&family=Noto+Serif+SC:wght@400;600;700",
     skip: "跳到主要内容",
     brandAlt: "Akileas 首页",
+    langAria: "语言",
     nav: [
       { key: "vision", label: "设计理念", href: "#vision" },
       { key: "features", label: "功能特性", href: "#features" },
@@ -86,19 +95,49 @@ const LOCALES = {
     footerNav: [
       { label: "隐私政策", href: "privacy.html" },
       { label: "技术手册", href: "docs/" },
-      { label: "版本发布", href: "https://github.com/WSPlXA/akileas/releases" },
-      { label: "问题反馈", href: "https://github.com/WSPlXA/akileas/issues" },
-      { label: "开源协议", href: "https://github.com/WSPlXA/akileas/blob/master/LICENSE" },
     ],
     docs: [
       { slug: "", num: "§", label: "总览" },
       { slug: "benchmarks", num: "一", label: "性能基准" },
       { slug: "architecture", num: "二", label: "为什么这么快" },
       { slug: "features", num: "三", label: "功能全景" },
-      { slug: "screenshots", num: "四", label: "界面导览" },
+    ],
+  },
+
+  ja: {
+    htmlLang: "ja",
+    hreflang: "ja",
+    prefix: "ja/",
+    label: "日本語",
+    fontExtra: "&family=Noto+Serif+JP:wght@400;600;700",
+    skip: "コンテンツへスキップ",
+    brandAlt: "Akileas ホーム",
+    langAria: "言語",
+    nav: [
+      { key: "vision", label: "設計思想", href: "#vision" },
+      { key: "features", label: "機能", href: "#features" },
+      { key: "specs", label: "詳細仕様", href: "#tech-specs" },
+      { key: "architecture", label: "アーキテクチャ", href: "#architecture" },
+      { key: "docs", label: "マニュアル", href: "docs/" },
+      { key: "privacy", label: "プライバシー", href: "privacy.html" },
+    ],
+    sidebarTitle: "テクニカルマニュアル",
+    sidebarBack: "概要に戻る",
+    footerTagline: "疾走する性能。ネイティブ Markdown デスクトップエディタ。",
+    footerNav: [
+      { label: "プライバシーポリシー", href: "privacy.html" },
+      { label: "マニュアル", href: "docs/" },
+    ],
+    docs: [
+      { slug: "", num: "§", label: "概要" },
+      { slug: "benchmarks", num: "I", label: "ベンチマーク" },
+      { slug: "architecture", num: "II", label: "高速化の仕組み" },
+      { slug: "features", num: "III", label: "機能ガイド" },
     ],
   },
 };
+
+const LOCALE_CODES = Object.keys(LOCALES);
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -108,6 +147,18 @@ const LOCALES = {
 function baseFor(outPath) {
   const depth = outPath.split("/").length - 1;
   return depth === 0 ? "./" : "../".repeat(depth);
+}
+
+/** Strip a locale prefix, leaving the path shared by every locale. */
+function neutralFor(outPath, locale) {
+  const prefix = LOCALES[locale].prefix;
+  return prefix && outPath.startsWith(prefix) ? outPath.slice(prefix.length) : outPath;
+}
+
+/** Site-root-relative path for a locale's copy of a page, using clean directory URLs. */
+function localePath(locale, neutral) {
+  const trimmed = neutral.endsWith("index.html") ? neutral.slice(0, -"index.html".length) : neutral;
+  return LOCALES[locale].prefix + trimmed;
 }
 
 function esc(s) {
@@ -126,7 +177,6 @@ function abs(base, href) {
 /**
  * Resolve a chrome link (nav / footer) against the page's base prefix AND the
  * current locale's directory. Anchors and absolute URLs pass through untouched.
- * Paths that already carry a locale (such as `altOut`) must use abs() instead.
  */
 function navHref(base, t, href) {
   if (/^https?:/.test(href)) return href;
@@ -151,6 +201,11 @@ function parseSource(text, file) {
   } catch (e) {
     throw new Error(`${file}: front matter is not valid JSON — ${e.message}`);
   }
+  if (meta.altOut) {
+    throw new Error(
+      `${file}: "altOut" is obsolete — counterpart URLs are derived from the locale prefix. Remove it.`,
+    );
+  }
   return { meta, body: text.slice(m[0].length).trim() };
 }
 
@@ -158,20 +213,18 @@ function parseSource(text, file) {
 // Shell rendering
 // ---------------------------------------------------------------------------
 
-function renderHead(meta, base) {
-  const canonical = `${ORIGIN}/${meta.out}`;
-  const alt = meta.altOut;
-  const other = meta.lang === "en" ? "zh-Hans" : "en";
-  const self = meta.lang === "en" ? "en" : "zh-Hans";
-  const xDefault = meta.lang === "en" ? meta.out : alt;
-
-  const alternates = alt
-    ? `    <link rel="alternate" hreflang="${self}" href="${ORIGIN}/${meta.out}" />
-    <link rel="alternate" hreflang="${other}" href="${ORIGIN}/${alt}" />
-    <link rel="alternate" hreflang="x-default" href="${ORIGIN}/${xDefault}" />`
-    : "";
+function renderHead(meta, base, t, neutral) {
+  const canonical = `${ORIGIN}/${localePath(meta.lang, neutral)}`;
+  const alternates = [
+    ...LOCALE_CODES.map(
+      (code) =>
+        `    <link rel="alternate" hreflang="${LOCALES[code].hreflang}" href="${ORIGIN}/${localePath(code, neutral)}" />`,
+    ),
+    `    <link rel="alternate" hreflang="x-default" href="${ORIGIN}/${localePath("en", neutral)}" />`,
+  ].join("\n");
 
   const ogImage = `${ORIGIN}/assets/og.png`;
+  const ogLocale = { en: "en_US", zh: "zh_CN", ja: "ja_JP" }[meta.lang] || "en_US";
   const jsonLd = meta.jsonLd
     ? `\n    <script type="application/ld+json">\n${indent(JSON.stringify(meta.jsonLd, null, 2), 6)}\n    </script>`
     : "";
@@ -185,12 +238,12 @@ ${alternates}
     <link rel="icon" type="image/png" href="${base}assets/akileas-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="${FONT_HREF}" rel="stylesheet" />
+    <link href="${FONT_BASE}${t.fontExtra}&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="${base}styles.css" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Akileas" />
-    <meta property="og:locale" content="${meta.lang === "en" ? "en_US" : "zh_CN"}" />
+    <meta property="og:locale" content="${ogLocale}" />
     <meta property="og:title" content="${esc(meta.title)}" />
     <meta property="og:description" content="${esc(meta.description)}" />
     <meta property="og:url" content="${canonical}" />
@@ -203,7 +256,22 @@ ${alternates}
     <title>${esc(meta.title)}</title>${jsonLd}`;
 }
 
-function renderHeader(meta, base, t) {
+function renderLangSwitch(meta, base, t, neutral) {
+  const items = LOCALE_CODES.map((code) => {
+    const L = LOCALES[code];
+    if (code === meta.lang) {
+      return `            <span class="lang-current" aria-current="true">${esc(L.label)}</span>`;
+    }
+    const href = base + localePath(code, neutral);
+    return `            <a href="${href}" hreflang="${L.hreflang}" lang="${L.htmlLang}">${esc(L.label)}</a>`;
+  }).join("\n");
+
+  return `          <span class="lang-switch" role="group" aria-label="${esc(t.langAria)}">
+${items}
+          </span>`;
+}
+
+function renderHeader(meta, base, t, neutral) {
   const links = t.nav
     .map((item) => {
       const current = item.key === meta.nav ? ' aria-current="page"' : "";
@@ -212,7 +280,6 @@ function renderHeader(meta, base, t) {
     })
     .join("\n");
 
-  const switchHref = meta.altOut ? abs(base, meta.altOut) : base + t.prefix;
   return `    <header class="site-header">
       <div class="shell nav-shell">
         <a class="brand" href="${base + t.prefix}" aria-label="${esc(t.brandAlt)}">
@@ -221,8 +288,7 @@ function renderHeader(meta, base, t) {
         </a>
         <nav aria-label="Primary">
 ${links}
-          <a class="lang-switch" href="${switchHref}" hreflang="${t.switchLang}" lang="${t.switchLang}">${esc(t.switchLabel)}</a>
-          <a class="nav-github" href="https://github.com/WSPlXA/akileas" target="_blank" rel="noopener">GitHub</a>
+${renderLangSwitch(meta, base, t, neutral)}
         </nav>
       </div>
     </header>`;
@@ -271,9 +337,8 @@ ${links}
     </footer>`;
 }
 
-function renderPage(meta, body) {
+function renderPage(meta, body, neutral) {
   const t = LOCALES[meta.lang];
-  if (!t) throw new Error(`${meta.out}: unknown lang "${meta.lang}"`);
   const base = baseFor(meta.out);
   const bodyClass = [meta.bodyClass, `lang-${meta.lang}`].filter(Boolean).join(" ");
 
@@ -289,21 +354,19 @@ ${indent(body, 8)}
     main = indent(body, 4);
   }
 
-  const scripts = "";
-
   return `<!doctype html>
 <html lang="${t.htmlLang}">
   <head>
-${renderHead(meta, base)}
+${renderHead(meta, base, t, neutral)}
   </head>
   <body class="${bodyClass}">
     <a class="skip-link" href="#main">${esc(t.skip)}</a>
 
-${renderHeader(meta, base, t)}
+${renderHeader(meta, base, t, neutral)}
 
 ${main}
 
-${renderFooter(base, t)}${scripts}
+${renderFooter(base, t)}
   </body>
 </html>
 `;
@@ -324,13 +387,16 @@ function walk(dir) {
 }
 
 const sources = [];
-for (const locale of Object.keys(LOCALES)) {
+for (const locale of LOCALE_CODES) {
   const dir = join(PAGES, locale);
   if (!existsSync(dir)) continue;
   for (const file of walk(dir)) {
     const { meta, body } = parseSource(readFileSync(file, "utf8"), relative(ROOT, file));
     meta.lang = meta.lang || locale;
-    sources.push({ file, meta, body });
+    if (meta.lang !== locale) {
+      throw new Error(`${relative(ROOT, file)}: lang "${meta.lang}" does not match its ${locale}/ directory`);
+    }
+    sources.push({ file, meta, body, neutral: neutralFor(meta.out, locale) });
   }
 }
 
@@ -340,21 +406,34 @@ const seenOut = new Set();
 for (const s of sources) {
   if (seenOut.has(s.meta.out)) throw new Error(`duplicate output path: ${s.meta.out}`);
   seenOut.add(s.meta.out);
-  if (s.meta.altOut && !s.meta.altOut.length) throw new Error(`${s.meta.out}: empty altOut`);
 }
 
-// Every page must have a counterpart in the other locale.
+// Every locale must cover exactly the same set of pages.
+const byLocale = new Map(LOCALE_CODES.map((c) => [c, new Set()]));
+for (const s of sources) byLocale.get(s.meta.lang).add(s.neutral);
+
+const reference = byLocale.get("en");
+for (const [code, set] of byLocale) {
+  const missing = [...reference].filter((p) => !set.has(p));
+  const extra = [...set].filter((p) => !reference.has(p));
+  if (missing.length) throw new Error(`locale "${code}" is missing: ${missing.join(", ")}`);
+  if (extra.length) throw new Error(`locale "${code}" has pages English lacks: ${extra.join(", ")}`);
+}
+
+const outputs = new Set(sources.map((s) => s.meta.out));
 for (const s of sources) {
-  if (!s.meta.altOut) continue;
-  if (!sources.some((o) => o.meta.out === s.meta.altOut)) {
-    throw new Error(`${s.meta.out}: altOut "${s.meta.altOut}" does not match any generated page`);
+  for (const code of LOCALE_CODES) {
+    const counterpart = localePath(code, s.neutral).replace(/\/$/, "/index.html") || "index.html";
+    if (!outputs.has(counterpart)) {
+      throw new Error(`${s.meta.out}: counterpart for "${code}" (${counterpart}) is not generated`);
+    }
   }
 }
 
 for (const s of sources) {
   const outFile = join(SITE, ...s.meta.out.split("/"));
   mkdirSync(dirname(outFile), { recursive: true });
-  writeFileSync(outFile, renderPage(s.meta, s.body), "utf8");
+  writeFileSync(outFile, renderPage(s.meta, s.body, s.neutral), "utf8");
   console.log(`  ${s.meta.out.padEnd(32)} ← ${relative(ROOT, s.file).split(sep).join("/")}`);
 }
 
@@ -367,16 +446,16 @@ const entries = sources
   .slice()
   .sort((a, b) => a.meta.out.localeCompare(b.meta.out))
   .map((s) => {
-    const self = s.meta.lang === "en" ? "en" : "zh-Hans";
-    const other = s.meta.lang === "en" ? "zh-Hans" : "en";
-    const alts = s.meta.altOut
-      ? `    <xhtml:link rel="alternate" hreflang="${self}" href="${ORIGIN}/${s.meta.out}" />
-    <xhtml:link rel="alternate" hreflang="${other}" href="${ORIGIN}/${s.meta.altOut}" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}/${s.meta.lang === "en" ? s.meta.out : s.meta.altOut}" />`
-      : "";
-    const priority = /^(zh\/)?index\.html$/.test(s.meta.out) ? "1.0" : "0.7";
+    const alts = [
+      ...LOCALE_CODES.map(
+        (code) =>
+          `    <xhtml:link rel="alternate" hreflang="${LOCALES[code].hreflang}" href="${ORIGIN}/${localePath(code, s.neutral)}" />`,
+      ),
+      `    <xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}/${localePath("en", s.neutral)}" />`,
+    ].join("\n");
+    const priority = /^(zh\/|ja\/)?index\.html$/.test(s.meta.out) ? "1.0" : "0.7";
     return `  <url>
-    <loc>${ORIGIN}/${s.meta.out}</loc>
+    <loc>${ORIGIN}/${localePath(s.meta.lang, s.neutral)}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>${priority}</priority>
@@ -396,4 +475,6 @@ ${entries}
   "utf8",
 );
 
-console.log(`\nBuilt ${sources.length} pages + sitemap.xml → site/`);
+console.log(
+  `\nBuilt ${sources.length} pages across ${LOCALE_CODES.length} locales + sitemap.xml → site/`,
+);

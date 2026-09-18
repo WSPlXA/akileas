@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="Akileas は、ホメロスの「駿足のアキレウス」に着想を得たネイティブ・低遅延の Markdown エディタです。その場で完結する WYSIWYG、目に優しい配色、100% ローカルファーストのプライバシーを備えています。" />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/ja/" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/" />
+    <link rel="alternate" hreflang="ja" href="https://wsplxa.github.io/akileas/ja/" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/" />
+    <link rel="icon" type="image/png" href="../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content="Akileas — ネイティブ・低遅延の Markdown エディタ" />
+    <meta property="og:description" content="Akileas は、ホメロスの「駿足のアキレウス」に着想を得たネイティブ・低遅延の Markdown エディタです。その場で完結する WYSIWYG、目に優しい配色、100% ローカルファーストのプライバシーを備えています。" />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/ja/" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Akileas — ネイティブ・低遅延の Markdown エディタ" />
+    <meta name="twitter:description" content="Akileas は、ホメロスの「駿足のアキレウス」に着想を得たネイティブ・低遅延の Markdown エディタです。その場で完結する WYSIWYG、目に優しい配色、100% ローカルファーストのプライバシーを備えています。" />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>Akileas — ネイティブ・低遅延の Markdown エディタ</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Akileas",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "inLanguage": "ja",
+        "description": "「駿足のアキレウス」に着想を得たネイティブ・低遅延の Markdown エディタ。目に優しい羊皮紙調のビジュアルと、エージェント設定ワークベンチを備えています。"
+      }
+    </script>
+  </head>
+  <body class="lang-ja">
+    <a class="skip-link" href="#main">コンテンツへスキップ</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../ja/" aria-label="Akileas ホーム">
+          <img src="../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../#vision" class="nav-anchor">設計思想</a>
+          <a href="../#features" class="nav-anchor">機能</a>
+          <a href="../#tech-specs" class="nav-anchor">詳細仕様</a>
+          <a href="../#architecture" class="nav-anchor">アーキテクチャ</a>
+          <a href="../ja/docs/">マニュアル</a>
+          <a href="../ja/privacy.html">プライバシー</a>
+          <span class="lang-switch" role="group" aria-label="言語">
+            <a href="../" hreflang="en" lang="en">EN</a>
+            <a href="../zh/" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+            <span class="lang-current" aria-current="true">日本語</span>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+          <!-- Hero Section -->
+          <section class="hero shell">
+            <div class="hero-copy">
+              <p class="eyebrow"><span></span> ネイティブ性能 · ローカルファースト · 目に優しい配色</p>
+              <h1>思考のスピードに<br /><em>遅れをとらない。</em></h1>
+              <p class="hero-lede dropcap">
+                ホメロスの「駿足のアキレウス」にその名を由来する Akileas は、妥協のない応答速度と深い集中のために設計されています。Markdown の記法はカーソルの位置で滑らかに展開し、カーソルが離れた瞬間に端正なタイポグラフィへと収まります。左右分割のわずらわしさも入力の遅延もありません。ただ、純粋な流れのままに書くだけです。
+              </p>
+              <div class="hero-actions">
+                <a class="button button-store" href="https://apps.microsoft.com/detail/9PF44S6NS06D" target="_blank" rel="noopener">
+                  <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.949-1.801"/></svg>
+                  <span>Microsoft Store から入手</span>
+                </a>
+                <a class="button button-secondary" href="#features">
+                  機能を見る
+                </a>
+              </div>
+              <div class="platforms" aria-label="対応プラットフォーム">
+                <span>Windows 10/11</span>
+                <span>macOS</span>
+                <span>Linux</span>
+              </div>
+            </div>
+
+            <div class="hero-mark" aria-hidden="true">
+              <div class="mark-glow"></div>
+              <img src="../assets/akileas-icon.png" width="1024" height="1024" alt="Akileas のアプリケーションアイコン" />
+              <div class="metric-card metric-top">
+                <small>レンダリングコア</small>
+                <strong>待ち時間ゼロの描画投影</strong>
+              </div>
+              <div class="metric-card metric-bottom">
+                <small>データの所有権</small>
+                <strong>100% ローカル保存</strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- Vision Section: Design Philosophy -->
+          <section class="vision-section" id="vision">
+            <div class="shell">
+              <div class="section-intro">
+                <div>
+                  <p class="section-kicker">設計思想</p>
+                  <h2>駿足のアキレウス</h2>
+                </div>
+                <p>
+                  ホメロスの『イリアス』において、英雄アキレウスは「駿足」（πόδας ὠκὺς Ἀχιλλεύς）と讃えられています。そこには鋭敏な機動力、妨げられることのない勢い、そして純粋な速さが宿っています。書き物の道具が重い Web ランタイムや鈍重な Electron ラッパーに押し潰されていた時代に、Akileas はその軽やかな速さを取り戻します。押した瞬間に反応するキー入力、静かな簡潔さ、そしてあなたの邪魔をしないキャンバスです。
+                </p>
+              </div>
+
+              <div class="vision-quote">
+                <blockquote class="homeric-verse" lang="grc">
+                  σευάμενος ὥς θ᾽ ἵππος ἀεθλοφόρος σὺν ὄχεσφιν,<br />
+                  ὅς ῥά τε ῥεῖα θέῃσι τιταινόμενος πεδίοιο·<br />
+                  ὣς Ἀχιλεὺς λαιψηρὰ πόδας καὶ γούνατ᾽ ἐνώμα.
+                </blockquote>
+                <p class="verse-translation">
+                  「褒賞を勝ち取った駿馬が戦車を引き、平原を軽やかに全力で駆け抜けるように、<br />
+                  アキレウスもまた、しなやかな足と膝をすばやく運んだ。」
+                </p>
+                <cite>—— ホメロス『イリアス』第 22 巻（22–24 行）</cite>
+              </div>
+            </div>
+          </section>
+
+          <!-- Product Showcase Section -->
+          <section class="product-stage shell" aria-labelledby="product-heading">
+            <div class="section-intro product-intro">
+              <div>
+                <p class="section-kicker">連続するインタラクティブキャンバス</p>
+                <h2 id="product-heading">書いたものが、そのまま読める。</h2>
+              </div>
+              <p>
+                Markdown の記法はカーソルのある行にだけ姿を現し、カーソルが離れた瞬間に洗練されたタイポグラフィへと収まります。画面を左右に分ける必要も、頭の中で切り替える必要もありません。ひとつの画面の上で、執筆と読書をシームレスにつなぎます。
+              </p>
+            </div>
+            <figure class="app-frame">
+              <div class="window-bar" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <strong>Akileas Showcase.md</strong>
+              </div>
+              <img
+                src="../assets/akileas-windows.png"
+                width="2576"
+                height="1408"
+                alt="ワークスペースツリー、数式、テーブル、Mermaid フローチャートを表示しながら Windows 上で動作する Akileas"
+              />
+              <figcaption>
+                ライブ Markdown、数式、Mermaid 図、ワークスペースナビゲーション、エージェント診断をひとつの画面に表示する統合ネイティブデスクトップワークスペース。
+              </figcaption>
+            </figure>
+          </section>
+
+          <!-- Feature Section -->
+          <section class="feature-section" id="features">
+            <div class="shell">
+              <div class="section-intro">
+                <div>
+                  <p class="section-kicker">主要機能</p>
+                  <h2>集中のために設計し、精密さに根ざす</h2>
+                </div>
+                <p>思考の下に消えてしまうほど軽く、複雑な技術原稿にも十分に応える。</p>
+              </div>
+
+              <div class="feature-grid">
+                <article class="feature-card feature-wide">
+                  <p class="feature-number">I</p>
+                  <h3>その場で完結するハイブリッド WYSIWYG</h3>
+                  <p>
+                    左右に分かれたプレビュー画面はもう必要ありません。生の Markdown 記法が展開するのは、カーソルのある行だけです。見出し、リスト、テーブル、リンク、太字はリアルタイムでインライン表示され、キャンバスは常に端正に保たれます。
+                  </p>
+                  <div class="mini-editor" aria-hidden="true">
+                    <span class="line source">## <b>没入できる執筆フロー</b></span>
+                    <span class="line rendered">カーソルが先へ進むと、テキストは滑らかに出版品質のレイアウトへと収まります。</span>
+                    <span class="caret"></span>
+                  </div>
+                </article>
+
+                <article class="feature-card">
+                  <p class="feature-number">II</p>
+                  <h3>GitHub アラートのコールアウト</h3>
+                  <p>
+                    標準的な GFM アラート記法に完全対応：<code>[!NOTE]</code>、<code>[!TIP]</code>、<code>[!IMPORTANT]</code>、<code>[!WARNING]</code>、<code>[!CAUTION]</code>。編集中は記法が展開し、カーソルが先へ進むと、柔らかなアクセントの付いた洗練されたコールアウトカードへと折りたたまれます。
+                  </p>
+                  <div class="mini-alert" aria-hidden="true">
+                    <div class="mini-alert-head">
+                      <span class="mini-alert-badge"><span class="mini-alert-dot"></span> TIP · コールアウトブロック</span>
+                    </div>
+                    <p>カーソルが行を離れた瞬間、記法は静かでエレガントなカードへと折りたたまれます。</p>
+                  </div>
+                </article>
+
+                <article class="feature-card">
+                  <p class="feature-number">III</p>
+                  <h3>スマートなテーブル移動 &amp; 整列</h3>
+                  <p>
+                    Markdown の列揃え記法に完全対応（<code>:---</code> は左寄せ、<code>:---:</code> は中央、<code>---:</code> は右寄せ）。<code>Tab</code> と <code>Shift-Tab</code> でセル間を軽やかに移動でき、最後のセルで <code>Tab</code> を押すと新しい行が自動的に追加されます。
+                  </p>
+                  <div class="mini-table-demo" aria-hidden="true">
+                    <div class="mini-table-row mini-table-head">
+                      <span class="col-left">モジュール (:---)</span>
+                      <span class="col-center">ステータス (:---:)</span>
+                      <span class="col-right">遅延 (---:)</span>
+                    </div>
+                    <div class="mini-table-row">
+                      <span class="col-left">インクリメンタル再解析</span>
+                      <span class="col-center"><span class="badge-status">稼働中</span></span>
+                      <span class="col-right">0.18 ms</span>
+                    </div>
+                    <div class="mini-table-row">
+                      <span class="col-left active-cell">ハードウェア加速カウンタ</span>
+                      <span class="col-center"><span class="badge-status">準備完了</span></span>
+                      <span class="col-right">0.05 ms</span>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="feature-card">
+                  <p class="feature-number">IV</p>
+                  <h3>ネイティブな数式 &amp; 図表レンダリング</h3>
+                  <p>
+                    TeX/LaTeX の数式、Mermaid のフローチャートとシーケンス図、シンタックスハイライト付きのコードフェンス、タスクリストを第一級の機能としてサポートします。ブラウザランタイムや重量級のスクリプトエンジンを一切使わず、GPU がネイティブに描画します。
+                  </p>
+                  <div class="formula" aria-hidden="true">E = mc²</div>
+                </article>
+
+                <article class="feature-card">
+                  <p class="feature-number">V</p>
+                  <h3>内蔵タイムマシン &amp; 自動復旧</h3>
+                  <p>
+                    保存のたびに最大 100 件の軽量スナップショットを自動で記録し、オフラインでの差分確認とワンクリックでの巻き戻しに対応します。容量を抑えたバイナリ復旧ログに支えられ、未保存の作業は予期しないクラッシュや停電を生き延びます。
+                  </p>
+                  <div class="mini-timemachine" aria-hidden="true">
+                    <div class="tm-node tm-active">
+                      <span class="tm-dot"></span>
+                      <div class="tm-info">
+                        <strong>現在のスナップショット</strong>
+                        <small>たった今 · 2,410 語 · クリーン</small>
+                      </div>
+                    </div>
+                    <div class="tm-node">
+                      <span class="tm-dot"></span>
+                      <div class="tm-info">
+                        <strong>保存チェックポイント · v0.1.0</strong>
+                        <small>15 分前 · +18 行</small>
+                      </div>
+                      <span class="tm-action">復元</span>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="feature-card">
+                  <p class="feature-number">VI</p>
+                  <h3>瞬時のテキスト分析</h3>
+                  <p>
+                    ハードウェア加速のスキャンが、ASCII テキスト、CJK の全角文字、句読点をサブミリ秒で正確に分割します。単語数、文字数、行数の指標は、キーを打つたびに正確に更新されます。
+                  </p>
+                  <div class="mini-stats" aria-hidden="true">
+                    <div class="stat-pill"><span class="stat-k">文字</span><span class="stat-v">128,490</span></div>
+                    <div class="stat-pill"><span class="stat-k">単語</span><span class="stat-v">32,840</span></div>
+                    <div class="stat-pill"><span class="stat-k">行</span><span class="stat-v">4,120</span></div>
+                    <div class="stat-badge-simd"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>0.05 ms</div>
+                  </div>
+                </article>
+
+                <article class="feature-card">
+                  <p class="feature-number">VII</p>
+                  <h3>目に優しいテーマ &amp; ローカルファーストのプライバシー</h3>
+                  <p>
+                    心地よい Eye-Care Parchment と深い Midnight Dark をシームレスに切り替えられます。あなたの文書は 100% ローカルのドライブに留まります。アカウントも、クラウド同期による囲い込みも、テレメトリもありません。
+                  </p>
+                  <div class="theme-badge-demo" aria-hidden="true">
+                    <div class="theme-chip">
+                      <span class="theme-chip-dot parchment"></span>
+                      <span>Eye-Care Parchment</span>
+                    </div>
+                    <div class="theme-chip theme-chip-dark">
+                      <span class="theme-chip-dot dark"></span>
+                      <span>Midnight Dark</span>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="feature-card feature-wide agent-card">
+                  <p class="feature-number">VIII</p>
+                  <h3>エージェント設定ワークベンチ</h3>
+                  <p>
+                    <code>SKILL.md</code>、<code>AGENTS.md</code>、アシスタント設定をネイティブに解析して検証します。インライン診断が frontmatter のキー不足や書式エラーを指摘し、ワンクリックの自動修正を提供します。
+                  </p>
+                  <div class="diagnostic" aria-hidden="true">
+                    <span class="diagnostic-dot"></span>
+                    <div><strong>frontmatter メタデータ名の不一致</strong><small>ワンクリックの自動修正が可能</small></div>
+                    <button tabindex="-1">修正</button>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Technical Specs & Tools Section -->
+          <section class="specs-section shell" id="tech-specs">
+            <div class="section-intro">
+              <div>
+                <p class="section-kicker">技術的な精密さ</p>
+                <h2>本気の執筆のための、細やかな配慮</h2>
+              </div>
+              <p>
+                繊細なタイポグラフィのアクセントから、数千語に及ぶエンジニアリング文書まで、あらゆる操作を丁寧に磨き上げています。
+              </p>
+            </div>
+
+            <div class="specs-grid">
+              <article class="spec-card">
+                <div class="spec-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                </div>
+                <h3>インタラクティブなタスク &amp; 折りたたみ詳細</h3>
+                <p>
+                  <code>- [ ]</code> と <code>- [x]</code> のタスクリストをネイティブにサポートし、<strong>マウスで直接クリックして切り替え</strong>られます。<code>&lt;details&gt;</code> と <code>&lt;summary&gt;</code> もネイティブにサポートし、長い技術的な補足を簡単に展開したり折りたたんだりできます。
+                </p>
+                <div class="spec-tags">
+                  <span>インタラクティブなタスク</span>
+                  <span>折りたたみ詳細</span>
+                </div>
+              </article>
+
+              <article class="spec-card">
+                <div class="spec-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2L12 2z"/></svg>
+                </div>
+                <h3>拡張された Markdown タイポグラフィ</h3>
+                <p>
+                  幅広いタイポグラフィに対応：ハイライト <code>==highlight==</code>、取り消し線 <code>~~strikethrough~~</code>、下線 <code>&lt;u&gt;</code>、キーキャップ <code>&lt;kbd&gt;Ctrl&lt;/kbd&gt;</code>、上付き文字 <code>^sup^</code>、下付き文字 <code>~sub~</code>、学術的な脚注 <code>[^1]</code>。
+                </p>
+                <div class="spec-tags">
+                  <span>ハイライト</span>
+                  <span>キーキャップ</span>
+                  <span>脚注</span>
+                </div>
+              </article>
+
+              <article class="spec-card">
+                <div class="spec-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15.5l-5.5-5.5-9.5 9.5"/></svg>
+                </div>
+                <h3>非同期の画像デコード &amp; GPU キャッシュ</h3>
+                <p>
+                  相対ローカルパスとリモートのネットワーク URL に対応し、幅を明示する属性（例：<code>&lt;img width="400"&gt;</code>）も使えます。専用のワーカースレッドが画像を GPU テクスチャへデコードするため、画像の多い原稿でもスクロールが引っかかりません。
+                </p>
+                <div class="spec-tags">
+                  <span>GPU テクスチャキャッシュ</span>
+                  <span>非同期デコード</span>
+                  <span>サイズの明示</span>
+                </div>
+              </article>
+
+              <article class="spec-card">
+                <div class="spec-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                </div>
+                <h3>一括検索 &amp; 置換を瞬時に</h3>
+                <p>
+                  ハードウェア加速のマッチングコアが、インターフェースを止めることなく数百万行を走査します。素早い検索には <code>Ctrl+F</code>、一括置換には <code>Ctrl+H</code>、指定した行へのジャンプには <code>Ctrl+G</code> をお使いください。
+                </p>
+                <div class="spec-tags">
+                  <span>ハードウェア加速</span>
+                  <span>一括置換</span>
+                  <span>指定行へ移動</span>
+                </div>
+              </article>
+
+              <article class="spec-card">
+                <div class="spec-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                </div>
+                <h3>セッションの即時復元 &amp; タイポグラフィ</h3>
+                <p>
+                  終了時にカーソル座標、スクロール行、サブピクセルのオフセットまで正確に保存し、起動時に書いていた状況をそのまま復元します。システムのサンセリフ、セリフ、等幅をシームレスに切り替えられ、10pt から 32pt まで動的に拡大縮小できます。
+                </p>
+                <div class="spec-tags">
+                  <span>セッションの記憶</span>
+                  <span>フォント切り替え</span>
+                  <span>動的な拡大縮小</span>
+                </div>
+              </article>
+
+              <article class="spec-card">
+                <div class="spec-icon" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+                </div>
+                <h3>ワークスペースツリー &amp; 構文差分</h3>
+                <p>
+                  複数の文書やプロジェクトフォルダ全体をまたいで作業できます。サイドバーのワークスペースツリーが Markdown ファイルを自動で走査し、ネイティブの <code>```diff```</code> コードフェンスが赤と緑の並列比較を明快に示します。
+                </p>
+                <div class="spec-tags">
+                  <span>ワークスペースツリー</span>
+                  <span>マルチタブ表示</span>
+                  <span>構文差分</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- Architecture Deep Dive Section -->
+          <section class="arch-section" id="architecture">
+            <div class="shell">
+              <div class="section-intro">
+                <div>
+                  <p class="section-kicker">低遅延ファーストのアーキテクチャ</p>
+                  <h2>UI スレッドは決して待たない。</h2>
+                </div>
+                <p>
+                  遅延は妥協のない不変条件として扱われます。キー入力はひとつの軽量な編集として適用され、影響を受けた行の暫定的な表示が即座に再描画されます。そのうえで、完全な再解析、レイアウト計算、永続化がバックグラウンドで非同期に収束していきます。
+                </p>
+              </div>
+
+              <!-- Hot Path Dual-Track Visualizer -->
+              <div class="arch-hotpath">
+                <div class="hotpath-track hotpath-ui">
+                  <div class="track-header">
+                    <span class="track-badge badge-fast"><svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>高速トラック · 体感される部分（1 ms 未満）</span>
+                    <strong>入力から描画まで：ブロックも待ちも、無駄な処理もなし</strong>
+                  </div>
+                  <div class="track-steps">
+                    <div class="step-card">
+                      <span class="step-num">I</span>
+                      <strong>キー入力</strong>
+                      <small>ひとつの自己完結した編集</small>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card">
+                      <span class="step-num">II</span>
+                      <strong>バージョンを付与</strong>
+                      <small>各編集はより新しいバージョン番号を伴う</small>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card">
+                      <span class="step-num">III</span>
+                      <strong>行を再描画</strong>
+                      <small>触れた行だけを描き直す</small>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card step-highlight">
+                      <span class="step-num">IV</span>
+                      <strong>画面に表示</strong>
+                      <small>文字とカーソルが 1 フレームの何分の一かで見える</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hotpath-track hotpath-worker">
+                  <div class="track-header">
+                    <span class="track-badge badge-worker"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>収束トラック · 背後で起きていること</span>
+                    <strong>ハイライトと組版が、あなたを妨げることなく追いつく</strong>
+                  </div>
+                  <div class="track-steps">
+                    <div class="step-card">
+                      <span class="step-num">I</span>
+                      <strong>変わった部分だけ</strong>
+                      <small>影響を受けた行だけを読み直す</small>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card">
+                      <span class="step-num">II</span>
+                      <strong>残りは再利用</strong>
+                      <small>触れていない部分はそのまま保持する</small>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card">
+                      <span class="step-num">III</span>
+                      <strong>最新の描画状態</strong>
+                      <small>文書の完全で最新の姿</small>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card step-highlight-worker">
+                      <span class="step-num">IV</span>
+                      <strong>差し替え</strong>
+                      <small>古い結果は破棄され、決して表示されない</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Architecture 3 Pillars -->
+              <div class="arch-pillars-grid">
+                <article class="pillar-card">
+                  <div class="pillar-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                  </div>
+                  <h3>3 つの独立したパイプライン</h3>
+                  <p>
+                    <strong>数式、図表、テーブルはそれぞれ独立に計算されます。</strong>
+                    LaTeX の数式は入力の手が止まるまで待ち、Mermaid の図は見えている範囲だけを描画し、テーブルは自身の列幅を測ります。文章を編集しても、高コストな図の再計算は発生しません。
+                  </p>
+                  <div class="pillar-tags">
+                    <span>数式スナップショット</span>
+                    <span>Mermaid ビューポートキャッシュ</span>
+                    <span>適応型テーブル</span>
+                  </div>
+                </article>
+
+                <article class="pillar-card">
+                  <div class="pillar-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>
+                  </div>
+                  <h3>テキストとグラフィックスを分離</h3>
+                  <p>
+                    <strong>処理を分けることで、どちらも相手を待つことがありません。</strong>
+                    テキスト編集、カーソルのヒットテスト、インクリメンタル再解析、統計処理はプロセッサ上で行われ、グリフ描画、レイヤー合成、ベクター描画はグラフィックスカード上で行われます。
+                  </p>
+                  <div class="pillar-tags">
+                    <span>テキストエンジン</span>
+                    <span>グリフシェイピングキャッシュ</span>
+                    <span>GPU ハードウェアアクセラレーション</span>
+                  </div>
+                </article>
+
+                <article class="pillar-card">
+                  <div class="pillar-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+                  </div>
+                  <h3>強靭なクラッシュ復旧</h3>
+                  <p>
+                    <strong>突然の電源断からあなたの思考を守ります。</strong>
+                    内蔵のタイムマシンが最大 100 件の履歴スナップショットを保持し、オフラインでの差分確認に対応します。さらに軽量な復旧ジャーナルが、再起動と同時に未保存の作業を復元します。
+                  </p>
+                  <div class="pillar-tags">
+                    <span>100 件のスナップショット履歴</span>
+                    <span>バイナリ復旧ログ</span>
+                    <span>アトミックな差し替え</span>
+                  </div>
+                </article>
+              </div>
+
+              <div class="arch-action-bar">
+                <p>内部のエンジニアリング設計とベンチマーク手法を詳しく知りたいですか？</p>
+                <a class="button button-secondary" href="docs/architecture.html">
+                  技術マニュアルを読む <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Privacy Band -->
+          <section class="privacy-band">
+            <div class="shell privacy-inner">
+              <div>
+                <p class="section-kicker">デフォルトでプライベート</p>
+                <h2>アカウント不要。広告なし。テレメトリはゼロ。</h2>
+              </div>
+              <div>
+                <p>
+                  Akileas はすべての文書をあなたのローカルマシン上でのみ処理します。ネットワーク通信が発生するのは、あなたが明示的に外部リンクを開いたり、リモートのアセットを読み込んだりしたときだけです。
+                </p>
+                <a class="text-link" href="privacy.html">プライバシーポリシー全文を読む <span aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Final CTA -->
+          <section class="final-cta shell">
+            <img src="../assets/akileas-icon.png" width="88" height="88" alt="Akileas のロゴ" />
+            <p class="section-kicker">さあ、書き始めよう</p>
+            <h2>生まれながらに速く。純粋な集中のために。</h2>
+            <p>Microsoft Store で公開中です。</p>
+            <div class="hero-actions">
+              <a class="button button-store" href="https://apps.microsoft.com/detail/9PF44S6NS06D" target="_blank" rel="noopener">
+                <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.949-1.801"/></svg>
+                <span>Microsoft Store から入手</span>
+              </a>
+            </div>
+          </section>
+        </main>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../ja/" aria-label="Akileas">
+          <img src="../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>疾走する性能。ネイティブ Markdown デスクトップエディタ。</p>
+        <nav aria-label="Footer">
+          <a href="../ja/privacy.html">プライバシーポリシー</a>
+          <a href="../ja/docs/">マニュアル</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

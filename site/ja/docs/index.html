@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6cf" />
+    <meta name="description" content="Akileasのマニュアル：実測された性能、なぜこれほど高速なのか、そして機能とショートカットの完全なリファレンス。" />
+    <link rel="canonical" href="https://wsplxa.github.io/akileas/ja/docs/" />
+    <link rel="alternate" hreflang="en" href="https://wsplxa.github.io/akileas/docs/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wsplxa.github.io/akileas/zh/docs/" />
+    <link rel="alternate" hreflang="ja" href="https://wsplxa.github.io/akileas/ja/docs/" />
+    <link rel="alternate" hreflang="x-default" href="https://wsplxa.github.io/akileas/docs/" />
+    <link rel="icon" type="image/png" href="../../assets/akileas-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=GFS+Didot&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Akileas" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content="マニュアル — Akileas" />
+    <meta property="og:description" content="Akileasのマニュアル：実測された性能、なぜこれほど高速なのか、そして機能とショートカットの完全なリファレンス。" />
+    <meta property="og:url" content="https://wsplxa.github.io/akileas/ja/docs/" />
+    <meta property="og:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="マニュアル — Akileas" />
+    <meta name="twitter:description" content="Akileasのマニュアル：実測された性能、なぜこれほど高速なのか、そして機能とショートカットの完全なリファレンス。" />
+    <meta name="twitter:image" content="https://wsplxa.github.io/akileas/assets/og.png" />
+
+    <title>マニュアル — Akileas</title>
+  </head>
+  <body class="docs-page lang-ja">
+    <a class="skip-link" href="#main">コンテンツへスキップ</a>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="../../ja/" aria-label="Akileas ホーム">
+          <img src="../../assets/akileas-icon.png" width="38" height="38" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <nav aria-label="Primary">
+          <a href="../../#vision" class="nav-anchor">設計思想</a>
+          <a href="../../#features" class="nav-anchor">機能</a>
+          <a href="../../#tech-specs" class="nav-anchor">詳細仕様</a>
+          <a href="../../#architecture" class="nav-anchor">アーキテクチャ</a>
+          <a href="../../ja/docs/" aria-current="page">マニュアル</a>
+          <a href="../../ja/privacy.html">プライバシー</a>
+          <span class="lang-switch" role="group" aria-label="言語">
+            <a href="../../docs/" hreflang="en" lang="en">EN</a>
+            <a href="../../zh/docs/" hreflang="zh-Hans" lang="zh-Hans">中文</a>
+            <span class="lang-current" aria-current="true">日本語</span>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell docs-layout">
+      <aside class="docs-sidebar" aria-label="テクニカルマニュアル">
+        <p class="docs-sidebar-title">テクニカルマニュアル</p>
+        <ol class="docs-nav">
+          <li>
+            <a href="./" aria-current="page">
+              <span class="docs-nav-num" aria-hidden="true">§</span>
+              <span>概要</span>
+            </a>
+          </li>
+          <li>
+            <a href="benchmarks.html">
+              <span class="docs-nav-num" aria-hidden="true">I</span>
+              <span>ベンチマーク</span>
+            </a>
+          </li>
+          <li>
+            <a href="architecture.html">
+              <span class="docs-nav-num" aria-hidden="true">II</span>
+              <span>高速化の仕組み</span>
+            </a>
+          </li>
+          <li>
+            <a href="features.html">
+              <span class="docs-nav-num" aria-hidden="true">III</span>
+              <span>機能ガイド</span>
+            </a>
+          </li>
+        </ol>
+        <a class="docs-sidebar-back" href="../../ja/"><span aria-hidden="true">←</span> 概要に戻る</a>
+      </aside>
+      <main id="main" class="docs-main">
+        <header class="docs-hero">
+          <p class="section-kicker">マニュアル</p>
+          <h1>Akileasマニュアル</h1>
+          <p class="docs-lede">
+            3つの章で構成されています。実測された性能、エディターがこれほど高速な理由、そして機能と
+            ショートカットの完全なリファレンスです。知りたい疑問から読み始めてください。
+          </p>
+        </header>
+
+        <section class="doc-section" id="overview">
+          <h2>このマニュアルで扱う内容</h2>
+          <p>
+            Akileasは、<strong>妥協のない応答性</strong>のために作られたネイティブのMarkdownエディターです。
+            数式と図をネイティブにレンダリングし、ソースビューと組版ビューのハイブリッドとしてその場で編集でき、
+            出版品質のベクターPDFを書き出します。すべての文書はあなた自身のディスク上に留まります。
+          </p>
+          <p>
+            1000行のメモを書くときも、10万行の原稿を書くときも、
+            応答はサブミリ秒のままです。以下の3つの章では、順に、性能がどう測られるのか、
+            なぜこれほど高速でいられるのか、各機能をどう使うのかを説明します。
+          </p>
+
+          <ol class="docs-toc">
+            <li>
+              <a href="benchmarks.html">
+                <span class="docs-toc-num">第 1 章</span>
+                <strong>性能とベンチマーク</strong>
+                <span>マイクロ秒スケールの応答、1万行と10万行での解析レイテンシ、
+                  大きな文書での検索速度、メモリ使用量、そしてエディター比較の全体像。</span>
+              </a>
+            </li>
+            <li>
+              <a href="architecture.html">
+                <span class="docs-toc-num">第 2 章</span>
+                <strong>なぜAkileasはこれほど高速なのか</strong>
+                <span>キーストロークから再描画された画面までの間に起きていること。即時の応答と
+                  バックグラウンドでの調整、変更された部分だけの再計算、3つの独立したレンダリング
+                  パイプライン、巨大な文書での瞬時の移動、そしてクラッシュに耐える保存。</span>
+              </a>
+            </li>
+            <li>
+              <a href="features.html">
+                <span class="docs-toc-num">第 3 章</span>
+                <strong>使い方と機能ガイド</strong>
+                <span>その場で編集できるハイブリッドWYSIWYG、分割ビュー、アウトラインと検索のシステム、
+                  Git不要のタイムマシン、数式と図、Agent設定ワークベンチ、PDF書き出し。</span>
+              </a>
+            </li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="using-this-material">
+          <h2>このマニュアルの読み方</h2>
+          <p>3つの章はそれぞれ独立しているので、必要なところへ直接進むことができます。</p>
+          <div class="card-grid">
+            <article class="doc-card">
+              <h3>どれほど高速かを確かめる</h3>
+              <p>
+                第1章の計測表と比較マトリクスをご覧ください。すべての数値は、その章に記録された
+                マシン上の実際のリリースビルドから得られたものです。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>高速さの源を理解する</h3>
+              <p>
+                第2章では、キーを押してから画面が再描画されるまでの道のり全体を、
+                図を使って説明します。技術的な予備知識は必要ありません。
+              </p>
+            </article>
+            <article class="doc-card">
+              <h3>使い始める</h3>
+              <p>
+                第3章では、すべての機能とそこへのたどり着き方を扱います。末尾の
+                ショートカットリファレンスは、日々使える早見表として役立ちます。
+              </p>
+            </article>
+          </div>
+          <p class="doc-note">
+            第1章の性能値は、その章に記録されたリファレンスマシンで計測したものです。
+            絶対値は他のハードウェアでは異なりますが、桁の規模と相対的な優位性は変わりません。
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="shell footer-inner">
+        <a class="brand" href="../../ja/" aria-label="Akileas">
+          <img src="../../assets/akileas-icon.png" width="30" height="30" alt="Akileas icon" />
+          <span>Akileas</span>
+        </a>
+        <p>疾走する性能。ネイティブ Markdown デスクトップエディタ。</p>
+        <nav aria-label="Footer">
+          <a href="../../ja/privacy.html">プライバシーポリシー</a>
+          <a href="../../ja/docs/">マニュアル</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
